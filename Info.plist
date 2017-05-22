@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Author</key>
+	<string>CityLife</string>
+	<key>Builder Version</key>
+	<string>12603.1.30.0.34</string>
+	<key>CFBundleDisplayName</key>
+	<string>CLNavigator</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.yourcompany.clnavigator</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.1.5</string>
+	<key>CFBundleVersion</key>
+	<string>2.1.5</string>
+	<key>Chrome</key>
+	<dict>
+		<key>Database Quota</key>
+		<integer>104857600</integer>
+		<key>Global Page</key>
+		<string>background.html</string>
+		<key>Popovers</key>
+		<array>
+			<dict>
+				<key>Filename</key>
+				<string>popup.html</string>
+				<key>Height</key>
+				<integer>540</integer>
+				<key>Identifier</key>
+				<string>popup</string>
+				<key>Width</key>
+				<integer>440</integer>
+			</dict>
+		</array>
+		<key>Toolbar Items</key>
+		<array>
+			<dict>
+				<key>Identifier</key>
+				<string>CLNButton</string>
+				<key>Image</key>
+				<string>img/balance.png</string>
+				<key>Include By Default</key>
+				<true/>
+				<key>Label</key>
+				<string>City Life Navigator</string>
+				<key>Popover</key>
+				<string>popup</string>
+			</dict>
+		</array>
+	</dict>
+	<key>Content</key>
+	<dict>
+		<key>Scripts</key>
+		<dict>
+			<key>End</key>
+			<array>
+				<string>js/background.js</string>
+				<string>js/partners.js</string>
+				<string>js/popup.js</string>
+				<string>js/sanitize-html.js</string>
+			</array>
+			<key>Start</key>
+			<array>
+				<string>js/main.js</string>
+				<string>js/punycode.js</string>
+				<string>js/content.js</string>
+			</array>
+		</dict>
+		<key>Stylesheets</key>
+		<array>
+			<string>styles/modal.css</string>
+			<string>styles/popup.css</string>
+		</array>
+	</dict>
+	<key>Description</key>
+	<string>Some description</string>
+	<key>DeveloperIdentifier</key>
+	<string>Y5Q9KRZT9Z</string>
+	<key>ExtensionInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>Permissions</key>
+	<dict>
+		<key>Website Access</key>
+		<dict>
+			<key>Level</key>
+			<string>All</string>
+		</dict>
+	</dict>
+	<key>Website</key>
+	<string>https://clcorp.ru</string>
+</dict>
+</plist>

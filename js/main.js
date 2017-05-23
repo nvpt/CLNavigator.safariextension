@@ -3,6 +3,46 @@
  */
 
 
+var cookiesMain = document.cookie.split(';');
+
+safari.self.tab.dispatchMessage("setCookies",cookiesMain);
+
+
+
+
+function cookiesToObj (arr){
+    var cookiesObj = {};
+    for(var i = 0; i < arr.length; i++){
+        var cookie = arr[i].split('=');
+        var cookieName = cookie[0];
+        var cookieValue = cookie.splice(1,cookie.length).join('=');
+        cookiesObj[cookieName] = cookieValue;
+        // console.log('result ', cookiesObj);
+    }
+
+    return cookiesObj;
+};
+
+
+
+var cookiesObject= cookiesToObj(cookiesMain);
+console.log('cookiesObj ', cookiesObject);
+console.log('cookiesObj auth ', cookiesObject.auth);
+
+
+// function _getCookies(url, name, cb) {//for aliexpress
+//     safari.cookies.get({
+//         url: url,
+//         name: name
+//     }, cb);
+// }
+//
+// function _getUserCookie(url, cb) {
+//     safari.cookies.get({
+//         'url': url,
+//         'name': 'auth'
+//     }, cb);
+// }
 
 
 
@@ -28,18 +68,6 @@ function getClearUrl(val) {
 }
 
 
-
-var cookies = document.cookie.split(';');
-safari.self.tab.dispatchMessage("setCookies",cookies);
-console.log('ccc ', cookies);
-// var cookies = null;
-
-function getCookies(incMsg) {
-    cookies = incMsg.message;
-    console.log('ccc 2 ', cookies);
-}
-
-safari.application.addEventListener("message",getCookies,false);
 /**
  * Safe-response Opera's method
  * https://github.com/operatester/safeResponse/blob/1.1/safeResponse.js

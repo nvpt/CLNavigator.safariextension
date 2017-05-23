@@ -6,35 +6,48 @@
 
 </head>
 <body>
+
+<script type="text/javascript" src="js/punycode.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/background.js"></script>
+<script type="text/javascript" src="js/content.js"></script>
+
+
 <script>
     var cookies = null;
+    var cookiesName = null;
 
     function getCookies(incMsg) {
         cookies = incMsg.message;
-        console.log('I received them :)' ,cookies);
+        cookiesName = incMsg.name;
+
+        console.log('cookies :)' ,cookies);
+        console.log('cookiesName :)' ,cookiesName);
+        console.log('incMsg :)' ,incMsg);
     }
 
     safari.application.addEventListener("message",getCookies,false);
 
 
-    function readCookie(name) {
-        if(cookies) {
-            var nameEQ = name + "=";
-            var ca = cookies.split(';');
-            console.log('ca!!! ', ca);
-            for(var i=0;i < ca.length;i++) {
-                var c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-            }
-            return null;
-        }
-    }
 
-    console.log('*** ', readCookie('auth'));
+//    function readCookie(name) {
+//        if(cookies) {
+//            var nameEQ = name + "=";
+//            var ca = cookies.split(';');
+//            console.log('ca!!! ', ca);
+//            for(var i=0;i < ca.length;i++) {
+//                var c = ca[i];
+//                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+//                if (c.indexOf(nameEQ) !== -1) return c.substring(nameEQ.length,c.length);
+//            }
+//            return null;
+//        }
+//    }
+//
+//    console.log('***2 ', readCookie('auth'));
+
 </script>
-<script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript" src="js/punycode.js"></script>
+
 <script type="text/javascript" src="js/background.js"></script>
 </body>
 </html>

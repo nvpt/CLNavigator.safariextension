@@ -20,7 +20,6 @@ var modalMarkers = [0];                 // для отслеживания ПО�
 var timers = {};                        //время запуска активных кэшбэков. Продолжительность жизни = TIMER_LIFE
 var modalShowed = false;                //маркер, отображалась ли ремодалка. Исопльзуется для ремодалки, которая должна отобразиться, только если до этого появлялась модалка. Работает только для али.
 var remodalShowed = false;              //маркер, отображалась ли ремодалка
-console.log('*** ', readCookie('auth'));
 
 function _getAliClear() {
     return ALI_CLEAR;
@@ -397,6 +396,7 @@ function clickTab() {
         active: true,
         currentWindow: true
     }, function (tabs) {
+        console.log('click');
         if (tabs && tabs[0]) {
             var currentUrl = tabs[0].url;//урл текущей вкладки
             changeIcon(currentUrl);//при клике сверяем актуальность иконки
@@ -410,6 +410,7 @@ function reloadTab() {
         active: true,
         currentWindow: true
     }, function (tabs) {
+        console.log('reload');
         if (tabs && tabs[0]) {
             var currentUrl = tabs[0].url;
             changeIcon(currentUrl);
@@ -447,8 +448,11 @@ safari.tabs.onUpdated.addListener(reloadTab);//для отслеживания �
 
 
 /* Мост между content и background */
-safari.runtime.onConnect.addListener(function (port) {
-    port.onMessage.addListener(function (msg) {
+
+// safari.runtime.onConnect.addListener(function (port) {
+//     port.onMessage.addListener(function (msg) {
+        window.addEventListener("message", function (port) {
+            var msg = port.data;
             //порядок запросов не менять
             if (msg.from === 'content') {
                 var contentUrl = msg.url;
@@ -520,8 +524,4 @@ safari.runtime.onConnect.addListener(function (port) {
             }
         }
     );
-});
-
-
-
-
+// });

@@ -222,11 +222,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 closePartner.addEventListener('click', function () {
                     partner.style.display = 'none';
                 });
-
+                console.log('1111111');
             } else {
                 //если это не партнер, то карточку не отображаем
                 partnerLink.setAttribute('href', '');
                 partner.style.display = 'none';
+                console.log('2222222');
             }
         }
     }
@@ -432,6 +433,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     safari.application.addEventListener('popover', function(e){
         var tab = safari.application.activeBrowserWindow.activeTab;
+
         bg.checkTimers(bg.getClearUrl(tab.url));//по окончании срока действия таймера кэшбэка, смена иконки и попапа будет производиться по клику на иконку
         renderMainCard(tab);
         renderRecommended();

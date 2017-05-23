@@ -70,9 +70,6 @@ function _getPartnersVisited() {
 }
 
 
-var ca = document.cookie;
-console.log('cookie ', ca);
-
 function _getCookies(url, name, cb) {//for aliexpress
     safari.cookies.get({
         url: url,

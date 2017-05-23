@@ -4,28 +4,25 @@
 
 
 var cookiesMain = document.cookie.split(';');
-
-safari.self.tab.dispatchMessage("setCookies",cookiesMain);
-
-
+console.log('safari.self ',safari.self);
+safari.self.tab.dispatchMessage("setCookies", cookiesMain);
 
 
-function cookiesToObj (arr){
+function cookiesToObj(arr) {
     var cookiesObj = {};
-    for(var i = 0; i < arr.length; i++){
+    for (var i = 0; i < arr.length; i++) {
         var cookie = arr[i].split('=');
         var cookieName = cookie[0];
-        var cookieValue = cookie.splice(1,cookie.length).join('=');
+        var cookieValue = cookie.splice(1, cookie.length).join('=');
         cookiesObj[cookieName] = cookieValue;
         // console.log('result ', cookiesObj);
     }
 
     return cookiesObj;
-};
+}
 
 
-
-var cookiesObject= cookiesToObj(cookiesMain);
+var cookiesObject = cookiesToObj(cookiesMain);
 console.log('cookiesObj ', cookiesObject);
 console.log('cookiesObj auth ', cookiesObject.auth);
 
@@ -45,7 +42,6 @@ console.log('cookiesObj auth ', cookiesObject.auth);
 // }
 
 
-
 /**
  * Получение "чистого" урла открытой вкладки
  * Срабатывает для обычных доменов типа http://xxx.xxxx.xx/sdfs/sdfs/...
@@ -58,72 +54,19 @@ console.log('cookiesObj auth ', cookiesObject.auth);
 
 function getClearUrl(val) {
     console.log('val!!! ', val);
-    val = val.match(/\/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.|)([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)\//);
-    if ((val) && (val[2])) {
-        console.log('val!!!2 ', punycode.toUnicode((val[2])));
-        return punycode.toUnicode((val[2]));
-    } else {
-        console.error('error');
+    if (val) {
+        val = val.match(/\/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.|)([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)\//);
+        if ((val) && (val[2])) {
+            console.log('val!!!2 ', punycode.toUnicode((val[2])));
+            return punycode.toUnicode((val[2]));
+        } else {
+            console.error('error');
+        }
     }
 }
 
 
-/**
- * Safe-response Opera's method
- * https://github.com/operatester/safeResponse/blob/1.1/safeResponse.js
- * @type {{cleanDomString}}
- */
-safeResponse = function () {
 
-    var validAttrs = ["class", "id", "href", "style"];
-
-    this.__removeInvalidAttributes = function (target) {
-        var attrs = target.attributes, currentAttr;
-
-        for (var i = attrs.length - 1; i >= 0; i--) {
-            currentAttr = attrs[i].name;
-
-            if (attrs[i].specified && validAttrs.indexOf(currentAttr) === -1) {
-                target.removeAttribute(currentAttr);
-            }
-
-            if (
-                currentAttr === "href" &&
-                /^(#|javascript[:])/gi.test(target.getAttribute("href"))
-            ) {
-                target.parentNode.removeChild(target);
-            }
-        }
-    };
-
-    this.__cleanDomString = function (data) {
-        var parser = new DOMParser;
-        var tmpDom = parser.parseFromString(data, "text/html").body;
-
-        var list, current, currentHref;
-
-        list = tmpDom.querySelectorAll("script,img");
-
-        for (var i = list.length - 1; i >= 0; i--) {
-            current = list[i];
-            current.parentNode.removeChild(current);
-        }
-
-        list = tmpDom.getElementsByTagName("*");
-
-        for (i = list.length - 1; i >= 0; i--) {
-            parent.__removeInvalidAttributes(list[i]);
-        }
-
-        return tmpDom.innerHTML;
-    };
-
-    return {
-        cleanDomString: function (html) {
-            return parent.__cleanDomString(html)
-        }
-    }
-}();
 
 /**
  * There we use check for all parameters of all objects to safe response (for partnersData array)
@@ -131,6 +74,66 @@ safeResponse = function () {
  * @param obj
  */
 function checkSafeResponse(obj) {
+
+
+    /**
+     * Safe-response Opera's method
+     * https://github.com/operatester/safeResponse/blob/1.1/safeResponse.js
+     * @type {{cleanDomString}}
+     */
+    safeResponse = function () {
+
+        var validAttrs = ["class", "id", "href", "style"];
+
+        this.__removeInvalidAttributes = function (target) {
+            var attrs = target.attributes, currentAttr;
+
+            for (var i = attrs.length - 1; i >= 0; i--) {
+                currentAttr = attrs[i].name;
+
+                if (attrs[i].specified && validAttrs.indexOf(currentAttr) === -1) {
+                    target.removeAttribute(currentAttr);
+                }
+
+                if (
+                    currentAttr === "href" &&
+                    /^(#|javascript[:])/gi.test(target.getAttribute("href"))
+                ) {
+                    target.parentNode.removeChild(target);
+                }
+            }
+        };
+
+        this.__cleanDomString = function (data) {
+            var parser = new DOMParser;
+            var tmpDom = parser.parseFromString(data, "text/html").body;
+
+            var list, current, currentHref;
+
+            list = tmpDom.querySelectorAll("script,img");
+
+            for (var i = list.length - 1; i >= 0; i--) {
+                current = list[i];
+                current.parentNode.removeChild(current);
+            }
+
+            list = tmpDom.getElementsByTagName("*");
+
+            for (i = list.length - 1; i >= 0; i--) {
+                parent.__removeInvalidAttributes(list[i]);
+            }
+
+            return tmpDom.innerHTML;
+        };
+
+        return {
+            cleanDomString: function (html) {
+                return parent.__cleanDomString(html)
+            }
+        }
+    }();
+
+
     for (var key in obj) {//перебираем все свойства объекта
         if ((obj.hasOwnProperty(key)) && obj[key]) {
             if ((obj[key].length > 0) && (!isNaN(obj[key]))) {//если число и не пустое значение

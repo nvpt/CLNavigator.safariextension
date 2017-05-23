@@ -307,20 +307,24 @@ strong {
     border-radius: 30px;
     box-sizing: border-box; }
     .search__field::-webkit-input-placeholder {
+      line-height:25px;
       color: #b6b6b6;
       text-transform: uppercase;
       font-family: ProximaBold, sans-serif;
       font-size: 14px; }
     .search__field::-moz-placeholder {
+      line-height:25px;
       color: #b6b6b6;
       text-transform: uppercase;
       font-size: 13px; }
     .search__field:-moz-placeholder {
+      line-height:25px;
       color: #b6b6b6;
       text-transform: uppercase;
       font-family: ProximaBold, sans-serif;
       font-size: 13px; }
     .search__field:-ms-input-placeholder {
+      line-height:25px;
       color: #b6b6b6;
       text-transform: uppercase;
       font-family: ProximaBold, sans-serif;

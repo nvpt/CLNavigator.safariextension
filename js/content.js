@@ -4,7 +4,7 @@
 
 var HIDE_MODAL_TIME = 15000;//15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
 var HIDE_CASHBACK_TIME = 7000;//7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
-var port = chrome.runtime.connect({name: "content-bg"});//инициализация порта связи content-background
+var port = safari.runtime.connect({name: "content-bg"});//инициализация порта связи content-background
 
 port.postMessage({
     from: 'content',

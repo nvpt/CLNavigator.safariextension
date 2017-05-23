@@ -7,6 +7,40 @@
 
 
 /**
+ * Получение "чистого" урла открытой вкладки
+ * Срабатывает для обычных доменов типа http://xxx.xxxx.xx/sdfs/sdfs/...
+ * Из урла все домены четвертого и тп. уровня и хвост урла после первого слеша (вместе с ним).
+ *
+ * Учитываются кириллические домены
+ * @param val
+ * @returns {*}
+ */
+
+function getClearUrl(val) {
+    console.log('val!!! ', val);
+    val = val.match(/\/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.|)([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)\//);
+    if ((val) && (val[2])) {
+        console.log('val!!!2 ', punycode.toUnicode((val[2])));
+        return punycode.toUnicode((val[2]));
+    } else {
+        console.error('error');
+    }
+}
+
+
+
+var cookies = document.cookie.split(';');
+safari.self.tab.dispatchMessage("setCookies",cookies);
+console.log('ccc ', cookies);
+// var cookies = null;
+
+function getCookies(incMsg) {
+    cookies = incMsg.message;
+    console.log('ccc 2 ', cookies);
+}
+
+safari.application.addEventListener("message",getCookies,false);
+/**
  * Safe-response Opera's method
  * https://github.com/operatester/safeResponse/blob/1.1/safeResponse.js
  * @type {{cleanDomString}}

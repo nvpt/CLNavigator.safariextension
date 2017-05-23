@@ -6,7 +6,35 @@
 
 </head>
 <body>
+<script>
+    var cookies = null;
 
+    function getCookies(incMsg) {
+        cookies = incMsg.message;
+        console.log('I received them :)' ,cookies);
+    }
+
+    safari.application.addEventListener("message",getCookies,false);
+
+
+    function readCookie(name) {
+        if(cookies) {
+            var nameEQ = name + "=";
+            var ca = cookies.split(';');
+            console.log('ca!!! ', ca);
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null;
+        }
+    }
+
+    console.log('*** ', readCookie('auth'));
+</script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/punycode.js"></script>
 <script type="text/javascript" src="js/background.js"></script>
 </body>
 </html>

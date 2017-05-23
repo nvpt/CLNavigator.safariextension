@@ -9,7 +9,7 @@
 <div class="popup" id="popupCL">
     <div class="popup__head-wrap">
         <div class="popup__head">
-            <a href="http://clcorp.ru" target="_blank" title="Перейти на сайт"><img src="img/logo.png" alt="City Life"
+            <a href="http://clcorp.ru" onclick="safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/'; safari.self.hide();" target="_blank" title="Перейти на сайт"><img src="img/logo.png" alt="City Life"
                                                                                     class="popup__logo"></a>
             <div class="user">
 
@@ -200,13 +200,13 @@
     </div>
     <div class="popup__footer-wrap">
         <div class="popup__footer">
-            <a href="http://clcorp.ru/cases" class="all-shops" target="_blank">Больше магазинов</a>
+            <a href="http://clcorp.ru/cases" onclick="safari.application.activeBrowserWindow.openTab().url = 'http://clcorp.ru/cases'; safari.self.hide();" class="all-shops" target="_blank">Больше магазинов</a>
             <div class="signature">&copy; City Life 2016-2017</div>
         </div>
     </div>
 </div>
-<script type="text/javascript" src="js/partners.js"></script><!--temp-->
-<script type="text/javascript" src="js/sanitize-html.js"></script><!--temp-->
+<script type="text/javascript" src="js/partners.js"></script>
+<script type="text/javascript" src="js/sanitize-html.js"></script>
 <script type="text/javascript" src="js/popup.js"></script>
 </body>
 </html>

@@ -107,8 +107,9 @@ function checkTimers(el) {
  * Иконка не партнера. дефолтная
  */
 function markNotPartner() {
-    safari.browserAction.setIcon({path: "img/main.png"});
-    safari.browserAction.setBadgeText({"text": ""});
+    var iconUri = safari.extension.baseURI + 'img/logo.png';
+    safari.extension.toolbarItems[0].image = iconUri;
+    safari.extension.toolbarItems[0].label = '';
 }
 
 
@@ -116,8 +117,9 @@ function markNotPartner() {
  * Иконка на партнере
  */
 function markPartner() {
-    safari.browserAction.setIcon({path: "img/partner.png"});
-    safari.browserAction.setBadgeText({"text": ""});
+    var iconUri = safari.extension.baseURI + 'img/balance.png';
+    safari.extension.toolbarItems[0].image = iconUri;
+    safari.extension.toolbarItems[0].label = '';
 }
 
 /**
@@ -125,16 +127,18 @@ function markPartner() {
  */
 //TODO описать вращения иконки
 function markCheckPartner() {
-    safari.browserAction.setIcon({path: "img/dynamic.png"});
-    safari.browserAction.setBadgeText({"text": "..."});
+    var iconUri = safari.extension.baseURI + 'img/dynamic.png';
+    safari.extension.toolbarItems[0].image = iconUri;
+    safari.extension.toolbarItems[0].label = '';
 }
 
 /**
  * Иконка кэшбэка
  */
 function markCashbackActive() {
-    safari.browserAction.setIcon({path: "img/cashback.png"});
-    safari.browserAction.setBadgeText({"text": ""});
+    var iconUri = safari.extension.baseURI + 'img/cashback.png';
+    safari.extension.toolbarItems[0].image = iconUri;
+    safari.extension.toolbarItems[0].label = '';
 }
 
 
@@ -437,8 +441,8 @@ function reloadTab() {
 // }, true);
 
 
-// safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
-// safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//клик по табу
+safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
+safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//клик по табу
 
 
 

@@ -71,17 +71,17 @@ function _getPartnersVisited() {
 }
 
 
-// function _getCookies(url, name, cb) {//for aliexpress
+// function _getUserCookie(url, cb) {
 //     safari.cookies.get({
-//         url: url,
-//         name: name
+//         'url': url,
+//         'name': 'auth'
 //     }, cb);
 // }
 
-function _getUserCookie(url, cb) {
+function _getCookies(url, name, cb) {//for aliexpress
     safari.cookies.get({
-        'url': url,
-        'name': 'auth'
+        url: url,
+        name: name
     }, cb);
 }
 
@@ -157,7 +157,6 @@ function changeIcon(url) {
 }
 
 
-
 /* Запросы */
 
 /**
@@ -211,6 +210,7 @@ function partnersDataRequest(resolve, reject) {
             for (var i = 0; i < response.length; i++) {
                 checkSafeResponse(response[i]);
             }
+
             resolve(response);
         } else {
             reject();
@@ -238,88 +238,88 @@ setInterval(checkAuthorization, SESSION_TIME);
 /**
  * Загрузка данных партнеров
  */
-function uploadServerData(url) {
-
-    var currentUrl = 'https://clcorp.ru/';
-
-    if ((url) && (url.indexOf('clcorp.ru') !== -1)) {
-        currentUrl = url;
-    }
-    else {
-        currentUrl = 'https://clcorp.ru';
-    }
-
-
-    _getUserCookie(currentUrl, function (val) {
-        if (val) {
-            var authStatus = val.value;
-
-            if (parseInt(authStatus) === 1) {
-
-                if (!loginData.profile) {
-                    reqProfile(
-                        function (resp) {
-                            loginData = resp;
-                        },
-                        function () {
-                            loginData = {};
-                        }
-                    );
-                } else {
-                    return;
-                }
-
-                if (Object.keys(partnersDataAdmitad).length === 0) {
-
-                    partnersDataRequest(
-                        function (res) {
-                            arrayToObj(res, partnersDataAdmitad);
-                            partnersData = partnersDataAdmitad;
-                        },
-                        function () {
-                            // console.info('Партнеры не загружены');
-                        }
-                    );
-                }
-                partnersData = partnersDataAdmitad;
-
-            } else {
-                loginData = {};
-                timers = {};
-
-                if (Object.keys(partnersDataCustom).length === 0) {
-
-                    partnersDataRequest(
-                        function (res) {
-                            arrayToObj(res, partnersDataCustom);
-                            partnersData = partnersDataCustom;
-                        },
-                        function () {}
-                    );
-                }
-                partnersData = partnersDataCustom;
-            }
-
-        } else { // если наш сайт не посещен - куки нет. тогда грузим объекты с кастомными ссылками
-            loginData = {};
-            timers = {};
-
-            if (Object.keys(partnersDataCustom).length === 0) {
-                partnersDataRequest(
-                    function (res) {
-                        arrayToObj(res, partnersDataCustom);
-                        partnersData = partnersDataCustom;
-                    },
-                    function () {}
-                );
-            }
-            partnersData = partnersDataCustom;
-        }
-    });
-}
+// function uploadServerData(url) {
+//
+//     var currentUrl = 'https://clcorp.ru/';
+//
+//     if ((url) && (url.indexOf('clcorp.ru') !== -1)) {
+//         currentUrl = url;
+//     }
+//     else {
+//         currentUrl = 'https://clcorp.ru';
+//     }
+//
+//
+//     _getUserCookie(currentUrl, function (val) {
+//         if (val) {
+//             var authStatus = val.value;
+//
+//             if (parseInt(authStatus) === 1) {
+//
+//                 if (!loginData.profile) {
+//                     reqProfile(
+//                         function (resp) {
+//                             loginData = resp;
+//                         },
+//                         function () {
+//                             loginData = {};
+//                         }
+//                     );
+//                 } else {
+//                     return;
+//                 }
+//
+//                 if (Object.keys(partnersDataAdmitad).length === 0) {
+//
+//                     partnersDataRequest(
+//                         function (res) {
+//                             arrayToObj(res, partnersDataAdmitad);
+//                             partnersData = partnersDataAdmitad;
+//                         },
+//                         function () {
+//                             // console.info('Партнеры не загружены');
+//                         }
+//                     );
+//                 }
+//                 partnersData = partnersDataAdmitad;
+//
+//             } else {
+//                 loginData = {};
+//                 timers = {};
+//
+//                 if (Object.keys(partnersDataCustom).length === 0) {
+//
+//                     partnersDataRequest(
+//                         function (res) {
+//                             arrayToObj(res, partnersDataCustom);
+//                             partnersData = partnersDataCustom;
+//                         },
+//                         function () {}
+//                     );
+//                 }
+//                 partnersData = partnersDataCustom;
+//             }
+//
+//         } else { // если наш сайт не посещен - куки нет. тогда грузим объекты с кастомными ссылками
+//             loginData = {};
+//             timers = {};
+//
+//             if (Object.keys(partnersDataCustom).length === 0) {
+//                 partnersDataRequest(
+//                     function (res) {
+//                         arrayToObj(res, partnersDataCustom);
+//                         partnersData = partnersDataCustom;
+//                     },
+//                     function () {}
+//                 );
+//             }
+//             partnersData = partnersDataCustom;
+//         }
+//     });
+// }
 
 //загрузка данных партнеров при первом запуске
-uploadServerData();
+// uploadServerData();
 
 
 /**
@@ -388,35 +388,6 @@ function addPartnerToVisited(url) {
     }
 }
 
-/* Действия с табами */
-function clickTab() {
-    safari.tabs.query({
-        active: true,
-        currentWindow: true
-    }, function (tabs) {
-        console.log('click');
-        if (tabs && tabs[0]) {
-            var currentUrl = tabs[0].url;//урл текущей вкладки
-            changeIcon(currentUrl);//при клике сверяем актуальность иконки
-            addPartnerToVisited(currentUrl);
-        }
-    });
-}
-
-function reloadTab() {
-    safari.tabs.query({
-        active: true,
-        currentWindow: true
-    }, function (tabs) {
-        console.log('reload');
-        if (tabs && tabs[0]) {
-            var currentUrl = tabs[0].url;
-            changeIcon(currentUrl);
-            uploadServerData(currentUrl);//запрос загрузки данных выполняется только при обновлении таба
-        }
-    });
-}
-
 
 /**
  * Проверяем, было ли уже показано модальное окно
@@ -435,91 +406,117 @@ function checkModalMarkerAdded(partner) {
 }
 
 
+/* Действия с табами */
+function clickTab() {
+    var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
+    changeIcon(currentUrl);//при клике сверяем актуальность иконки
+    addPartnerToVisited(currentUrl);
+}
+
+function reloadTab() {
+    var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
+    changeIcon(currentUrl);
+    // uploadServerData(currentUrl);//запрос загрузки данных выполняется только при обновлении таба
+
+}
+
 
 /* Обработчики */
-safari.tabs.onActivated.addListener(clickTab);//клик по табу
-safari.tabs.onUpdated.addListener(reloadTab);//для отслеживания смены иконки при открытии ссылки из поисковика
+
+// console.log('application2 ', safari.application);
+// console.log('extension2 ', safari.extension);
+// console.log('self2 ', safari.self);
+// console.log('tab2 ', safari.application.activeBrowserWindow.activeTab);
+
+// safari.application.activeBrowserWindow.addEventListener("activate", function () {
+//     console.log('***клик***', safari.application.activeBrowserWindow.activeTab);
+// }, true);
+//
+// safari.application.activeBrowserWindow.addEventListener("navigate", function () {
+//     console.log('***обновление***', safari.application.activeBrowserWindow.activeTab);
+// }, true);
 
 
-//safari.tabs.onCreated.addListener(clickTab);//создание вкладки по табу
-//safari.tabs.onHighlighted.addListener(clickTab);
+// safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
+// safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//клик по табу
+
 
 
 /* Мост между content и background */
 
 // safari.runtime.onConnect.addListener(function (port) {
 //     port.onMessage.addListener(function (msg) {
-        window.addEventListener("message", function (port) {
-            var msg = port.data;
-            //порядок запросов не менять
-            if (msg.from === 'content') {
-                var contentUrl = msg.url;
-                var clearUrl = getClearUrl(contentUrl);
+window.addEventListener("message", function (port) {
+        var msg = port.data;
+        //порядок запросов не менять
+        if (msg.from === 'content') {
+            var contentUrl = msg.url;
+            var clearUrl = getClearUrl(contentUrl);
 
-                if (msg.id === 'modalMarkerAdded') {
-                    if (partnersData[clearUrl]) {
-                        var partner = partnersData[clearUrl];
-                        checkModalMarkerAdded(partner);
-                    }
+            if (msg.id === 'modalMarkerAdded') {
+                if (partnersData[clearUrl]) {
+                    var partner = partnersData[clearUrl];
+                    checkModalMarkerAdded(partner);
                 }
+            }
 
-                if (msg.id === 'setCashbackClick') {
-                    modalShowed = true;
-                    remodalShowed = false;
-                    if (Object.keys(loginData).length > 0) { //если юзер залогинен, активируем кэшбэк по клику
-                        _addToTimers(clearUrl, msg.timer);
-                        for (var i = 0; i < modalMarkers.length; i++) {
-                            if (modalMarkers[i] === msg.partnerId) {
-                                modalMarkers.splice(i, 1);//удаляем маркер отображени модалки, чтобы после активации кэшбэка модалка отобразилась заново еще раз
-                            }
+            if (msg.id === 'setCashbackClick') {
+                modalShowed = true;
+                remodalShowed = false;
+                if (Object.keys(loginData).length > 0) { //если юзер залогинен, активируем кэшбэк по клику
+                    _addToTimers(clearUrl, msg.timer);
+                    for (var i = 0; i < modalMarkers.length; i++) {
+                        if (modalMarkers[i] === msg.partnerId) {
+                            modalMarkers.splice(i, 1);//удаляем маркер отображени модалки, чтобы после активации кэшбэка модалка отобразилась заново еще раз
                         }
                     }
                 }
+            }
 
-                if (msg.id === 'remodalShowed') {//активация маркера remodalShowed
-                    remodalShowed = msg.remodalShowed;
+            if (msg.id === 'remodalShowed') {//активация маркера remodalShowed
+                remodalShowed = msg.remodalShowed;
+            }
+
+            if (msg.id === 'startConnect') {//начальная связь от content.js
+
+                if (partnersData[clearUrl]) {
+                    partner = partnersData[clearUrl];
+
+                    port.postMessage({//и отправляем в контент колбэк с этими данными
+                        from: 'bg',
+                        id: 'showModal',
+                        currentPartner: partner,
+                        timers: timers,
+                        modalMarkers: modalMarkers,
+                        loginData: _getLoginData()
+                    });
                 }
 
-                if (msg.id === 'startConnect') {//начальная связь от content.js
-
-                    if (partnersData[clearUrl]) {
-                        partner = partnersData[clearUrl];
-
-                        port.postMessage({//и отправляем в контент колбэк с этими данными
-                            from: 'bg',
-                            id: 'showModal',
-                            currentPartner: partner,
-                            timers: timers,
-                            modalMarkers: modalMarkers,
-                            loginData: _getLoginData()
-                        });
-                    }
-
-                    if (clearUrl === ALI_CLEAR) {//если сайт - Aliexpress
-                        _getCookies(contentUrl, ALI_COOKIE, function (e) {//кука aeu_cid содежит наш идентификатор "yVF2rZRRj"?
-                            if ((e) && (e.value.indexOf(CL_ALI_UID) === -1)) {//если нет, то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку
-                                if (partnersData[clearUrl]) {
-                                    delete timers[ALI_CLEAR];
-                                    port.postMessage({//и запустим в контенте колбэк с этими данными
-                                        from: 'bg',
-                                        id: 'showRemodal',
-                                        currentPartner: partner,
-                                        timers: timers,
-                                        modalMarkers: modalMarkers,
-                                        modalShowed: modalShowed,
-                                        remodalShowed: remodalShowed
-                                    });
-                                }
-                            } else {//если да
-                                port.postMessage({//запустим колбэк для скрытия ремодалки
+                if (clearUrl === ALI_CLEAR) {//если сайт - Aliexpress
+                    _getCookies(contentUrl, ALI_COOKIE, function (e) {//кука aeu_cid содежит наш идентификатор "yVF2rZRRj"?
+                        if ((e) && (e.value.indexOf(CL_ALI_UID) === -1)) {//если нет, то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку
+                            if (partnersData[clearUrl]) {
+                                delete timers[ALI_CLEAR];
+                                port.postMessage({//и запустим в контенте колбэк с этими данными
                                     from: 'bg',
-                                    id: 'hideRemodal'
+                                    id: 'showRemodal',
+                                    currentPartner: partner,
+                                    timers: timers,
+                                    modalMarkers: modalMarkers,
+                                    modalShowed: modalShowed,
+                                    remodalShowed: remodalShowed
                                 });
                             }
-                        });
-                    }
+                        } else {//если да
+                            port.postMessage({//запустим колбэк для скрытия ремодалки
+                                from: 'bg',
+                                id: 'hideRemodal'
+                            });
+                        }
+                    });
                 }
             }
         }
-    );
+    }
+);
 // });

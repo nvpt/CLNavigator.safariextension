@@ -5,8 +5,10 @@
 
 var cookiesMain = document.cookie.split(';');
 console.log('safari.self ',safari.self);
-safari.self.tab.dispatchMessage("setCookies", cookiesMain);
-
+console.log('safari.self.tab ',safari.self.tab);
+if(safari.self.tab) {
+    safari.self.tab.dispatchMessage("setCookies", cookiesMain);
+}
 
 function cookiesToObj(arr) {
     var cookiesObj = {};
@@ -26,20 +28,21 @@ var cookiesObject = cookiesToObj(cookiesMain);
 console.log('cookiesObj ', cookiesObject);
 console.log('cookiesObj auth ', cookiesObject.auth);
 
-
-function _getCookies(url, name, cb) {//for aliexpress
+function _getUserCookie(url, cb) {
     safari.cookies.get({
-        url: url,
-        name: name
+        'url': url,
+        'name': 'auth'
     }, cb);
 }
-//
-// function _getUserCookie(url, cb) {
+
+// function _getCookies(url, name, cb) {//for aliexpress
 //     safari.cookies.get({
-//         'url': url,
-//         'name': 'auth'
+//         url: url,
+//         name: name
 //     }, cb);
 // }
+//
+
 
 
 /**

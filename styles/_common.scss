@@ -1,0 +1,54 @@
+/*Общие*/
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 14px;
+}
+
+.wrapper {
+  font-size: 0;
+}
+
+a {
+  outline: none;
+
+  &:hover,
+  &:focus,
+  &:active {
+    outline:none;
+  }
+}
+
+
+strong {
+  font-family:ProximaBold;
+}
+
+/*END Общие*/
+
+/*Сетка*/
+[class^="part-"] {
+  display: inline-block;
+  font-size: 0;
+}
+
+.part-30 {
+  width: 30%;
+}
+
+.part-45 {
+  width: 45%;
+}
+
+.part-55 {
+	width: 55%;
+}
+
+.part-70 {
+  width: 70%;
+}
+
+/*END Сетка*/

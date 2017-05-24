@@ -73,6 +73,11 @@ document.addEventListener('DOMContentLoaded', function () {
      *Личниый кабинет
      */
     function showUserData() {
+
+        console.log('bg', bg);
+        console.log('bg._getLoginData() ', bg._getLoginData());
+        console.log('bg._getLoginData().profile ', bg._getLoginData().profile);
+
         if (bg._getLoginData().profile) {
             var el = bg._getLoginData();
             user.innerText = '';
@@ -226,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 //если это не партнер, то карточку не отображаем
                 partnerLink.setAttribute('href', '');
-                partner.style.display = 'none';
+                // partner.style.display = 'none';
                 console.log('2222222');
             }
         }

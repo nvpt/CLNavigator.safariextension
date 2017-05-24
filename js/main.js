@@ -27,12 +27,12 @@ console.log('cookiesObj ', cookiesObject);
 console.log('cookiesObj auth ', cookiesObject.auth);
 
 
-// function _getCookies(url, name, cb) {//for aliexpress
-//     safari.cookies.get({
-//         url: url,
-//         name: name
-//     }, cb);
-// }
+function _getCookies(url, name, cb) {//for aliexpress
+    safari.cookies.get({
+        url: url,
+        name: name
+    }, cb);
+}
 //
 // function _getUserCookie(url, cb) {
 //     safari.cookies.get({
@@ -53,11 +53,11 @@ console.log('cookiesObj auth ', cookiesObject.auth);
  */
 
 function getClearUrl(val) {
-    console.log('val!!! ', val);
+    // console.log('val!!! ', val);
     if (val) {
         val = val.match(/\/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.|)([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)\//);
         if ((val) && (val[2])) {
-            console.log('val!!!2 ', punycode.toUnicode((val[2])));
+            // console.log('val!!!2 ', punycode.toUnicode((val[2])));
             return punycode.toUnicode((val[2]));
         } else {
             console.error('error');

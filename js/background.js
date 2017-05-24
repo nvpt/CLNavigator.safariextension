@@ -1,6 +1,7 @@
 /**
  * Created by CityLife on 23.12.16.
  */
+console.log('загрузка bg');
 
 var CL_ALI_UID = 'yVF2rZRRj';           //идентификатор ситилайф в алиэкспресс
 var ALI_CLEAR = 'aliexpress.com';       //"чистый" урл Aliexpress.com
@@ -70,12 +71,12 @@ function _getPartnersVisited() {
 }
 
 
-function _getCookies(url, name, cb) {//for aliexpress
-    safari.cookies.get({
-        url: url,
-        name: name
-    }, cb);
-}
+// function _getCookies(url, name, cb) {//for aliexpress
+//     safari.cookies.get({
+//         url: url,
+//         name: name
+//     }, cb);
+// }
 
 function _getUserCookie(url, cb) {
     safari.cookies.get({

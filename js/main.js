@@ -4,9 +4,10 @@
 
 
 var cookiesMain = document.cookie.split(';');
-console.log('safari.self ',safari.self);
-console.log('safari.self.tab ',safari.self.tab);
-if(safari.self.tab) {
+console.log('safari.self ', safari.self);
+console.log('safari.self.tab ', safari.self.tab);
+
+if (safari.self.tab) {
     safari.self.tab.dispatchMessage("setCookies", cookiesMain);
 }
 
@@ -19,20 +20,19 @@ function cookiesToObj(arr) {
         cookiesObj[cookieName] = cookieValue;
         // console.log('result ', cookiesObj);
     }
-
     return cookiesObj;
 }
-
 
 var cookiesObject = cookiesToObj(cookiesMain);
 console.log('cookiesObj ', cookiesObject);
 console.log('cookiesObj auth ', cookiesObject.auth);
 
-function _getUserCookie(url, cb) {
-    safari.cookies.get({
-        'url': url,
-        'name': 'auth'
-    }, cb);
+function checkAuthCookie(url) {
+    var depot = 0;
+    if ((url.indexOf() !== -1) && cookiesObject.auth) {
+        depot = cookiesObject.auth
+    }
+    return depot;
 }
 
 // function _getCookies(url, name, cb) {//for aliexpress
@@ -42,7 +42,6 @@ function _getUserCookie(url, cb) {
 //     }, cb);
 // }
 //
-
 
 
 /**
@@ -67,8 +66,6 @@ function getClearUrl(val) {
         }
     }
 }
-
-
 
 
 /**

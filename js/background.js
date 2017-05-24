@@ -11,6 +11,7 @@ var SERVER_DATA_UPDATE_TIME = 86400000; //86400000 =  сутки. Интерва
 var TIMER_LIFE = 86400000;              //86400000 =  сутки. Время жизни отображения активного кэшбка
 //var MODAL_MARKERS_LIFE = 3600000;     //3600000 = 1 час. Интервал повторного отображения модалок ("ремодалок")
 
+var authorizationStatus = 0;
 var loginData = {};                     //данные пользователя
 var partnersData = {};                  //рабочий объект данных партнеров .
 var partnersDataCustom = {};            //промежуточный объект данных партнеров с ссылками на сайт
@@ -242,88 +243,58 @@ setInterval(checkAuthorization, SESSION_TIME);
 /**
  * Загрузка данных партнеров
  */
-// function uploadServerData(url) {
-//
-//     var currentUrl = 'https://clcorp.ru/';
-//
-//     if ((url) && (url.indexOf('clcorp.ru') !== -1)) {
-//         currentUrl = url;
-//     }
-//     else {
-//         currentUrl = 'https://clcorp.ru';
-//     }
-//
-//
-//     _getUserCookie(currentUrl, function (val) {
-//         if (val) {
-//             var authStatus = val.value;
-//
-//             if (parseInt(authStatus) === 1) {
-//
-//                 if (!loginData.profile) {
-//                     reqProfile(
-//                         function (resp) {
-//                             loginData = resp;
-//                         },
-//                         function () {
-//                             loginData = {};
-//                         }
-//                     );
-//                 } else {
-//                     return;
-//                 }
-//
-//                 if (Object.keys(partnersDataAdmitad).length === 0) {
-//
-//                     partnersDataRequest(
-//                         function (res) {
-//                             arrayToObj(res, partnersDataAdmitad);
-//                             partnersData = partnersDataAdmitad;
-//                         },
-//                         function () {
-//                             // console.info('Партнеры не загружены');
-//                         }
-//                     );
-//                 }
-//                 partnersData = partnersDataAdmitad;
-//
-//             } else {
-//                 loginData = {};
-//                 timers = {};
-//
-//                 if (Object.keys(partnersDataCustom).length === 0) {
-//
-//                     partnersDataRequest(
-//                         function (res) {
-//                             arrayToObj(res, partnersDataCustom);
-//                             partnersData = partnersDataCustom;
-//                         },
-//                         function () {}
-//                     );
-//                 }
-//                 partnersData = partnersDataCustom;
-//             }
-//
-//         } else { // если наш сайт не посещен - куки нет. тогда грузим объекты с кастомными ссылками
-//             loginData = {};
-//             timers = {};
-//
-//             if (Object.keys(partnersDataCustom).length === 0) {
-//                 partnersDataRequest(
-//                     function (res) {
-//                         arrayToObj(res, partnersDataCustom);
-//                         partnersData = partnersDataCustom;
-//                     },
-//                     function () {}
-//                 );
-//             }
-//             partnersData = partnersDataCustom;
-//         }
-//     });
-// }
+function uploadServerData() {
+
+    if (parseInt(authorizationStatus) === 1) {
+
+        if (!loginData.profile) {
+            reqProfile(
+                function (resp) {
+                    loginData = resp;
+                },
+                function () {
+                    loginData = {};
+                }
+            );
+        } else {
+            return;
+        }
+
+        if (Object.keys(partnersDataAdmitad).length === 0) {
+
+            partnersDataRequest(
+                function (res) {
+                    arrayToObj(res, partnersDataAdmitad);
+                    partnersData = partnersDataAdmitad;
+                },
+                function () {
+                    // console.info('Партнеры не загружены');
+                }
+            );
+        }
+        partnersData = partnersDataAdmitad;
+
+    } else {
+        loginData = {};
+        timers = {};
+
+        if (Object.keys(partnersDataCustom).length === 0) {
+
+            partnersDataRequest(
+                function (res) {
+                    arrayToObj(res, partnersDataCustom);
+                    partnersData = partnersDataCustom;
+                },
+                function () {
+                }
+            );
+        }
+        partnersData = partnersDataCustom;
+    }
+}
 
 //загрузка данных партнеров при первом запуске
-// uploadServerData();
+uploadServerData();
 
 
 /**
@@ -415,36 +386,25 @@ function clickTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
     changeIcon(currentUrl);//при клике сверяем актуальность иконки
     addPartnerToVisited(currentUrl);
+    console.log('authorizationStatus ', parseFloat(authorizationStatus));
 }
 
 function reloadTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
     changeIcon(currentUrl);
-    // uploadServerData(currentUrl);//запрос загрузки данных выполняется только при обновлении таба
+    if(true){//TODO прописать условие проверки
+        uploadServerData(currentUrl);//запрос загрузки данных выполняется только при обновлении таба
+    }
 
 }
 
 
 /* Обработчики */
 
-// console.log('application2 ', safari.application);
-// console.log('extension2 ', safari.extension);
-// console.log('self2 ', safari.self);
-// console.log('tab2 ', safari.application.activeBrowserWindow.activeTab);
-
-// safari.application.activeBrowserWindow.addEventListener("activate", function () {
-//     console.log('***клик***', safari.application.activeBrowserWindow.activeTab);
-// }, true);
-//
-// safari.application.activeBrowserWindow.addEventListener("navigate", function () {
-//     console.log('***обновление***', safari.application.activeBrowserWindow.activeTab);
-// }, true);
-
-if(safari.application) {
+if (safari.application) {
     safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
     safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//клик по табу
 }
-
 
 
 /* Мост между content и background */
@@ -484,8 +444,8 @@ window.addEventListener("message", function (port) {
 
             if (msg.id === 'startConnect') {//начальная связь от content.js
 
-                 if (partnersData[clearUrl]) {
-                     partner = partnersData[clearUrl];
+                if (partnersData[clearUrl]) {
+                    partner = partnersData[clearUrl];
 
                     window.postMessage({//и отправляем в контент колбэк с этими данными
                         from: 'bg',
@@ -495,7 +455,7 @@ window.addEventListener("message", function (port) {
                         modalMarkers: modalMarkers,
                         loginData: _getLoginData()
                     }, '*');
-                 }
+                }
 
                 if (clearUrl === ALI_CLEAR) {//если сайт - Aliexpress
                     _getCookies(contentUrl, ALI_COOKIE, function (e) {//кука aeu_cid содежит наш идентификатор "yVF2rZRRj"?

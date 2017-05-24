@@ -23,7 +23,7 @@ window.postMessage({
 // port.onMessage.addListener(function (msg) {
     window.addEventListener("message", function (port) {
         var msg = port.data;
-    var partnerData = msg.currentPartner;
+        var partnerData = msg.currentPartner;
     var timers = msg.timers;
     var modalMarkers = msg.modalMarkers;
     var currentUrl = document.location.href;//will work in ff?
@@ -52,7 +52,6 @@ window.postMessage({
         if (msg.id === 'showModal') {//отображение модалки
 
             //рендер компонентнов модалки
-
             ANCHOR.id = 'modalCL2017';
             ANCHOR.classList.add('modalCL2017');
 
@@ -133,11 +132,11 @@ window.postMessage({
 
                     close.addEventListener('click', function () {
                         ANCHOR.style.display = 'none';
-                        port.postMessage({
+                        window.postMessage({
                             from: 'content',
                             id: 'modalMarkerAdded',
                             url: currentUrl
-                        });
+                        }, '*');
                     });
                 }
 
@@ -150,20 +149,20 @@ window.postMessage({
 
             setTimeout(function () {
                 ANCHOR.style.display = 'none';
-                port.postMessage({
+                window.postMessage({
                     from: 'content',
                     id: 'modalMarkerAdded',
                     url: currentUrl
-                });
+                }, '*');
             }, HIDE_MODAL_TIME);
 
             //отображение информации об активном кэшбэке зависит от данных в timers
             if ((timers) && (timers.hasOwnProperty(getClearUrl(currentUrl)))) {
-                port.postMessage({
+                window.postMessage({
                     from: 'content',
                     id: 'modalMarkerAdded',
                     url: currentUrl
-                });
+                }, '*');
                 cashbackActive.style.display = 'flex';
                 setTimeout(function () {//после уведомления модалкой об активации кэшбэка, автоматически прячем ее через HIDE_CASHBACK_TIME
                     ANCHOR.style.display = 'none';
@@ -180,13 +179,13 @@ window.postMessage({
 
             clButton.addEventListener('click', function () {//функция активации кэшбэка из модалки. После задействования в background передается об этом информация
 
-                port.postMessage({
+                window.postMessage({
                     from: 'content',
                     id: 'setCashbackClick',
                     url: currentUrl,
                     timer: new Date().getTime(),
                     partnerId: partnerData.id
-                });
+                }, '*');
             });
 
         }
@@ -291,35 +290,35 @@ window.postMessage({
                         }
                         if (!document.querySelector('#remodalCL2017')) {
                             document.body.appendChild(REANCHOR);
-                            port.postMessage({//возвращаем в bg значение remodalShowed
+                            window.postMessage({//возвращаем в bg значение remodalShowed
                                 from: 'content',
                                 id: 'remodalShowed',
                                 url: currentUrl,
                                 remodalShowed: true
-                            });
+                            }, '*');
                         }
 
 
                         close.addEventListener('click', function () {
                             REANCHOR.style.display = 'none';
-                            port.postMessage({
+                            window.postMessage({
                                 from: 'content',
                                 id: 'remodalShowed',
                                 url: currentUrl,
                                 remodalShowed: true
-                            });
+                            }, '*');
                         });
                     });
                 }
 
                 setTimeout(function () {//прячем ремодалку через HIDE_MODAL_TIME времени
                     REANCHOR.style.display = 'none';
-                    port.postMessage({
+                    window.postMessage({
                         from: 'content',
                         id: 'remodalShowed',
                         url: currentUrl,
                         remodalShowed: true
-                    });
+                    }, '*');
                 }, HIDE_MODAL_TIME);
 
                 //прописываемзначение кэшбэка и ставим иконку партнера
@@ -328,14 +327,14 @@ window.postMessage({
                 clButton.setAttribute('href', msg.currentPartner.href);
 
                 clButton.addEventListener('click', function () {//функция активации кэшбэка из модалки. После задействования в background передается об этом информация
-                    port.postMessage({
+                    window.postMessage({
                         from: 'content',
                         id: 'setCashbackClick',
                         url: currentUrl,
                         timer: new Date().getTime(),
                         partnerId: partnerData.id,
                         remodalShowed: false
-                    });
+                    }, '*');
                 });
             } else {
                 return false;

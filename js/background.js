@@ -483,25 +483,25 @@ window.addEventListener("message", function (port) {
 
             if (msg.id === 'startConnect') {//начальная связь от content.js
 
-                if (partnersData[clearUrl]) {
-                    partner = partnersData[clearUrl];
+                 if (partnersData[clearUrl]) {
+                     partner = partnersData[clearUrl];
 
-                    port.postMessage({//и отправляем в контент колбэк с этими данными
+                    window.postMessage({//и отправляем в контент колбэк с этими данными
                         from: 'bg',
                         id: 'showModal',
                         currentPartner: partner,
                         timers: timers,
                         modalMarkers: modalMarkers,
                         loginData: _getLoginData()
-                    });
-                }
+                    }, '*');
+                 }
 
                 if (clearUrl === ALI_CLEAR) {//если сайт - Aliexpress
                     _getCookies(contentUrl, ALI_COOKIE, function (e) {//кука aeu_cid содежит наш идентификатор "yVF2rZRRj"?
                         if ((e) && (e.value.indexOf(CL_ALI_UID) === -1)) {//если нет, то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку
                             if (partnersData[clearUrl]) {
                                 delete timers[ALI_CLEAR];
-                                port.postMessage({//и запустим в контенте колбэк с этими данными
+                                window.postMessage({//и запустим в контенте колбэк с этими данными
                                     from: 'bg',
                                     id: 'showRemodal',
                                     currentPartner: partner,
@@ -509,13 +509,13 @@ window.addEventListener("message", function (port) {
                                     modalMarkers: modalMarkers,
                                     modalShowed: modalShowed,
                                     remodalShowed: remodalShowed
-                                });
+                                }, '*');
                             }
                         } else {//если да
-                            port.postMessage({//запустим колбэк для скрытия ремодалки
+                            window.postMessage({//запустим колбэк для скрытия ремодалки
                                 from: 'bg',
                                 id: 'hideRemodal'
-                            });
+                            }, '*');
                         }
                     });
                 }

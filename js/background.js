@@ -440,9 +440,10 @@ function reloadTab() {
 //     console.log('***обновление***', safari.application.activeBrowserWindow.activeTab);
 // }, true);
 
-
-safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
-safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//клик по табу
+if(safari.application) {
+    safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
+    safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//клик по табу
+}
 
 
 

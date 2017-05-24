@@ -21,9 +21,9 @@ window.postMessage({
 }, '*');
 
 // port.onMessage.addListener(function (msg) {
-    window.addEventListener("message", function (port) {
-        var msg = port.data;
-        var partnerData = msg.currentPartner;
+window.addEventListener("message", function (port) {
+    var msg = port.data;
+    var partnerData = msg.currentPartner;
     var timers = msg.timers;
     var modalMarkers = msg.modalMarkers;
     var currentUrl = document.location.href;//will work in ff?
@@ -125,26 +125,22 @@ window.postMessage({
             ANCHOR.style.opacity = 1;
 
 
-            document.addEventListener('DOMContentLoaded', function () {
-                // window.addEventListener('load', function () {
-                if (!document.querySelector("#modalCL2017")) {//пресекаем дублирование добавления модалки
-                    document.body.appendChild(ANCHOR);
+            if (!document.querySelector("#modalCL2017")) {//пресекаем дублирование добавления модалки
+                document.body.appendChild(ANCHOR);
 
-                    close.addEventListener('click', function () {
-                        ANCHOR.style.display = 'none';
-                        window.postMessage({
-                            from: 'content',
-                            id: 'modalMarkerAdded',
-                            url: currentUrl
-                        }, '*');
-                    });
-                }
+                close.addEventListener('click', function () {
+                    ANCHOR.style.display = 'none';
+                    window.postMessage({
+                        from: 'content',
+                        id: 'modalMarkerAdded',
+                        url: currentUrl
+                    }, '*');
+                });
+            }
 
-                if (document.querySelector("#remodalCL2017")) {//на всякий случай прячем ремодалку
-                    document.querySelector("#remodalCL2017").style.display = 'none';
-                }
-
-            });
+            if (document.querySelector("#remodalCL2017")) {//на всякий случай прячем ремодалку
+                document.querySelector("#remodalCL2017").style.display = 'none';
+            }
 
 
             setTimeout(function () {

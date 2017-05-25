@@ -13,12 +13,25 @@ var HIDE_CASHBACK_TIME = 7000;//7000 = 7сек. Время скрытия мод
 //     url: document.location.href
 // });
 
+var currentUrl = document.location.href;
+// console.log('!!!currentUrl:' ,currentUrl);
+// console.log('!!!currentUrl.indexOf(clcorp.ru) !== -1:' ,currentUrl.indexOf('clcorp.ru') !== -1);
+if(currentUrl.indexOf('clcorp.ru') !== -1){
+    // console.log('!!!checkAuthCookie(currentUrl) ', checkAuthCookie(currentUrl));
+    console.log('authorizationStatus content 1', authorizationStatus);
+    authorizationStatus = checkAuthCookie(currentUrl);
+    console.log('authorizationStatus content 2', authorizationStatus);
+}
 
 window.postMessage({
     from: 'content',
     id: 'startConnect',
+    authorizationStatus: authorizationStatus,
     url: document.location.href
 }, '*');
+
+
+
 
 // port.onMessage.addListener(function (msg) {
 window.addEventListener("message", function (port) {

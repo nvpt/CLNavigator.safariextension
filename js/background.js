@@ -170,10 +170,15 @@ function changeIcon(url) {
  * @param obj
  */
 function arrayToObj(arr, obj) {
+    console.log('length ', arr.length);
     for (var i = 0; i < arr.length; i++) {
         var partner = arr[i];
         obj[getClearUrl(partner.site_url)] = partner;
     }
+    console.log('length obj ', Object.keys(obj).length);
+    console.log('maknails ', getClearUrl('http://maknails.ru/'));
+    console.log('stuartweitzman ', getClearUrl('http://eu.stuartweitzman.com/ru/home'));
+    console.log('malaamada ', getClearUrl('http://www.malaamada.com.br/'));
 }
 
 
@@ -212,9 +217,9 @@ function partnersDataRequest(resolve, reject) {
     req.addEventListener('load', function () {
         if (req.status === 200) {
             var response = JSON.parse(req.responseText);
-            for (var i = 0; i < response.length; i++) {
-                checkSafeResponse(response[i]);
-            }
+            // for (var i = 0; i < response.length; i++) {//TODO temp
+            //     checkSafeResponse(response[i]);
+            // }
 
             resolve(response);
         } else {
@@ -284,8 +289,11 @@ function uploadServerData() {
                 function (res) {
                     arrayToObj(res, partnersDataCustom);
                     partnersData = partnersDataCustom;
+                    console.log('partnersData ', partnersData);
+                    console.log('partnersDataCustom ', partnersDataCustom);
                 },
                 function () {
+                    console.log('reject');
                 }
             );
         }
@@ -384,18 +392,42 @@ function checkModalMarkerAdded(partner) {
 /* Действия с табами */
 function clickTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
+    // console.log('currentUrl:' ,currentUrl);
+    // console.log('currentUrl.indexOf(clcorp.ru) !== -1:' ,currentUrl.indexOf('clcorp.ru') !== -1);
+    if(currentUrl.indexOf('clcorp.ru') !== -1){
+        // console.log('checkAuthCookie(currentUrl) ', checkAuthCookie(currentUrl));
+        authorizationStatus = checkAuthCookie(currentUrl);
+        // console.log('authorizationStatus = ', authorizationStatus);
+    }
     changeIcon(currentUrl);//при клике сверяем актуальность иконки
     addPartnerToVisited(currentUrl);
-    console.log('authorizationStatus ', parseFloat(authorizationStatus));
+    // console.log('authorizationStatus ', parseFloat(authorizationStatus));
+
 }
 
 function reloadTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
+    console.log('currentUrl ', currentUrl);
+    if(currentUrl.indexOf('clcorp.ru') !== -1){
+        authorizationStatus = checkAuthCookie(currentUrl);
+        // console.log('authorizationStatus2 = ', authorizationStatus);
+    }
     changeIcon(currentUrl);
     if(true){//TODO прописать условие проверки
         uploadServerData(currentUrl);//запрос загрузки данных выполняется только при обновлении таба
     }
 
+console.log('authorizationStatus bg', authorizationStatus);
+    // window.addEventListener("message", function (port) {
+    //     var msg = port.data;
+    //     console.log('*******')
+    //     //порядок запросов не менять
+    //     if ((msg.from === 'content') && (msg.id === 'startConnect')) {
+    //         console.log('authorizationStatus before ', authorizationStatus);
+    //         authorizationStatus = msg.authorizationStatus;
+    //         console.log('authorizationStatus after ', authorizationStatus);
+    //     }
+    // });
 }
 
 
@@ -414,6 +446,7 @@ if (safari.application) {
 window.addEventListener("message", function (port) {
         var msg = port.data;
         //порядок запросов не менять
+    console.log('МОСТ');
         if (msg.from === 'content') {
             var contentUrl = msg.url;
             var clearUrl = getClearUrl(contentUrl);

@@ -158,7 +158,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var currentTabUrl = tab.url;
         var rightUrl = bg.getClearUrl(currentTabUrl);
-
+console.log('rightUrl ', rightUrl);
+console.log('currentTabUrl ', currentTabUrl);
         /*вид кнопки в зависимости от статуса залогирован-незалогирован*/
         if (bg._getLoginData().profile) {
             partnerLink.innerHTML = '<span>Активировать</span>';

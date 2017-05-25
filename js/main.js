@@ -4,8 +4,8 @@
 
 
 var cookiesMain = document.cookie.split(';');
-console.log('safari.self ', safari.self);
-console.log('safari.self.tab ', safari.self.tab);
+// console.log('safari.self ', safari.self);
+// console.log('safari.self.tab ', safari.self.tab);
 
 if (safari.self.tab) {
     safari.self.tab.dispatchMessage("setCookies", cookiesMain);
@@ -24,12 +24,14 @@ function cookiesToObj(arr) {
 }
 
 var cookiesObject = cookiesToObj(cookiesMain);
-console.log('cookiesObj ', cookiesObject);
-console.log('cookiesObj auth ', cookiesObject.auth);
 
 function checkAuthCookie(url) {
     var depot = 0;
-    if ((url.indexOf() !== -1) && cookiesObject.auth) {
+    // console.log('cookiesMain ', cookiesMain);
+    // console.log('cookiesToObj(cookiesMain) ', cookiesToObj(cookiesMain));
+    // console.log('cookiesObject ', cookiesObject);
+    // console.log('cookiesObject.auth ', cookiesObject.auth);
+    if ((url.indexOf('clcorp.ru') !== -1) && cookiesObject.auth) {
         depot = cookiesObject.auth
     }
     return depot;
@@ -57,12 +59,16 @@ function checkAuthCookie(url) {
 function getClearUrl(val) {
     // console.log('val!!! ', val);
     if (val) {
-        val = val.match(/\/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.|)([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)\//);
+        // var val = val.match(/\/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.|)([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)\//);
+        var val = val.match(/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_]+\.|)(([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)(|\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]))\//);
+
         if ((val) && (val[2])) {
             // console.log('val!!!2 ', punycode.toUnicode((val[2])));
+            // console.log('val!!!3 ', val[2]);
             return punycode.toUnicode((val[2]));
         } else {
             console.error('error');
+            console.log('val error ', val);
         }
     }
 }

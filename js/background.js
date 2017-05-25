@@ -88,34 +88,21 @@ function cookiesToObj(arr) {
     return obj;
 }
 
-//var cookiesObject = cookiesToObj(cookiesMain);//спиок кук по умолчанию идет строкой. Парсим его в сначала в масив, затемв объект
-
-
 function getCookiesAuth(incMsg) {
     var cookies = incMsg;
     var  cookiesValue = incMsg.message;
     var  cookiesUrl = incMsg.target['url'];
-    if(cookiesUrl.indexOf('clcorp.ru') !== -1) {authorizationStatus = cookiesToObj(cookiesValue)['auth']}
+    if(cookiesUrl !== undefined && (cookiesUrl.indexOf('clcorp.ru') !== -1)) {
+        authorizationStatus = cookiesToObj(cookiesValue)['auth'];
+        uploadServerData();
+    }//берем из кук индекс авторизации
 
-    console.log('cookies ' , cookies );
-    console.log('authorizationStatus ww' , authorizationStatus );
-    // console.log('cookiesUrl ' ,cookiesUrl );
+
 }
 
 safari.application.addEventListener("message", getCookiesAuth, false);
 
 
-
-
-
-
-
-// function _getUserCookie(url, cb) {
-//     safari.cookies.get({
-//         'url': url,
-//         'name': 'auth'
-//     }, cb);
-// }
 
 function _getCookies(url, name, cb) {//for aliexpress
     safari.cookies.get({
@@ -228,10 +215,10 @@ function reqProfile(resolve, reject) {
     req.addEventListener('load', function () {
         if (req.status === 200) {
             var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
-            console.log('авторизация',response);
+            console.log('reqProfileRequest!');
             resolve(response);
         } else {
-            console.log('авторизация не удалась');
+            console.error('error authorization');
             reject();
         }
     });
@@ -255,6 +242,7 @@ function partnersDataRequest(resolve, reject) {
             for (var i = 0; i < response.length; i++) {
                 checkSafeResponse(response[i]);
             }
+            console.log('partnersDataRequest!');
             resolve(response);
         } else {
             reject();
@@ -267,9 +255,9 @@ function partnersDataRequest(resolve, reject) {
  * Загрузка данных партнеров
  */
 function uploadServerData() {
-    console.log(111, authorizationStatus);
+
     if (parseInt(authorizationStatus) === 1) {
-        console.log(222);
+
         if (!loginData.profile) {
             reqProfile(
                 function (resp) {

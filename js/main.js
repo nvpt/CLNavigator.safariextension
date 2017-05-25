@@ -1,49 +1,9 @@
 /**
  * Created by CityLife on 14.04.17.
  */
+console.log('загрузка main');
+var mainTest = 'mainTest';
 
-
-var cookiesMain = document.cookie.split(';');
-// console.log('safari.self ', safari.self);
-// console.log('safari.self.tab ', safari.self.tab);
-
-if (safari.self.tab) {
-    safari.self.tab.dispatchMessage("setCookies", cookiesMain);
-}
-
-function cookiesToObj(arr) {
-    var cookiesObj = {};
-    for (var i = 0; i < arr.length; i++) {
-        var cookie = arr[i].split('=');
-        var cookieName = cookie[0];
-        var cookieValue = cookie.splice(1, cookie.length).join('=');
-        cookiesObj[cookieName] = cookieValue;
-        // console.log('result ', cookiesObj);
-    }
-    return cookiesObj;
-}
-
-var cookiesObject = cookiesToObj(cookiesMain);
-
-function checkAuthCookie(url) {
-    var depot = 0;
-    // console.log('cookiesMain ', cookiesMain);
-    // console.log('cookiesToObj(cookiesMain) ', cookiesToObj(cookiesMain));
-    // console.log('cookiesObject ', cookiesObject);
-    // console.log('cookiesObject.auth ', cookiesObject.auth);
-    if ((url.indexOf('clcorp.ru') !== -1) && cookiesObject.auth) {
-        depot = cookiesObject.auth
-    }
-    return depot;
-}
-
-// function _getCookies(url, name, cb) {//for aliexpress
-//     safari.cookies.get({
-//         url: url,
-//         name: name
-//     }, cb);
-// }
-//
 
 
 /**
@@ -57,18 +17,13 @@ function checkAuthCookie(url) {
  */
 
 function getClearUrl(val) {
-    // console.log('val!!! ', val);
     if (val) {
-        // var val = val.match(/\/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.|)([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)\//);
         var val = val.match(/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_]+\.|)(([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)(|\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]))\//);
 
         if ((val) && (val[2])) {
-            // console.log('val!!!2 ', punycode.toUnicode((val[2])));
-            // console.log('val!!!3 ', val[2]);
             return punycode.toUnicode((val[2]));
         } else {
             console.error('error');
-            console.log('val error ', val);
         }
     }
 }
@@ -80,7 +35,6 @@ function getClearUrl(val) {
  * @param obj
  */
 function checkSafeResponse(obj) {
-
 
     /**
      * Safe-response Opera's method

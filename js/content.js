@@ -5,23 +5,14 @@ console.log('загрузка content');
 
 var HIDE_MODAL_TIME = 15000;//15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
 var HIDE_CASHBACK_TIME = 7000;//7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
-//var port = safari.runtime.connect({name: "content-bg"});//инициализация порта связи content-background
 
-// port.postMessage({
-//     from: 'content',
-//     id: 'startConnect',
-//     url: document.location.href
-// });
 
-var currentUrl = document.location.href;
-// console.log('!!!currentUrl:' ,currentUrl);
-// console.log('!!!currentUrl.indexOf(clcorp.ru) !== -1:' ,currentUrl.indexOf('clcorp.ru') !== -1);
-if(currentUrl.indexOf('clcorp.ru') !== -1){
-    // console.log('!!!checkAuthCookie(currentUrl) ', checkAuthCookie(currentUrl));
-    console.log('authorizationStatus content 1', authorizationStatus);
-    authorizationStatus = checkAuthCookie(currentUrl);
-    console.log('authorizationStatus content 2', authorizationStatus);
-}
+// if(currentUrl.indexOf('clcorp.ru') !== -1){
+//     console.log('!!!checkAuthCookie(currentUrl) ', checkAuthCookie(currentUrl));
+//     console.log('authorizationStatus content 1', authorizationStatus);
+//    var authStatusContent = checkAuthCookie(currentUrl);
+//     console.log('authorizationStatus content 2', authorizationStatus);
+// }
 
 window.postMessage({
     from: 'content',

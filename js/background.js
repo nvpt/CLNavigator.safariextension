@@ -71,6 +71,44 @@ function _getPartnersVisited() {
     return partnersVisited;
 }
 
+//Куки
+var cookiesMain = document.cookie.split(';');
+if (safari.self.tab) {//для отработки в страницах браузера. В background не сработает
+    safari.self.tab.dispatchMessage("setCookies", cookiesMain);
+}
+
+function cookiesToObj(arr) {
+    var obj = {};
+    for (var i = 0; i < arr.length; i++) {
+        var cookie = arr[i].split('=');
+        var cookieName = cookie[0];
+        var cookieValue = cookie.splice(1, cookie.length).join('=');
+        obj[cookieName] = cookieValue;
+    }
+    return obj;
+}
+
+//var cookiesObject = cookiesToObj(cookiesMain);//спиок кук по умолчанию идет строкой. Парсим его в сначала в масив, затемв объект
+
+
+function getCookiesAuth(incMsg) {
+    var cookies = incMsg;
+    var  cookiesValue = incMsg.message;
+    var  cookiesUrl = incMsg.target.url;
+    if(cookiesUrl.indexOf('clcorp.ru') !== -1) {authorizationStatus = cookiesToObj(cookiesValue).auth}
+
+    // console.log('cookies ' , cookies );
+    // console.log('cookiesValue ' , cookiesValue );
+    // console.log('cookiesUrl ' ,cookiesUrl );
+}
+
+safari.application.addEventListener("message", getCookiesAuth, false);
+
+
+
+
+
+
 
 // function _getUserCookie(url, cb) {
 //     safari.cookies.get({
@@ -170,15 +208,10 @@ function changeIcon(url) {
  * @param obj
  */
 function arrayToObj(arr, obj) {
-    console.log('length ', arr.length);
     for (var i = 0; i < arr.length; i++) {
         var partner = arr[i];
         obj[getClearUrl(partner.site_url)] = partner;
     }
-    console.log('length obj ', Object.keys(obj).length);
-    console.log('maknails ', getClearUrl('http://maknails.ru/'));
-    console.log('stuartweitzman ', getClearUrl('http://eu.stuartweitzman.com/ru/home'));
-    console.log('malaamada ', getClearUrl('http://www.malaamada.com.br/'));
 }
 
 
@@ -229,20 +262,7 @@ function partnersDataRequest(resolve, reject) {
 }
 
 
-/**
- * Проверка авторизации
- */
-function checkAuthorization() {
-    reqProfile(function (resp) {
-        loginData = resp;
-    }, function () {
-        loginData = {};
-        timers = {};
-    });
-}
 
-//чтобы не вылетала авторизация, каждые SESSION_TIME пингуем наш сервер
-setInterval(checkAuthorization, SESSION_TIME);
 
 
 /**
@@ -289,8 +309,7 @@ function uploadServerData() {
                 function (res) {
                     arrayToObj(res, partnersDataCustom);
                     partnersData = partnersDataCustom;
-                    console.log('partnersData ', partnersData);
-                    console.log('partnersDataCustom ', partnersDataCustom);
+                    // console.log('partnersData ', partnersData);
                 },
                 function () {
                     console.log('reject');
@@ -318,23 +337,14 @@ function updateServerData() {
         function () {
             loginData = {};
             timers = {};
+            authorizationStatus = 0;
         }
     );
 
     partnersDataRequest(
         function (res) {
-            var currentUrl = 'https://clcorp.ru';
-            // if (url) {
-            //     if (url.indexOf('clcorp.ru') !== -1) {
-            //         currentUrl = url;
-            //     } else {
-            //         currentUrl = 'https://clcorp.ru';
-            //     }
-            // }
-            _getUserCookie(currentUrl, function (val) {
-                    if (val) {
-                        var authStatus = val.value;
-                        if (parseInt(authStatus) === 1) {
+
+                        if (parseInt(authorizationStatus) === 1) {
                             arrayToObj(res, partnersDataAdmitad);
                             partnersData = partnersDataAdmitad;
                         } else {
@@ -343,20 +353,30 @@ function updateServerData() {
                             arrayToObj(res, partnersDataCustom);
                             partnersData = partnersDataCustom;
                         }
-                    } else {
-                        loginData = {};
-                        timers = {};
-                        arrayToObj(res, partnersDataCustom);
-                        partnersData = partnersDataCustom;
-                    }
-                },
-                function () {
-                    // console.info('Партнеры не загружены');
-                });
+
         });
 }
 
 setInterval(updateServerData, SERVER_DATA_UPDATE_TIME);
+
+
+/**
+ * Проверка авторизации
+ */
+function checkAuthorization() {
+    reqProfile(function (resp) {
+        loginData = resp;
+    }, function () {
+        loginData = {};
+        timers = {};
+        authorizationStatus = 0;
+    });
+}
+
+//чтобы не вылетала авторизация, каждые SESSION_TIME пингуем наш сервер
+setInterval(checkAuthorization, SESSION_TIME);
+
+
 
 
 /* Проверяем наличие данных партнера в массиве. Если нет, то запрашиваем */
@@ -392,47 +412,19 @@ function checkModalMarkerAdded(partner) {
 /* Действия с табами */
 function clickTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    // console.log('currentUrl:' ,currentUrl);
-    // console.log('currentUrl.indexOf(clcorp.ru) !== -1:' ,currentUrl.indexOf('clcorp.ru') !== -1);
-    if(currentUrl.indexOf('clcorp.ru') !== -1){
-        // console.log('checkAuthCookie(currentUrl) ', checkAuthCookie(currentUrl));
-        authorizationStatus = checkAuthCookie(currentUrl);
-        // console.log('authorizationStatus = ', authorizationStatus);
-    }
+    console.log('currentUrl:' ,currentUrl);
     changeIcon(currentUrl);//при клике сверяем актуальность иконки
     addPartnerToVisited(currentUrl);
-    // console.log('authorizationStatus ', parseFloat(authorizationStatus));
-
+    console.log('loginData ',loginData);
 }
 
 function reloadTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    console.log('currentUrl ', currentUrl);
-    if(currentUrl.indexOf('clcorp.ru') !== -1){
-        authorizationStatus = checkAuthCookie(currentUrl);
-        // console.log('authorizationStatus2 = ', authorizationStatus);
-    }
     changeIcon(currentUrl);
-    if(true){//TODO прописать условие проверки
-        uploadServerData(currentUrl);//запрос загрузки данных выполняется только при обновлении таба
-    }
-
-console.log('authorizationStatus bg', authorizationStatus);
-    // window.addEventListener("message", function (port) {
-    //     var msg = port.data;
-    //     console.log('*******')
-    //     //порядок запросов не менять
-    //     if ((msg.from === 'content') && (msg.id === 'startConnect')) {
-    //         console.log('authorizationStatus before ', authorizationStatus);
-    //         authorizationStatus = msg.authorizationStatus;
-    //         console.log('authorizationStatus after ', authorizationStatus);
-    //     }
-    // });
 }
 
 
 /* Обработчики */
-
 if (safari.application) {
     safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
     safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//клик по табу
@@ -446,7 +438,7 @@ if (safari.application) {
 window.addEventListener("message", function (port) {
         var msg = port.data;
         //порядок запросов не менять
-    console.log('МОСТ');
+    // console.log('МОСТ');
         if (msg.from === 'content') {
             var contentUrl = msg.url;
             var clearUrl = getClearUrl(contentUrl);
@@ -518,3 +510,4 @@ window.addEventListener("message", function (port) {
     }
 );
 // });
+

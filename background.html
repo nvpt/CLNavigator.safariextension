@@ -9,27 +9,7 @@
 
 <script type="text/javascript" src="js/punycode.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
-<!--<script type="text/javascript" src="js/content.js"></script>-->
-
-
-<script>
-    var cookies = null;
-    var cookiesName = null;
-
-    function getCookies(incMsg) {
-        cookies = incMsg.message;
-        cookiesName = incMsg.name;
-
-//        console.log('cookies :)' ,cookies);
-//        console.log('cookiesName :)' ,cookiesName);
-//        console.log('incMsg :)' ,incMsg);
-    }
-
-    safari.application.addEventListener("message", getCookies, false);
-
-    console.log('загрузка bg.html');
-</script>
-
+<script type="text/javascript" src="js/content.js"></script>
 <script type="text/javascript" src="js/background.js"></script>
 </body>
 </html>

@@ -57,16 +57,16 @@
 		<dict>
 			<key>End</key>
 			<array>
-				<string>js/background.js</string>
 				<string>js/content.js</string>
+				<string>js/background.js</string>
 				<string>js/popup.js</string>
 			</array>
 			<key>Start</key>
 			<array>
 				<string>js/punycode.js</string>
-				<string>js/main.js</string>
 				<string>js/sanitize-html.js</string>
 				<string>js/partners.js</string>
+				<string>js/main.js</string>
 			</array>
 		</dict>
 		<key>Stylesheets</key>

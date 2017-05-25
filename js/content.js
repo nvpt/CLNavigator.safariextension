@@ -17,7 +17,6 @@ var HIDE_CASHBACK_TIME = 7000;//7000 = 7сек. Время скрытия мод
 window.postMessage({
     from: 'content',
     id: 'startConnect',
-    authorizationStatus: authorizationStatus,
     url: document.location.href
 }, '*');
 

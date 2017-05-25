@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function showUserData() {
 
         console.log('bg', bg);
-        console.log('bg._getLoginData() ', bg._getLoginData());
-        console.log('bg._getLoginData().profile ', bg._getLoginData().profile);
+        console.log('bg.getLoginData ', bg.loginData);
+
 
         if (bg._getLoginData().profile) {
             var el = bg._getLoginData();

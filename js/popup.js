@@ -82,6 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var el = bg._getLoginData();
             user.innerText = '';
             userLink.removeAttribute('class');
+            userLink.innerText = '';
             userLinkName.innerText = el.profile.full_name;
             userLink.appendChild(userLinkImg);
             userLink.appendChild(userLinkName);
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/profile';
                 safari.self.hide();
             });
-
+            userCash.style.display = 'flex';
             userCashValue.innerText = el.profile.balance + ' руб.';
             userCash.appendChild(userCashImg);
             userCash.appendChild(userCashValue);
@@ -160,6 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var rightUrl = bg.getClearUrl(currentTabUrl);
 console.log('rightUrl ', rightUrl);
 console.log('currentTabUrl ', currentTabUrl);
+
         /*вид кнопки в зависимости от статуса залогирован-незалогирован*/
         if (bg._getLoginData().profile) {
             partnerLink.innerHTML = '<span>Активировать</span>';
@@ -439,7 +441,7 @@ console.log('currentTabUrl ', currentTabUrl);
 
     safari.application.addEventListener('popover', function(e){
         var tab = safari.application.activeBrowserWindow.activeTab;
-
+        showUserData();
         bg.checkTimers(bg.getClearUrl(tab.url));//по окончании срока действия таймера кэшбэка, смена иконки и попапа будет производиться по клику на иконку
         renderMainCard(tab);
         renderRecommended();
@@ -447,15 +449,10 @@ console.log('currentTabUrl ', currentTabUrl);
         // console.log('e ', e);
     });
 
-    // safari.tabs.query({
-    //     active: true,
-    //     currentWindow: true
-    // }, function (tabs) {
-    //     var tab = tabs[0];
-    //     bg.checkTimers(bg.getClearUrl(tab.url));//по окончании срока действия таймера кэшбэка, смена иконки и попапа будет производиться по клику на иконку
-    //     renderMainCard(tab);
-    //     renderRecommended();
-    //     renderLastVisited();
-    // });
 
 });
+
+safari.application.addEventListener("command", OpenPopUp, false);
+function OpenPopUp(event) {
+    var newTab = safari.application.openBrowserWindow().activeTab.url = safari.extension.baseURI + "your_pop_up.html";
+}

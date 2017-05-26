@@ -94,6 +94,7 @@ function getCookiesAuth(incMsg) {
     var  cookiesUrl = incMsg.target['url'];
     if(cookiesUrl !== undefined && (cookiesUrl.indexOf('clcorp.ru') !== -1)) {
         authorizationStatus = cookiesToObj(cookiesValue)['auth'];
+        console.log('authorizationStatus ', authorizationStatus);
         uploadServerData();
     }//берем из кук индекс авторизации
 
@@ -162,7 +163,7 @@ function markCheckPartner() {
  * Иконка кэшбэка
  */
 function markCashbackActive() {
-    var iconUri = safari.extension.baseURI + 'img/cashback.png';
+    var iconUri = safari.extension.baseURI + 'img/search.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -242,7 +243,7 @@ function partnersDataRequest(resolve, reject) {
             for (var i = 0; i < response.length; i++) {
                 checkSafeResponse(response[i]);
             }
-            console.log('partnersDataRequest!');
+
             resolve(response);
         } else {
             reject();
@@ -277,6 +278,7 @@ function uploadServerData() {
                 function (res) {
                     arrayToObj(res, partnersDataAdmitad);
                     partnersData = partnersDataAdmitad;
+                    console.log('partnersData 1',partnersData);
                 },
                 function () {
                     // console.info('Партнеры не загружены');
@@ -295,7 +297,7 @@ function uploadServerData() {
                 function (res) {
                     arrayToObj(res, partnersDataCustom);
                     partnersData = partnersDataCustom;
-                    // console.log('partnersData ', partnersData);
+                    console.log('partnersData 2', partnersData);
                 },
                 function () {
                     console.log('reject');
@@ -333,11 +335,13 @@ function updateServerData() {
                         if (parseInt(authorizationStatus) === 1) {
                             arrayToObj(res, partnersDataAdmitad);
                             partnersData = partnersDataAdmitad;
+                            console.log('partnersData 3',partnersData);
                         } else {
                             loginData = {};
                             timers = {};
                             arrayToObj(res, partnersDataCustom);
                             partnersData = partnersDataCustom;
+                            console.log('partnersData 4',partnersData);
                         }
 
         });
@@ -398,15 +402,18 @@ function checkModalMarkerAdded(partner) {
 /* Действия с табами */
 function clickTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    console.log('currentUrl:' ,currentUrl);
+    console.log('clickTab');
     changeIcon(currentUrl);//при клике сверяем актуальность иконки
     addPartnerToVisited(currentUrl);
-    console.log('loginData ',loginData);
+
 }
 
 function reloadTab() {
+    console.log('reloadTab');
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
     changeIcon(currentUrl);
+    uploadServerData(currentUrl);
+    console.log('loginData ',loginData);
 }
 
 

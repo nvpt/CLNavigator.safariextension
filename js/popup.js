@@ -173,6 +173,7 @@ console.log('currentTabUrl ', currentTabUrl);
         if (Object.keys(bg._getPartnersData()).length > 0) {//проверяем, подгрузился ли массив партнеров
             if ((bg._getPartnersData()[rightUrl]) && (rightUrl !== undefined)) {
                 var el = bg._getPartnersData()[rightUrl];
+                console.log('el ', el);
                 partner.style.display = 'flex';
                 partnerName.innerText = el.name;
                 partnerUrl.innerText = bg.getClearUrl(el.site_url);
@@ -234,7 +235,7 @@ console.log('currentTabUrl ', currentTabUrl);
             } else {
                 //если это не партнер, то карточку не отображаем
                 partnerLink.setAttribute('href', '');
-                // partner.style.display = 'none';
+                partner.style.display = 'none';
                 console.log('2222222');
             }
         }

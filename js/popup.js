@@ -443,6 +443,7 @@ console.log('currentTabUrl ', currentTabUrl);
     safari.application.addEventListener('popover', function(e){
         var tab = safari.application.activeBrowserWindow.activeTab;
         showUserData();
+        searchField.value='';
         bg.checkTimers(bg.getClearUrl(tab.url));//по окончании срока действия таймера кэшбэка, смена иконки и попапа будет производиться по клику на иконку
         renderMainCard(tab);
         renderRecommended();

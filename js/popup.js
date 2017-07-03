@@ -183,13 +183,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 partner.style.display = 'flex';
                 partnerLink.setAttribute('href', el.href);
 
-                partnerLink.addEventListener('click', function () {
-                    safari.application.activeBrowserWindow.openTab().url = el.href;
-                    safari.self.hide();
-                });
-
                 partnerLink.addEventListener('click', function (e) {
                     e.preventDefault();
+
+                  safari.application.activeBrowserWindow.openTab().url = el.href;
+                  safari.self.hide();
+
                     if (bg._getLoginData().profile) { //после активации через попап, модалка снова должна отобразиться с инфой об активрованном кэшбэке
                         var modalMarkers = bg._getModalMarkers();
                         for (var i = 0; i < modalMarkers.length; i++) {
@@ -258,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             link.addEventListener('click', function () {
                 safari.application.activeBrowserWindow.openTab().url = el.site_url;
+                console.log("Переход по ссылке");
                 safari.self.hide();
             });
 

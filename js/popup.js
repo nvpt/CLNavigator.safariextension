@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function () {
             userLink.setAttribute('href', 'https://clcorp.ru/profile');
             userLink.classList.add('user__login-link', 'user__login-link_logged');
 
-            userLink.addEventListener('click', function(){
+            userLink.addEventListener('click', function () {
                 safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/profile';
                 safari.self.hide();
             });
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
             userLink.removeAttribute('class');
             userLink.innerText = "Войти";
             userLink.setAttribute('href', 'https://clcorp.ru/');
-            userLink.addEventListener('click', function(){
+            userLink.addEventListener('click', function () {
                 safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/';
                 safari.self.hide();
             });
@@ -159,8 +159,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var currentTabUrl = tab.url;
         var rightUrl = bg.getClearUrl(currentTabUrl);
-console.log('rightUrl ', rightUrl);
-console.log('currentTabUrl ', currentTabUrl);
+        console.log('rightUrl ', rightUrl);
+        console.log('currentTabUrl ', currentTabUrl);
 
         /*вид кнопки в зависимости от статуса залогирован-незалогирован*/
         if (bg._getLoginData().profile) {
@@ -183,7 +183,7 @@ console.log('currentTabUrl ', currentTabUrl);
                 partner.style.display = 'flex';
                 partnerLink.setAttribute('href', el.href);
 
-                partnerLink.addEventListener('click', function(){
+                partnerLink.addEventListener('click', function () {
                     safari.application.activeBrowserWindow.openTab().url = el.href;
                     safari.self.hide();
                 });
@@ -256,7 +256,7 @@ console.log('currentTabUrl ', currentTabUrl);
             link.classList.add('list-item__link');
             link.setAttribute('href', el.site_url);
 
-            link.addEventListener('click', function(){
+            link.addEventListener('click', function () {
                 safari.application.activeBrowserWindow.openTab().url = el.site_url;
                 safari.self.hide();
             });
@@ -329,7 +329,8 @@ console.log('currentTabUrl ', currentTabUrl);
      */
     function renderLastVisited() {
         var keys = Object.keys(bg._getPartnersVisited());
-
+        console.log('Посещенные партнеры ', bg._getPartnersVisited());
+        console.log('количество посещенных ', keys);
         for (var i = keys.length - 1; i >= 0; i--) {
             listItemRender(bg._getPartnersVisited()[keys[i]], last);
         }
@@ -440,10 +441,10 @@ console.log('currentTabUrl ', currentTabUrl);
      */
     console.log('tab ', safari.application.activeBrowserWindow.activeTab);
 
-    safari.application.addEventListener('popover', function(e){
+    safari.application.addEventListener('popover', function (e) {
         var tab = safari.application.activeBrowserWindow.activeTab;
         showUserData();
-        searchField.value='';
+        searchField.value = '';
         bg.checkTimers(bg.getClearUrl(tab.url));//по окончании срока действия таймера кэшбэка, смена иконки и попапа будет производиться по клику на иконку
         renderMainCard(tab);
         renderRecommended();

@@ -3,8 +3,9 @@
  */
 console.log('загрузка content');
 
+var SHOW_MODAL_TIME = 5000;
 var HIDE_MODAL_TIME = 15000;//15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
-var HIDE_CASHBACK_TIME = 7000;//7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
+var HIDE_CASHBACK_TIME = 12000;//7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 
 
 // if(currentUrl.indexOf('clcorp.ru') !== -1){
@@ -129,7 +130,10 @@ window.addEventListener("message", function (port) {
 
 
             if (!document.querySelector("#modalCL2017")) {//пресекаем дублирование добавления модалки
+
+              setTimeout(function(){
                 document.body.appendChild(ANCHOR);
+              }, SHOW_MODAL_TIME);
 
                 close.addEventListener('click', function () {
                     ANCHOR.style.display = 'none';

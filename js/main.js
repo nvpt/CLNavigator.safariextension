@@ -17,15 +17,19 @@ var mainTest = 'mainTest';
  */
 
 function getClearUrl(val) {
-    if (val) {
-        var val = val.match(/\/.*?([а-яА-ЯёЁa-zA-Z0-9\-_]+\.|)(([а-яА-ЯёЁa-zA-Z0-9\-_\.]+\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]+)(|\.[а-яА-ЯёЁa-zA-Z0-9\-_\.]))\//);
 
-        if ((val) && (val[2])) {
-            return punycode.toUnicode((val[2]));
-        } else {
-            console.error('error');
-        }
-    }
+
+  if (/(.com\.br)\//.test(val)) {//регулярка для доменов типа ... .com.br/
+    val = val.match(/\/\/.*?(www\.|)(([\w\d_\-\.]+)\.(com\.br))\//)
+  } else {
+    val = val.match(/(.+\.)?(([а-яА-ЯёЁ\w\d_\-]+)\.([а-яА-ЯёЁ\w\d_\-]+))\//);
+  }
+
+  if ((val) && (val[2])) {
+    return punycode.toUnicode((val[2]));
+  } else {
+    // console.error(e);
+  }
 }
 
 

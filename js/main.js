@@ -29,6 +29,7 @@ function getClearUrl(val) {
     return punycode.toUnicode((val[2]));
   } else {
     // console.error(e);
+      return false;
   }
 }
 

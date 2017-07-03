@@ -183,11 +183,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 partner.style.display = 'flex';
                 partnerLink.setAttribute('href', el.href);
 
-                partnerLink.addEventListener('click', function (e) {
+                function eventOnCardBtn (e) {
                     e.preventDefault();
 
-                  safari.application.activeBrowserWindow.openTab().url = el.href;
-                  safari.self.hide();
+                    console.log('Клик по активировать');
+
+                    safari.application.activeBrowserWindow.openTab().url = el.href;
+                    safari.self.hide();
 
                     if (bg._getLoginData().profile) { //после активации через попап, модалка снова должна отобразиться с инфой об активрованном кэшбэке
                         var modalMarkers = bg._getModalMarkers();
@@ -198,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                         bg._setModalMarkers(modalMarkers);
                     }
-                    safari.tabs.update(tab.id, {url: el.href});
+                    // safari.tabs.update(tab.id, {url: el.href});//TODO ???
                     if (rightUrl == bg._getAliClear()) {
                         bg._setModalShowed(true);
                         if (bg._getRemodalShowed()) {
@@ -215,7 +217,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     partner.style.display = 'none';
                     window.close();
-                });
+                }
+
+                partnerLink.removeEventListener('click', eventOnCardBtn, false);
+                partnerLink.addEventListener('click', eventOnCardBtn, false);
 
                 // также, без привязки к клику по кнопке проверяем активен ли таймер кэшбэка
                 if ((bg._getLoginData()) && (bg._getTimers()[rightUrl])) {
@@ -242,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /**
-     * Паттерн создания элемента списка партнеров
+     * Шаблон создания элемента списка партнеров
      * @param el
      * @param target
      */
@@ -257,7 +262,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             link.addEventListener('click', function () {
                 safari.application.activeBrowserWindow.openTab().url = el.site_url;
-                console.log("Переход по ссылке");
                 safari.self.hide();
             });
 
@@ -331,8 +335,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function renderLastVisited() {
         last.innerText='';
         var keys = Object.keys(bg._getPartnersVisited());
-        console.log('Посещенные партнеры ', bg._getPartnersVisited());
-        console.log('количество посещенных ', keys);
         for (var i = keys.length - 1; i >= 0; i--) {
             listItemRender(bg._getPartnersVisited()[keys[i]], last);
         }

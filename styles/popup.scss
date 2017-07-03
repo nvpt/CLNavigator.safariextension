@@ -161,10 +161,11 @@
 		.cashback-active {
 			display: none;
 			position: absolute;
+			top: 0;
 			width: 100%;
 			height: 100%;
 			background: #2CC79D;
-			margin-top: 8px;
+			margin-top: 0;
 			align-items: center;
 			justify-content: center;
 			color: #fff;

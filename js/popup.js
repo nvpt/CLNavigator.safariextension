@@ -4,9 +4,9 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 
-    console.log('application ', safari.application);
-    console.log('extension ', safari.extension);
-    console.log('self ', safari.self);
+    // console.log('application ', safari.application);
+    // console.log('extension ', safari.extension);
+    // console.log('self ', safari.self);
 
 
     // console.log('extension.globalPage partnersData ', safari.extension.globalPage.contentWindow._getAliClear());
@@ -74,8 +74,8 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function showUserData() {
 
-        console.log('bg', bg);
-        console.log('bg.getLoginData ', bg.loginData);
+        // console.log('bg', bg);
+        // console.log('bg.getLoginData ', bg.loginData);
 
 
         if (bg._getLoginData().profile) {
@@ -159,8 +159,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var currentTabUrl = tab.url;
         var rightUrl = bg.getClearUrl(currentTabUrl);
-        console.log('rightUrl ', rightUrl);
-        console.log('currentTabUrl ', currentTabUrl);
+        // console.log('rightUrl ', rightUrl);
+        // console.log('currentTabUrl ', currentTabUrl);
 
         /*вид кнопки в зависимости от статуса залогирован-незалогирован*/
         if (bg._getLoginData().profile) {
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (Object.keys(bg._getPartnersData()).length > 0) {//проверяем, подгрузился ли массив партнеров
             if ((bg._getPartnersData()[rightUrl]) && (rightUrl !== undefined)) {
                 var el = bg._getPartnersData()[rightUrl];
-                console.log('el ', el);
+                // console.log('el ', el);
                 partner.style.display = 'flex';
                 partnerName.innerText = el.name;
                 partnerUrl.innerText = bg.getClearUrl(el.site_url);
@@ -231,12 +231,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 closePartner.addEventListener('click', function () {
                     partner.style.display = 'none';
                 });
-                console.log('1111111');
+                // console.log('1111111');
             } else {
                 //если это не партнер, то карточку не отображаем
                 partnerLink.setAttribute('href', '');
                 partner.style.display = 'none';
-                console.log('2222222');
+                // console.log('2222222');
             }
         }
     }
@@ -313,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
      * partners - прописаны в отдельном файле. Подключаются в html файле
      */
     function renderRecommended() {
+        recommended.innerText='';
         for (var i = 0; i < partners.length; i++) {
             listItemRender(partners[i], recommended);
         }
@@ -328,6 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
      * Генерится динамически, обновляясь при каждом посещени новой страницы очередного партнера
      */
     function renderLastVisited() {
+        last.innerText='';
         var keys = Object.keys(bg._getPartnersVisited());
         console.log('Посещенные партнеры ', bg._getPartnersVisited());
         console.log('количество посещенных ', keys);
@@ -439,7 +441,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /**
      * В момент клика выясняем урл активной вкладки и работаем с ним
      */
-    console.log('tab ', safari.application.activeBrowserWindow.activeTab);
+    // console.log('tab ', safari.application.activeBrowserWindow.activeTab);
 
     safari.application.addEventListener('popover', function (e) {
         var tab = safari.application.activeBrowserWindow.activeTab;

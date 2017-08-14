@@ -7,8 +7,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // console.log('application ', safari.application);
     // console.log('extension ', safari.extension);
     // console.log('self ', safari.self);
-
-
     // console.log('extension.globalPage partnersData ', safari.extension.globalPage.contentWindow._getAliClear());
 
     // safari.runtime.getBackgroundPage(function (bg) {
@@ -77,8 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // console.log('bg', bg);
         // console.log('bg.getLoginData ', bg.loginData);
 
-
-        if (bg._getLoginData().profile) {
+        if ((bg._getLoginData()) && (bg._getLoginData().profile)) {
             var el = bg._getLoginData();
             user.innerText = '';
             userLink.removeAttribute('class');
@@ -88,11 +85,12 @@ document.addEventListener('DOMContentLoaded', function () {
             userLink.appendChild(userLinkName);
             userLink.setAttribute('href', 'https://clcorp.ru/profile');
             userLink.classList.add('user__login-link', 'user__login-link_logged');
-
-            userLink.addEventListener('click', function () {
+            var userInLink = function () {
                 safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/profile';
                 safari.self.hide();
-            });
+            };
+            userLink.removeEventListener('click', userInLink);
+            userLink.addEventListener('click', userInLink);
             userCash.style.display = 'flex';
             userCashValue.innerText = el.profile.balance + ' руб.';
             userCash.appendChild(userCashImg);
@@ -107,10 +105,12 @@ document.addEventListener('DOMContentLoaded', function () {
             userLink.removeAttribute('class');
             userLink.innerText = "Войти";
             userLink.setAttribute('href', 'https://clcorp.ru/');
-            userLink.addEventListener('click', function () {
+            var userOutLink = function () {
                 safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/';
                 safari.self.hide();
-            });
+            };
+            userLink.removeEventListener('click', userOutLink);
+            userLink.addEventListener('click', userOutLink);
             userLink.classList.add('user__login-link');
             user.appendChild(userLink);
             userCash.style.display = 'none';
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // console.log('currentTabUrl ', currentTabUrl);
 
         /*вид кнопки в зависимости от статуса залогирован-незалогирован*/
-        if (bg._getLoginData().profile) {
+        if ((bg._getLoginData()) && (bg._getLoginData().profile)) {
             partnerLink.innerHTML = '<span>Активировать</span>';
         } else {
             partnerLink.innerHTML = '<span>Войти для активации</span>';
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     console.log('Клик по активировать');
 
-                    safari.application.activeBrowserWindow.openTab().url = el.href;
+                    // safari.application.activeBrowserWindow.openTab().url = el.href;
                     safari.self.hide();
 
                     if (bg._getLoginData().profile) { //после активации через попап, модалка снова должна отобразиться с инфой об активрованном кэшбэке

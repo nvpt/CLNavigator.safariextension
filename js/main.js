@@ -17,14 +17,14 @@ var mainTest = 'mainTest';
  */
 
 function getClearUrl(val) {
+    if(val) { //если урл не указан, пропускаем
 
-
-  if (/(.com\.br)\//.test(val)) {//регулярка для доменов типа ... .com.br/
-    val = val.match(/\/\/.*?(www\.|)(([\w\d_\-\.]+)\.(com\.br))\//)
-  } else {
-    val = val.match(/(.+\.)?(([а-яА-ЯёЁ\w\d_\-]+)\.([а-яА-ЯёЁ\w\d_\-]+))\//);
-  }
-
+        if (/(.com\.br)\//.test(val)) {//регулярка для доменов типа ... .com.br/
+            val = val.match(/\/\/.*?(www\.|)(([\w\d_\-\.]+)\.(com\.br))\//)
+        } else {
+            val = val.match(/(.+\.)?(([а-яА-ЯёЁ\w\d_\-]+)\.([а-яА-ЯёЁ\w\d_\-]+))\//);
+        }
+    }
   if ((val) && (val[2])) {
     return punycode.toUnicode((val[2]));
   } else {

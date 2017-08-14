@@ -88,7 +88,7 @@ function cookiesToObj(arr) {
   return obj;
 }
 
-function getCookiesAuth(incMsg) {
+function getCookiesAuth(incMsg) {//TODO настроить проверку р-куки
   var cookies = incMsg;
   var cookiesValue = incMsg.message;
   var cookiesUrl = incMsg.target['url'];
@@ -104,7 +104,7 @@ function getCookiesAuth(incMsg) {
 safari.application.addEventListener("message", getCookiesAuth, false);
 
 
-function _getCookies(url, name, cb) {//for aliexpress
+function _getCookies(url, name, cb) {//for aliexpress//TODO проверить корректность работы
   safari.cookies.get({
     url: url,
     name: name
@@ -197,6 +197,9 @@ function changeIcon(url) {
 function arrayToObj(arr, obj) {
   for (var i = 0; i < arr.length; i++) {
     var partner = arr[i];
+      // if(!partner.site_url){//проверка на корректность указанного урла
+      //     console.log('partner no url ', partner);
+      // }
     obj[getClearUrl(partner.site_url)] = partner;
   }
 }

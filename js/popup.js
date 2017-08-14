@@ -12,39 +12,12 @@ document.addEventListener('DOMContentLoaded', function () {
     // safari.runtime.getBackgroundPage(function (bg) {
     var bg = safari.extension.globalPage.contentWindow;
 
-    var partner = document.querySelector('.partner');
-    var partnerName = document.querySelector('.partner__name');
-    var partnerUrl = document.querySelector('.partner__url');
-    var partnerLogo = document.querySelector('.partner__logo');
-    var partnerCashback = document.querySelector('.partner__cashback > span');
-    var partnerDescription = document.querySelector('.partner__description');
-    var partnerLink = document.querySelector('.partner__link');
+
     //табы
     var tabsButtons = document.querySelectorAll('.tabs__button');
     var tabsBodies = document.querySelectorAll('.tabs__body');
-    //юзер
-    var user = document.querySelector('.user');
-    var userLink = document.createElement('a');
-    userLink.setAttribute('target', '_blank');
 
-    var userLinkImg = document.createElement('img');
-    userLinkImg.setAttribute('src', 'img/user_24x24.png');
-    userLinkImg.classList.add('user__icon');
 
-    var userLinkName = document.createElement('span');
-    userLinkImg.classList.add('user__name');
-
-    var userCash = document.createElement('span');
-    userCash.classList.add('user__cash');
-
-    var userCashImg = document.createElement('img');
-    userCashImg.setAttribute('src', 'img/balance.png');
-    userCashImg.classList.add('user__cash-icon');
-
-    var userCashValue = document.createElement('span');
-    userCashValue.classList.add('user__cash-value');
-
-    var cashbackActive = document.querySelector('.cashback-active');
     //список партнеров
     var partnerThumb = document.querySelectorAll('.list-item');
     var recommendedWrap = document.querySelector('.search-list__content_recommended');
@@ -72,8 +45,28 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function showUserData() {
 
-        // console.log('bg', bg);
-        // console.log('bg.getLoginData ', bg.loginData);
+        //юзер
+        var user = document.querySelector('.user');
+        var userLink = document.createElement('a');
+        userLink.setAttribute('target', '_blank');
+
+        var userLinkImg = document.createElement('img');
+        userLinkImg.setAttribute('src', 'img/user_24x24.png');
+        userLinkImg.classList.add('user__icon');
+
+        var userLinkName = document.createElement('span');
+        userLinkImg.classList.add('user__name');
+
+        var userCash = document.createElement('span');
+        userCash.classList.add('user__cash');
+
+        var userCashImg = document.createElement('img');
+        userCashImg.setAttribute('src', 'img/balance.png');
+        userCashImg.classList.add('user__cash-icon');
+
+        var userCashValue = document.createElement('span');
+        userCashValue.classList.add('user__cash-value');
+
 
         if ((bg._getLoginData()) && (bg._getLoginData().profile)) {
             var el = bg._getLoginData();
@@ -85,12 +78,11 @@ document.addEventListener('DOMContentLoaded', function () {
             userLink.appendChild(userLinkName);
             userLink.setAttribute('href', 'https://clcorp.ru/profile');
             userLink.classList.add('user__login-link', 'user__login-link_logged');
-            var userInLink = function () {
+
+            userLink.addEventListener('click', function () {
                 safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/profile';
                 safari.self.hide();
-            };
-            userLink.removeEventListener('click', userInLink);
-            userLink.addEventListener('click', userInLink);
+            });
             userCash.style.display = 'flex';
             userCashValue.innerText = el.profile.balance + ' руб.';
             userCash.appendChild(userCashImg);
@@ -99,18 +91,16 @@ document.addEventListener('DOMContentLoaded', function () {
             user.appendChild(userLink);
             user.appendChild(userCash);
 
-            bg._setLoginData(el);//запросив данные с сервака и отобразив их в попапе, также отправляем их в bg
+            // bg._setLoginData(el);//запросив данные с сервака и отобразив их в попапе, также отправляем их в bg//TODO ???
         } else {
             user.innerText = '';
             userLink.removeAttribute('class');
             userLink.innerText = "Войти";
             userLink.setAttribute('href', 'https://clcorp.ru/');
-            var userOutLink = function () {
+            userLink.addEventListener('click', function () {
                 safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/';
                 safari.self.hide();
-            };
-            userLink.removeEventListener('click', userOutLink);
-            userLink.addEventListener('click', userOutLink);
+            });
             userLink.classList.add('user__login-link');
             user.appendChild(userLink);
             userCash.style.display = 'none';
@@ -118,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    showUserData();
+    // showUserData();
 
     /**
      * Переключение табов внутри окна попапа
@@ -159,8 +149,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var currentTabUrl = tab.url;
         var rightUrl = bg.getClearUrl(currentTabUrl);
-        // console.log('rightUrl ', rightUrl);
-        // console.log('currentTabUrl ', currentTabUrl);
+
+        var partner = document.querySelector('.partner');
+        var partnerName = document.querySelector('.partner__name');
+        var partnerUrl = document.querySelector('.partner__url');
+        var partnerLogo = document.querySelector('.partner__logo');
+        var partnerCashback = document.querySelector('.partner__cashback > span');
+        var partnerDescription = document.querySelector('.partner__description');
+
+        //для предотвращения дублирования событий на обработчике кликов, необходимо генерить элемент с обработчиком внутри это ункции
+        var partnerLinkWrap = document.querySelector('.button-cl__wrapper');
+        partnerLinkWrap.innerText='';
+        var partnerLink = document.createElement('a');
+        partnerLink.classList.add('button-cl', 'button-cl_pink', 'partner__link', 'button-cl_glass');
+        partnerLinkWrap.appendChild(partnerLink);
+
+        var cashbackActive = document.querySelector('.cashback-active');
+
 
         /*вид кнопки в зависимости от статуса залогирован-незалогирован*/
         if ((bg._getLoginData()) && (bg._getLoginData().profile)) {
@@ -183,12 +188,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 partner.style.display = 'flex';
                 partnerLink.setAttribute('href', el.href);
 
-                function eventOnCardBtn (e) {
-                    e.preventDefault();
 
-                    console.log('Клик по активировать');
+                function eventOnCardBtn () {
 
-                    // safari.application.activeBrowserWindow.openTab().url = el.href;
+                    // safari.application.activeBrowserWindow.openTab().url = el.href;//раскомментить, если надо target _blank
                     safari.self.hide();
 
                     if (bg._getLoginData().profile) { //после активации через попап, модалка снова должна отобразиться с инфой об активрованном кэшбэке
@@ -200,7 +203,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                         bg._setModalMarkers(modalMarkers);
                     }
-                    // safari.tabs.update(tab.id, {url: el.href});//TODO ???
+
                     if (rightUrl == bg._getAliClear()) {
                         bg._setModalShowed(true);
                         if (bg._getRemodalShowed()) {
@@ -215,12 +218,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             bg.markCashbackActive();//иконка расширения информирует об активном кэшбэке
                         }, 1200);
                     }
-                    partner.style.display = 'none';
-                    window.close();
                 }
 
-                partnerLink.removeEventListener('click', eventOnCardBtn, false);
                 partnerLink.addEventListener('click', eventOnCardBtn, false);
+
 
                 // также, без привязки к клику по кнопке проверяем активен ли таймер кэшбэка
                 if ((bg._getLoginData()) && (bg._getTimers()[rightUrl])) {
@@ -235,12 +236,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 closePartner.addEventListener('click', function () {
                     partner.style.display = 'none';
                 });
-                // console.log('1111111');
+
             } else {
                 //если это не партнер, то карточку не отображаем
                 partnerLink.setAttribute('href', '');
                 partner.style.display = 'none';
-                // console.log('2222222');
             }
         }
     }

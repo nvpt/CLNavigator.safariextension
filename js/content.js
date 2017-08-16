@@ -286,8 +286,8 @@ window.addEventListener("message", function (port) {
 
                 if (!remodalShowed) {//второе условие отображения ремодалки - она до этого не отображалась
 
-                    document.addEventListener('DOMContentLoaded', function () {
-                        // window.addEventListener('load', function () {
+                    // document.addEventListener('DOMContentLoaded', function () { //не для сафари
+                        window.addEventListener('load', function () {//для сафари
                         if (document.querySelector('#modalCL2017')) {//на вский случай прячем основную модалку
                             document.querySelector('#modalCL2017').style.display = 'none';
                         }

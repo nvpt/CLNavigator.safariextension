@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-safari.application.addEventListener("command", OpenPopUp, false);
-function OpenPopUp(event) {
-    var newTab = safari.application.openBrowserWindow().activeTab.url = safari.extension.baseURI + "your_pop_up.html";
-}
+// safari.application.addEventListener("command", OpenPopUp, false);
+// function OpenPopUp(event) {
+//     var newTab = safari.application.openBrowserWindow().activeTab.url = safari.extension.baseURI + "your_pop_up.html";
+// }

@@ -76,11 +76,11 @@ document.addEventListener('DOMContentLoaded', function () {
             userLinkName.innerText = el.profile.full_name;
             userLink.appendChild(userLinkImg);
             userLink.appendChild(userLinkName);
-            userLink.setAttribute('href', 'https://clcorp.ru/profile');
+            userLink.setAttribute('href', 'https://cl.world/profile');
             userLink.classList.add('user__login-link', 'user__login-link_logged');
 
             userLink.addEventListener('click', function () {
-                safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/profile';
+                safari.application.activeBrowserWindow.openTab().url = 'https://cl.world/profile';
                 safari.self.hide();
             });
             userCash.style.display = 'flex';
@@ -96,9 +96,9 @@ document.addEventListener('DOMContentLoaded', function () {
             user.innerText = '';
             userLink.removeAttribute('class');
             userLink.innerText = "Войти";
-            userLink.setAttribute('href', 'https://clcorp.ru/');
+            userLink.setAttribute('href', 'https://cl.world/');
             userLink.addEventListener('click', function () {
-                safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/';
+                safari.application.activeBrowserWindow.openTab().url = 'https://cl.world/';
                 safari.self.hide();
             });
             userLink.classList.add('user__login-link');
@@ -393,7 +393,7 @@ document.addEventListener('DOMContentLoaded', function () {
      * Генерится динамически
      */
     function searchRequest(name, resolve, reject) {
-        var url = 'https://clcorp.ru/api/v2/cases/index?&name=' + name + '&show=1&non_strict=1';
+        var url = 'https://cl.world/api/v2/cases/index?&name=' + name + '&show=1&non_strict=1';
         var req = new XMLHttpRequest();
         req.open('GET', url);
         req.send();

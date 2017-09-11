@@ -8,7 +8,7 @@ var HIDE_MODAL_TIME = 5000;//15000//15000 = 20сек. Время скрытия 
 var HIDE_CASHBACK_TIME = 12000;//7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 
 
-// if(currentUrl.indexOf('clcorp.ru') !== -1){
+// if(currentUrl.indexOf('cl.world') !== -1){
 //     console.log('!!!checkAuthCookie(currentUrl) ', checkAuthCookie(currentUrl));
 //     console.log('authorizationStatus content 1', authorizationStatus);
 //    var authStatusContent = checkAuthCookie(currentUrl);
@@ -64,7 +64,7 @@ window.addEventListener("message", function (port) {
             clLogo.classList.add('cl-logo');
 
             clLogoImg.classList.add('cl-logo__img');
-            clLogoImg.setAttribute('src', 'https://clcorp.ru/images/extenion/logo.png');
+            clLogoImg.setAttribute('src', 'https://cl.world/images/extenion/logo.png');
 
             close.classList.add('cl-close');
 
@@ -214,7 +214,7 @@ window.addEventListener("message", function (port) {
 
                 clLogoImg = document.createElement('img');
                 clLogoImg.classList.add('cl-logo__img');
-                clLogoImg.setAttribute('src', 'https://clcorp.ru/images/extenion/logo.png');
+                clLogoImg.setAttribute('src', 'https://cl.world/images/extenion/logo.png');
 
                 close = document.createElement('div');
                 close.classList.add('cl-close');

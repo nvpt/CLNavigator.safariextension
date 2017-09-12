@@ -548,3 +548,24 @@ function test(){
 }
 
 test();
+
+
+
+// function tempGetData() {
+
+
+partnersDataRequest(
+    function (res) {
+        arrayToObj(res, partnersDataAdmitad);
+        partnersData = partnersDataAdmitad;
+        console.log('partnersData 1', partnersData);
+    },
+    function () {
+        console.info('Партнеры не загружены');
+    }
+);
+// }
+
+// tempGetData();
+console.log('partnersData 2', partnersData);
+// });

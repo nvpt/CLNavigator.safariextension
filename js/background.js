@@ -73,8 +73,8 @@ function _getPartnersVisited() {
 }
 
 //Куки
-var cookiesMain = document.cookie.split(';');//не удалять этот блок. работает  в сторону браузера. С ним можем отслеживать куки в расширении
-if (safari.self.tab) {//для отработки в страницах браузера. В background не сработает
+var cookiesMain = document.cookie.split(';');//не удалять этот блок. работает  из браузера забирая куки. С ним можем отслеживать куки в расширении
+if (safari.self.tab) {
     safari.self.tab.dispatchMessage("setCookies", cookiesMain);
     // console.log('browser cookiesMain ', cookiesMain);
 }
@@ -210,19 +210,21 @@ function arrayToObj(arr, obj) {
  * @param reject
  */
 function reqProfile(resolve, reject) {
-    var url = 'https://cl.world/api/v2/profile/menu';
-    var req = new XMLHttpRequest();
-    req.open('GET', url);
-    req.send();
-    req.addEventListener('load', function () {
-        if (req.status === 200) {
-            var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
-            resolve(response);
-        } else {
-            console.error('error authorization');
-            reject();
-        }
-    });
+    if(safari && safari.application) {
+        var url = 'https://cl.world/api/v2/profile/menu';
+        var req = new XMLHttpRequest();
+        req.open('GET', url);
+        req.send();
+        req.addEventListener('load', function () {
+            if (req.status === 200) {
+                var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
+                resolve(response);
+            } else {
+                console.error('error authorization');
+                reject();
+            }
+        });
+    }
 }
 
 
@@ -232,22 +234,24 @@ function reqProfile(resolve, reject) {
  * @param reject
  */
 function partnersDataRequest(resolve, reject) {
-    var url = 'https://cl.world/api/v2/cases/index?limit=10000&show=1&non_strict=0&lang=ru&r1=' + Math.random();
-    var req = new XMLHttpRequest();
-    req.open('GET', url);
-    req.send();
-    req.addEventListener('load', function () {
-        if (req.status === 200) {
-            var response = JSON.parse(req.responseText);
-            for (var i = 0; i < response.length; i++) {
-                checkSafeResponse(response[i]);
-            }
+    if(safari && safari.application) {
+        var url = 'https://cl.world/api/v2/cases/index?limit=10000&show=1&non_strict=0&lang=ru&r1=' + Math.random();
+        var req = new XMLHttpRequest();
+        req.open('GET', url);
+        req.send();
+        req.addEventListener('load', function () {
+            if (req.status === 200) {
+                var response = JSON.parse(req.responseText);
+                for (var i = 0; i < response.length; i++) {
+                    checkSafeResponse(response[i]);
+                }
 
-            resolve(response);
-        } else {
-            reject();
-        }
-    })
+                resolve(response);
+            } else {
+                reject();
+            }
+        })
+    }
 }
 
 
@@ -413,9 +417,78 @@ function clickTab() {
 
 }
 
+// function test(){
+//     // var currentUrl='111';
+//
+//     // if(safari && safari.application){
+//     //     currentUrl = safari.application.activeBrowserWindow.activeTab.url;
+//     //     var clearUrl = getClearUrl(currentUrl);
+//     //
+//     //     console.log('currentUrl ', currentUrl);
+//     //     console.log('clearUrl ', clearUrl);
+//     //     console.log('partnersData ', partnersData);
+//     //     console.log('partnersData[clearUrl] ', partnersData[clearUrl]);
+//     // } else {
+//     var currentUrl = window.location.href;
+//         var clearUrl = getClearUrl(currentUrl);
+//         console.log('currentUrl ', currentUrl);
+//         console.log('clearUrl ', clearUrl);
+//         console.log('partnersData ', partnersData);
+//         console.log('testData ', testData);
+//         console.log('partnersData[clearUrl] ', partnersData[clearUrl]);
+//     // }
+//
+//     var test1 = document.createElement('div');
+//     test1.classList.add('test1');
+//     test1.style.position = 'fixed';
+//     test1.style.display = 'flex';
+//     test1.style.alignItems = 'center';
+//     test1.style.justifyContent = 'center';
+//     test1.style.color= '#fff';
+//     test1.style.zIndex = 9999;
+//     test1.style.top = 0;
+//     test1.style.left = 0;
+//     test1.style.width = '300px';
+//     test1.style.height = '300px';
+//     test1.style.background = 'red';
+//     test1.innerText = testData.test;
+//
+//
+//     window.addEventListener('load', function () {
+//         console.log('document ' , document);
+//
+//         document.body.appendChild(test1);
+//     });
+//
+// }
+//
+// test();
+/////////
+
+
+// var initialVal=1;
+// var calculatedVal=0 ;
+//
+// function doBigCalc(theData) {
+//     safari.self.tab.dispatchMessage("calcThis",theData);
+// }
+//
+// function getAnswer(theMessageEvent) {
+//     if (theMessageEvent.name === "theAnswer") {
+//         calculatedVal=theMessageEvent.message;
+//         console.log(calculatedVal);
+//     }
+// }
+//
+//
+//     safari.self.addEventListener("message", getAnswer, false);
+//
+// doBigCalc(initialVal);
+
+/////////
 
 function reloadTab() {
-    // console.log('reloadTab');
+    console.log('reloadTab');
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
     changeIcon(currentUrl);
     uploadServerData(currentUrl);
@@ -425,7 +498,7 @@ function reloadTab() {
 
 
 /* Обработчики */
-if (safari.application) {
+if (safari && safari.application) {
     safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
     safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//клик по табу
 }
@@ -509,57 +582,6 @@ window.addEventListener("message", function (port) {
         }
     }
 );
-// });
-
-function test(){
-    var currentUrl='111';
-
-    if(safari && safari.application){
-        currentUrl = safari.application.activeBrowserWindow.activeTab.url;
-        console.log('currentUrl ', currentUrl);
-    } else {
-        currentUrl = window.location.href;
-    }
-
-    var test1 = document.createElement('div');
-    test1.classList.add('test1');
-    test1.style.position = 'fixed';
-    test1.style.zIndex = 9000;
-    test1.style.top = 0;
-    test1.style.left = 0;
-    test1.style.width = '300px';
-    test1.style.height = '300px';
-    test1.style.background = 'red';
-    test1.innerText = currentUrl;
-
-    window.addEventListener('load', function () {
-        console.log('document ' , document);
-
-        document.body.appendChild(test1);
-    });
-
-}
-
-test();
-
-
-// function tempGetData() {
-
-
-partnersDataRequest(
-    function (res) {
-        arrayToObj(res, partnersDataAdmitad);
-        partnersData = partnersDataAdmitad;
-        console.log('partnersData 1', partnersData);
-    },
-    function () {
-        console.info('Партнеры не загружены');
-    }
-);
-// }
-
-// tempGetData();
-console.log('partnersData 2', partnersData);
 // });
 
 

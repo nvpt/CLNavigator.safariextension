@@ -1,12 +1,12 @@
 @font-face {
   font-family: ProximaRegular;
-  src: url(/fonts/proxima/ProximaNova-Reg.otf); }
+  src: url(../fonts/proxima/ProximaNova-Reg.otf); }
 @font-face {
   font-family: ProximaBold;
-  src: url(/fonts/proxima/ProximaNova-Bold.otf); }
+  src: url(../fonts/proxima/ProximaNova-Bold.otf); }
 @font-face {
   font-family: ProximaLight;
-  src: url(/fonts/proxima/ProximaNova-Light.otf); }
+  src: url(../fonts/proxima/ProximaNova-Light.otf); }
 .modalCL2017 {
   position: fixed;
   top: 10px;
@@ -202,7 +202,8 @@
     max-height: 100%;
     align-items: center;
     justify-content: space-between;
-    width: 100px; }
+    width: 100px;
+    background-color: transparent !important; }
     .modalCL2017 .cl-logo__img {
       max-width: 100px;
       max-height: 50px; }

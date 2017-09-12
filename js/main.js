@@ -1,9 +1,7 @@
 /**
  * Created by CityLife on 14.04.17.
  */
-console.log('загрузка main');
-var mainTest = 'mainTest';
-
+// console.log('загрузка main');
 
 
 /**

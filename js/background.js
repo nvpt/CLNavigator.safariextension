@@ -1,7 +1,7 @@
 /**
  * Created by CityLife on 23.12.16.
  */
-console.log('загрузка bg');
+// console.log('загрузка bg');
 
 var CL_ALI_UID = 'yVF2rZRRj';           //идентификатор ситилайф в алиэкспресс
 var ALI_CLEAR = 'aliexpress.com';       //"чистый" урл Aliexpress.com
@@ -407,7 +407,7 @@ function checkModalMarkerAdded(partner) {
 /* Действия с табами */
 function clickTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    console.log('clickTab');
+    // console.log('clickTab');
     changeIcon(currentUrl);//при клике сверяем актуальность иконки
     addPartnerToVisited(currentUrl);
 
@@ -415,10 +415,10 @@ function clickTab() {
 
 
 function reloadTab() {
-    console.log('reloadTab');
+    // console.log('reloadTab');
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
     changeIcon(currentUrl);
-    uploadServerData();
+    uploadServerData(currentUrl);
     addPartnerToVisited(currentUrl);
     // test();
 }
@@ -516,16 +516,9 @@ function test(){
 
     if(safari && safari.application){
         currentUrl = safari.application.activeBrowserWindow.activeTab.url;
-        var clearUrl = getClearUrl(currentUrl);
-        console.log('start---------');
         console.log('currentUrl ', currentUrl);
-        console.log('clearUrl ', clearUrl);
-        console.log('partnersData[clearUrl] ', partnersData['moon-trade.ru']);
-        console.log('partnersData ', partnersData);
-        console.log('end---------');
     } else {
         currentUrl = window.location.href;
-        console.log(222);
     }
 
     var test1 = document.createElement('div');
@@ -550,7 +543,6 @@ function test(){
 test();
 
 
-
 // function tempGetData() {
 
 
@@ -569,3 +561,5 @@ partnersDataRequest(
 // tempGetData();
 console.log('partnersData 2', partnersData);
 // });
+
+

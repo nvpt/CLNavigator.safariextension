@@ -99,9 +99,9 @@ function getCookiesAuth(incMsg) {//TODO настроить проверку р-�
         currentCookie = cookiesToObj(cookiesValue)['auth'];
     }
 }
-
-safari.application.addEventListener("message", getCookiesAuth, false);//проверяем куку авторизации; выполняется при каждом обновлении страницы
-
+if(safari && safari.application) {
+    safari.application.addEventListener("message", getCookiesAuth, false);//проверяем куку авторизации; выполняется при каждом обновлении страницы
+}
 
 function _getCookies(url, name, cb) {//for aliexpress//TODO проверить корректность работы
     safari.cookies.get({
@@ -488,7 +488,7 @@ function clickTab() {
 /////////
 
 function reloadTab() {
-    console.log('reloadTab');
+    // console.log('reloadTab');
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
     changeIcon(currentUrl);
     uploadServerData(currentUrl);

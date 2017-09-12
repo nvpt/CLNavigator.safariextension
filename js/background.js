@@ -92,7 +92,7 @@ function cookiesToObj(arr) {
 
 function getCookiesAuth(incMsg) {//TODO настроить проверку р-куки
     var cookies = incMsg;
-    console.log('cookies ', cookies);
+    // console.log('cookies ', cookies);
     var cookiesValue = incMsg.message;
     var cookiesUrl = incMsg.target['url'];
     if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
@@ -420,6 +420,7 @@ function reloadTab() {
     changeIcon(currentUrl);
     uploadServerData();
     addPartnerToVisited(currentUrl);
+    test();
 }
 
 
@@ -510,3 +511,40 @@ window.addEventListener("message", function (port) {
 );
 // });
 
+function test(){
+    var currentUrl='111';
+
+    if(safari && safari.application){
+        currentUrl = safari.application.activeBrowserWindow.activeTab.url;
+        var clearUrl = getClearUrl(currentUrl);
+        console.log('start---------');
+        console.log('currentUrl ', currentUrl);
+        console.log('clearUrl ', clearUrl);
+        console.log('partnersData[clearUrl] ', partnersData['moon-trade.ru']);
+        console.log('partnersData ', partnersData);
+        console.log('end---------');
+    } else {
+        currentUrl = window.location.href;
+        console.log(222);
+    }
+
+    var test1 = document.createElement('div');
+    test1.classList.add('test1');
+    test1.style.position = 'fixed';
+    test1.style.zIndex = 9000;
+    test1.style.top = 0;
+    test1.style.left = 0;
+    test1.style.width = '300px';
+    test1.style.height = '300px';
+    test1.style.background = 'red';
+    test1.innerText = currentUrl;
+
+    window.addEventListener('load', function () {
+        console.log('document ' , document);
+
+        document.body.appendChild(test1);
+    });
+
+}
+
+test();

@@ -154,7 +154,7 @@ function markPartner() {
 function markCheckPartner() {
     var iconUri = safari.extension.baseURI + 'img/dynamic.png';
     safari.extension.toolbarItems[0].image = iconUri;
-    safari.extension.toolbarItems[0].label = '';
+    safari.extension.toolbarItems[0].label = '...';
 }
 
 /**
@@ -420,7 +420,7 @@ function reloadTab() {
     changeIcon(currentUrl);
     uploadServerData();
     addPartnerToVisited(currentUrl);
-    test();
+    // test();
 }
 
 

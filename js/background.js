@@ -584,4 +584,64 @@ window.addEventListener("message", function (port) {
 );
 // });
 
+console.log('rrr');
+var initialVal=1;
+var calculatedVal=0 ;
 
+
+function doBigCalc(theData) {
+    if (safari.self.tab) {
+        safari.self.tab.dispatchMessage("calcThis", theData);
+    }
+}
+
+function getAnswer(theMessageEvent) {
+    // console.log('theMessageEvent' , theMessageEvent);
+    if (theMessageEvent.name === "theAnswer") {
+        calculatedVal=theMessageEvent.message;
+
+        function test(){
+
+            var test1 = document.createElement('div');
+            test1.classList.add('test1');
+            test1.style.position = 'fixed';
+            test1.style.display = 'flex';
+            test1.style.alignItems = 'center';
+            test1.style.justifyContent = 'center';
+            test1.style.color= '#fff';
+            test1.style.zIndex = 9999;
+            test1.style.top = 0;
+            test1.style.left = 0;
+            test1.style.width = '300px';
+            test1.style.height = '300px';
+            test1.style.background = 'red';
+            test1.innerText = calculatedVal;
+
+
+            window.addEventListener('load', function () {
+                console.log('document ' , document);
+
+                document.body.appendChild(test1);
+            });
+
+        }
+
+        test();
+
+        console.log('bg ', calculatedVal);
+    }
+
+}
+doBigCalc(initialVal);
+
+if (safari.self.addEventListener) {
+    safari.self.addEventListener("message", getAnswer, false);
+
+
+
+console.log('rrr222');
+
+
+
+}
+///////

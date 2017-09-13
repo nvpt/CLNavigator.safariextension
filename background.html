@@ -11,6 +11,28 @@
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="js/content.js"></script>
 <script type="text/javascript" src="js/background.js"></script>
+<script type="text/javascript">
+
+
+
+
+    function bigCalc(startVal, event) {
+        // imagine hundreds of lines of code here...
+        var endVal = startVal + 2;
+        // return to sender
+        event.target.page.dispatchMessage("theAnswer", endVal);
+    }
+
+    function respondToMessage(theMessageEvent) {
+        if(theMessageEvent.name === "calcThis") {
+            var startVal=theMessageEvent.message;
+            bigCalc(startVal, theMessageEvent);
+        }
+    }
+
+    safari.application.addEventListener("message",respondToMessage,false);
+    //        console.log('safari.application ', safari.application);
+</script>
 </body>
 </html>
 

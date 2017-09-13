@@ -233,4 +233,30 @@
       line-height: 27px;
       z-index: 200; }
 
+.test1 {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 9999;
+  top: 0px;
+  right: 0px;
+  width: 300px;
+  height: 300px;
+  background-color: #0b27ff; }
+
+.test2 {
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  z-index: 9999;
+  top: 0px;
+  left: 0px;
+  width: 300px;
+  height: 300px;
+  background-color: #4bfff8; }
+
 /*# sourceMappingURL=modal.css.map */

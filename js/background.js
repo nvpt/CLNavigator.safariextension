@@ -1,7 +1,7 @@
 /**
  * Created by CityLife on 23.12.16.
  */
-// console.log('загрузка bg');
+console.log('загрузка bg');
 
 var CL_ALI_UID = 'yVF2rZRRj';           //идентификатор ситилайф в алиэкспресс
 var ALI_CLEAR = 'aliexpress.com';       //"чистый" урл Aliexpress.com
@@ -272,6 +272,7 @@ function resetAuthorisation() {
 function checkAuthorization() {
     reqProfile(function (resp) {
         loginData = resp;
+
     }, function () {
         resetAuthorisation();
     });
@@ -500,7 +501,7 @@ function reloadTab() {
 /* Обработчики */
 if (safari && safari.application) {
     safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
-    safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//клик по табу
+    safari.application.activeBrowserWindow.activeTab.addEventListener("navigate", reloadTab, true);//обновление
 }
 
 
@@ -584,64 +585,73 @@ window.addEventListener("message", function (port) {
 );
 // });
 
-console.log('rrr');
-var initialVal=1;
-var calculatedVal=0 ;
 
 
-function doBigCalc(theData) {
-    if (safari.self.tab) {
-        safari.self.tab.dispatchMessage("calcThis", theData);
-    }
-}
 
-function getAnswer(theMessageEvent) {
-    // console.log('theMessageEvent' , theMessageEvent);
-    if (theMessageEvent.name === "theAnswer") {
-        calculatedVal=theMessageEvent.message;
 
-        function test(){
+// function bridge(){
+//     var initialVal=1;
+//     var calculatedVal=0 ;
+//
+//     function doBigCalc(theData) {
+//         if(safari.self.tab) {
+//             safari.self.tab.dispatchMessage("calcThis", theData);
+//         }
+//     }
+//
+//     function getAnswer(theMessageEvent) {
+//         if (theMessageEvent.name === "theAnswer") {
+//             calculatedVal=theMessageEvent.message;
+//             console.log(calculatedVal);
+//         }
+//     }
+//
+//     if(safari.self.addEventListener) {
+//         safari.self.addEventListener("message", getAnswer, false);
+//     }
+//
+//     doBigCalc(initialVal);
+// }
+// bridge();
+
+
+
+
+
+
+
+/*Прием данных из bg. Прием в инъецированный скрипт*/
+function myHendler(port) {
+    var messageName = port.name;
+    var messageData = port.message;
+    console.log('port ', port);
+
+    if (messageName === "global-page-sender") {
+        console.log('messageData ', messageData);
+        function renderModal(){
 
             var test1 = document.createElement('div');
             test1.classList.add('test1');
-            test1.style.position = 'fixed';
-            test1.style.display = 'flex';
-            test1.style.alignItems = 'center';
-            test1.style.justifyContent = 'center';
-            test1.style.color= '#fff';
-            test1.style.zIndex = 9999;
-            test1.style.top = 0;
-            test1.style.left = 0;
-            test1.style.width = '300px';
-            test1.style.height = '300px';
-            test1.style.background = 'red';
-            test1.innerText = calculatedVal;
+
+            if(messageData.profile){
+            test1.innerText = messageData.profile.full_name;
+            } else {
+                test1.innerText = 'не загружено';
+            }
 
 
             window.addEventListener('load', function () {
-                console.log('document ' , document);
 
                 document.body.appendChild(test1);
             });
 
         }
-
-        test();
-
-        console.log('bg ', calculatedVal);
+        renderModal();
     }
-
 }
-doBigCalc(initialVal);
 
-if (safari.self.addEventListener) {
-    safari.self.addEventListener("message", getAnswer, false);
-
-
-
-console.log('rrr222');
-
-
-
+if(safari.self.addEventListener) {
+    safari.self.addEventListener("message", myHendler, false);
 }
-///////
+
+

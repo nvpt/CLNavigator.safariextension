@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="styles/modal.css">
-
 </head>
 <body>
 
@@ -13,26 +12,36 @@
 <script type="text/javascript" src="js/background.js"></script>
 <script type="text/javascript">
 
+//    function bigCalc(startVal, event) {
+//        // imagine hundreds of lines of code here...
+//        var endVal = startVal + 2;
+//        // return to sender
+//        event.target.page.dispatchMessage("theAnswer", endVal);
+//    }
+//
+//    function respondToMessage(theMessageEvent) {
+//        if(theMessageEvent.name === "calcThis") {
+//            var startVal=theMessageEvent.message;
+//            bigCalc(startVal, theMessageEvent);
+//        }
+//        console.log('document3 ' , document);
+//    }
+//
+//    safari.application.addEventListener("message",respondToMessage,false);
 
 
 
-    function bigCalc(startVal, event) {
-        // imagine hundreds of lines of code here...
-        var endVal = startVal + 2;
-        // return to sender
-        event.target.page.dispatchMessage("theAnswer", endVal);
-    }
+/*Передача данных в bg. Отправка в инъецированный скрипт*/
+function myGlobalSender(attr){
+//    console.log('attr ', attr);
+    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("global-page-sender", _getLoginData());
+}
+safari.application.addEventListener("message", myGlobalSender,false);
 
-    function respondToMessage(theMessageEvent) {
-        if(theMessageEvent.name === "calcThis") {
-            var startVal=theMessageEvent.message;
-            bigCalc(startVal, theMessageEvent);
-        }
-    }
 
-    safari.application.addEventListener("message",respondToMessage,false);
-    //        console.log('safari.application ', safari.application);
 </script>
+
+<div class="test2"></div>
 </body>
 </html>
 

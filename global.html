@@ -6,13 +6,12 @@
 </head>
 <body>
 
-<script type="text/javascript" src="js/punycode.js"></script>
-<script type="text/javascript" src="js/sanitize-html.js"></script>
-<script type="text/javascript" src="js/partners.js"></script>
-<script type="text/javascript" src="js/background.js"></script>
-<!--<script type="text/javascript" src="js/popup.js"></script>-->
-<script type="text/javascript" src="js/testing.js"></script>
-<script type="text/javascript" src="js/content.js"></script>
+<script type="text/javascript" src="js/punycode.js"></script><!--TODO позже перенести сюда инлай-->
+<script type="text/javascript" src="js/sanitize-html.js"></script><!--TODO позже перенести сюда инлай-->
+<script type="text/javascript" src="js/common.js"></script>
+
+<script type="text/javascript" src="js/background.js"></script><!--TODO позже перенести сюда инлай-->
+
 <script type="text/javascript">
     console.log('загрузка bg html');
 
@@ -35,25 +34,6 @@
 
 
 
-/*Передача данных в bg. Отправка в инъецированный скрипт*/
-//function myGlobalSender(attr){
-//    console.log('attr ', attr);
-//    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("global-page-sender", _getLoginData());
-//}
-//safari.application.addEventListener("message", myGlobalSender,false);
-
-//    console.log('loginData html bg ', loginData);
-//    console.log('_getLoginData() html bg ', _getLoginData());
-
-    /*Передача данных в web. Отправка в инъецированный скрипт*/
-    if(safari.application) {
-        function myGlobalSender(attr) {
-            console.log('attr ', attr);
-            safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("global-page-sender", _getLoginData());
-        }
-
-        safari.application.addEventListener("message", myGlobalSender, false);
-    }
 
 
 </script>

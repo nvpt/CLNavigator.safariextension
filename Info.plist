@@ -58,12 +58,12 @@
 			<key>End</key>
 			<array>
 				<string></string>
-				<string>js/popup.js</string>
-				<string>js/testing.js</string>
+				<string></string>
+				<string>js/test-content.js</string>
 			</array>
 			<key>Start</key>
 			<array>
-				<string>js/background.js</string>
+				<string>js/common.js</string>
 			</array>
 		</dict>
 		<key>Stylesheets</key>

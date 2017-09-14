@@ -392,22 +392,63 @@ window.addEventListener("message", function (port) {
 );
 // });
 
-/*Передача данных в bg. Отправка в инъецированный скрипт*/
-//function myGlobalSender(attr){
-//    console.log('attr ', attr);
-//    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("global-page-sender", _getLoginData());
-//}
-//safari.application.addEventListener("message", myGlobalSender,false);
 
-//    console.log('loginData html bg ', loginData);
-//    console.log('_getLoginData() html bg ', _getLoginData());
 
-/*Передача данных в web. Отправка в инъецированный скрипт*///TODO новый мост. Переместить в глобал
-if(safari.application) {
-    function myGlobalSender(attr) {
-        // console.log('attr ', attr);
-        safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("global-page-sender", _getLoginData());
+
+/*
+* Мост связи с веб
+* */
+function globalBridge(message) {
+    var messageName = message.name;
+    var messageData = message.message;
+
+    //прием
+    if (messageName === "send-url") {
+        reciveWebUrl(message)
     }
 
-    safari.application.addEventListener("message", myGlobalSender, false);
+    //отправка
+    sendLoginData(_getLoginData());
+
 }
+safari.application.addEventListener("message", globalBridge, false);
+
+
+/*
+* Привем данных из веба
+* */
+function reciveWebUrl(val) {
+    var name = val.name;
+    var data = val.message;
+
+    console.log('web url is ', data)
+}
+
+
+
+/**
+ * Отправка данных в веб
+ */
+function sendLoginData(data){
+    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("login-data-send", data);
+}
+
+
+
+////////
+
+// function bigCalc(startVal, event) {
+//     // imagine hundreds of lines of code here...
+//     var endVal = startVal + 2;
+//     // return to sender
+//     event.target.page.dispatchMessage("theAnswer", endVal);
+// }
+//
+// function respondToMessage(theMessageEvent) {
+//     if (theMessageEvent.name === "calcThis") {
+//         var startVal = theMessageEvent.message;
+//         bigCalc(startVal, theMessageEvent);
+//     }
+// }
+
+// safari.application.addEventListener("message", respondToMessage, false);

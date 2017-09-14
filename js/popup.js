@@ -1,6 +1,7 @@
 /**
  * Created by CityLife on 23.12.16.
  */
+console.log('загрузка popup');
 
 document.addEventListener('DOMContentLoaded', function () {
 
@@ -455,8 +456,10 @@ document.addEventListener('DOMContentLoaded', function () {
         renderLastVisited();
         // console.log('e ', e);
     });
-
-
+    if (bg._getLoginData()){
+    console.log('bg.loginData popup ', bg.loginData);
+    console.log('bg._getLoginData() popup ', bg._getLoginData());
+    }
 });
 
 // safari.application.addEventListener("command", OpenPopUp, false);

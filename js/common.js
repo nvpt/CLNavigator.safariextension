@@ -72,6 +72,126 @@ function _getPartnersVisited() {
     return partnersVisited;
 }
 
+/**
+ * Получение "чистого" урла открытой вкладки
+ * Срабатывает для обычных доменов типа http://xxx.xxxx.xx/sdfs/sdfs/...
+ * Из урла все домены четвертого и тп. уровня и хвост урла после первого слеша (вместе с ним).
+ *
+ * Учитываются кириллические домены
+ * @param val
+ * @returns {*}
+ */
+
+function getClearUrl(val) {
+    if(val) { //если урл не указан, пропускаем
+
+        if (/(.com\.br)\//.test(val)) {//регулярка для доменов типа ... .com.br/
+            val = val.match(/\/\/.*?(www\.|)(([\w\d_\-\.]+)\.(com\.br))\//)
+        } else {
+            val = val.match(/(.+\.)?(([а-яА-ЯёЁ\w\d_\-]+)\.([а-яА-ЯёЁ\w\d_\-]+))\//);
+        }
+    }
+    if ((val) && (val[2])) {
+        return punycode.toUnicode((val[2]));
+    } else {
+        // console.error(e);
+        return false;
+    }
+}
+
+
+/**
+ * There we use check for all parameters of all objects to safe response (for partnersData array)
+ * Проверяем ответ сервера согласно требованиям Opera
+ * @param obj
+ */
+function checkSafeResponse(obj) {
+
+    /**
+     * Safe-response Opera's method
+     * https://github.com/operatester/safeResponse/blob/1.1/safeResponse.js
+     * @type {{cleanDomString}}
+     */
+    safeResponse = function () {
+
+        var validAttrs = ["class", "id", "href", "style"];
+
+        this.__removeInvalidAttributes = function (target) {
+            var attrs = target.attributes, currentAttr;
+
+            for (var i = attrs.length - 1; i >= 0; i--) {
+                currentAttr = attrs[i].name;
+
+                if (attrs[i].specified && validAttrs.indexOf(currentAttr) === -1) {
+                    target.removeAttribute(currentAttr);
+                }
+
+                if (
+                    currentAttr === "href" &&
+                    /^(#|javascript[:])/gi.test(target.getAttribute("href"))
+                ) {
+                    target.parentNode.removeChild(target);
+                }
+            }
+        };
+
+        this.__cleanDomString = function (data) {
+            var parser = new DOMParser;
+            var tmpDom = parser.parseFromString(data, "text/html").body;
+
+            var list, current, currentHref;
+
+            list = tmpDom.querySelectorAll("script,img");
+
+            for (var i = list.length - 1; i >= 0; i--) {
+                current = list[i];
+                current.parentNode.removeChild(current);
+            }
+
+            list = tmpDom.getElementsByTagName("*");
+
+            for (i = list.length - 1; i >= 0; i--) {
+                parent.__removeInvalidAttributes(list[i]);
+            }
+
+            return tmpDom.innerHTML;
+        };
+
+        return {
+            cleanDomString: function (html) {
+                return parent.__cleanDomString(html)
+            }
+        }
+    }();
+
+
+    for (var key in obj) {//перебираем все свойства объекта
+        if ((obj.hasOwnProperty(key)) && obj[key]) {
+            if ((obj[key].length > 0) && (!isNaN(obj[key]))) {//если число и не пустое значение
+                obj[key] = parseFloat(obj[key]);
+            } else if (obj[key].constructor === Array) {//массив как объект, если не пустой
+                obj[key].length > 0 ? checkSafeResponse(obj[key]) : obj[key] = []
+            } else {
+                switch (typeof(obj[key])) {
+                    case 'string'://строки прогоняем через saferesponce
+                        obj[key] = safeResponse.cleanDomString(obj[key]);
+                        break;
+                    case 'number'://доп. проверка на число
+                        obj[key] = parseFloat(obj[key]);
+                        break;
+                    case 'object'://если вложенный объект. то рекурсивно проверяем
+                        checkSafeResponse(obj[key]);
+                        break;
+                    default:
+                        obj[key] = safeResponse.cleanDomString(obj[key]);
+                        break;
+                }
+            }
+        }
+    }
+}
+
+
 //Куки
 var cookiesMain = document.cookie.split(';');//не удалять этот блок. работает  из браузера забирая куки. С ним можем отслеживать куки в расширении
 if (safari.self.tab) {
@@ -418,75 +538,6 @@ function clickTab() {
 
 }
 
-// function test(){
-//     // var currentUrl='111';
-//
-//     // if(safari && safari.application){
-//     //     currentUrl = safari.application.activeBrowserWindow.activeTab.url;
-//     //     var clearUrl = getClearUrl(currentUrl);
-//     //
-//     //     console.log('currentUrl ', currentUrl);
-//     //     console.log('clearUrl ', clearUrl);
-//     //     console.log('partnersData ', partnersData);
-//     //     console.log('partnersData[clearUrl] ', partnersData[clearUrl]);
-//     // } else {
-//     var currentUrl = window.location.href;
-//         var clearUrl = getClearUrl(currentUrl);
-//         console.log('currentUrl ', currentUrl);
-//         console.log('clearUrl ', clearUrl);
-//         console.log('partnersData ', partnersData);
-//         console.log('testData ', testData);
-//         console.log('partnersData[clearUrl] ', partnersData[clearUrl]);
-//     // }
-//
-//     var test1 = document.createElement('div');
-//     test1.classList.add('test1');
-//     test1.style.position = 'fixed';
-//     test1.style.display = 'flex';
-//     test1.style.alignItems = 'center';
-//     test1.style.justifyContent = 'center';
-//     test1.style.color= '#fff';
-//     test1.style.zIndex = 9999;
-//     test1.style.top = 0;
-//     test1.style.left = 0;
-//     test1.style.width = '300px';
-//     test1.style.height = '300px';
-//     test1.style.background = 'red';
-//     test1.innerText = testData.test;
-//
-//
-//     window.addEventListener('load', function () {
-//         console.log('document ' , document);
-//
-//         document.body.appendChild(test1);
-//     });
-//
-// }
-//
-// test();
-/////////
-
-
-// var initialVal=1;
-// var calculatedVal=0 ;
-//
-// function doBigCalc(theData) {
-//     safari.self.tab.dispatchMessage("calcThis",theData);
-// }
-//
-// function getAnswer(theMessageEvent) {
-//     if (theMessageEvent.name === "theAnswer") {
-//         calculatedVal=theMessageEvent.message;
-//         console.log(calculatedVal);
-//     }
-// }
-//
-//
-//     safari.self.addEventListener("message", getAnswer, false);
-//
-// doBigCalc(initialVal);
-
-/////////
 
 function reloadTab() {
     // console.log('reloadTab');
@@ -617,41 +668,41 @@ window.addEventListener("message", function (port) {
 
 
 
-
-
-
-/*Прием данных из bg. Прием в инъецированный скрипт*/
-function myHendler(port) {
-    var messageName = port.name;
-    var messageData = port.message;
-    console.log('port ', port);
-
-    if (messageName === "global-page-sender") {
-        console.log('messageData ', messageData);
-        function renderModal(){
-
-            var test1 = document.createElement('div');
-            test1.classList.add('test1');
-
-            if(messageData.profile){
-            test1.innerText = messageData.profile.full_name;
-            } else {
-                test1.innerText = 'не загружено';
-            }
-
-
-            window.addEventListener('load', function () {
-
-                document.body.appendChild(test1);
-            });
-
-        }
-        renderModal();
-    }
-}
-
-if(safari.self.addEventListener) {
-    safari.self.addEventListener("message", myHendler, false);
-}
-
-
+// /*Прием данных из bg. Прием в инъецированный скрипт*/
+// function myHendler(port) {
+//     var messageName = port.name;
+//     var messageData = port.message;
+//     // console.log('port ', port);
+//
+//     if (messageName === "global-page-sender") {
+//         // console.log('messageData ', messageData);
+//
+//         function renderModal(){
+//
+//             var test1 = document.createElement('div');
+//             test1.classList.add('test1');
+//
+//             if(messageData.profile){
+//             test1.innerText = messageData.profile.full_name;
+//             } else {
+//                 test1.innerText = 'не загружено';
+//             }
+//
+//
+//             window.addEventListener('load', function () {
+//
+//                 document.body.appendChild(test1);
+//             });
+//
+//         }
+//         renderModal();
+//     }
+// }
+//
+// if(safari.self.addEventListener) {
+//     safari.self.addEventListener("message", myHendler, false);
+//     console.log('loginData bg ', loginData);
+//     console.log('_getLoginData() bg ', _getLoginData());
+// }
+//
+//

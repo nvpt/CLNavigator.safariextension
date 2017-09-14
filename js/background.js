@@ -411,7 +411,7 @@ function globalBridge(message) {
     sendLoginData(_getLoginData());
 
 }
-safari.application.addEventListener("message", globalBridge, false);
+safari.application.activeBrowserWindow.activeTab.addEventListener("message", globalBridge, false);//.activeBrowserWindow.activeTab - слушаем только текущую
 
 
 /*
@@ -432,23 +432,3 @@ function reciveWebUrl(val) {
 function sendLoginData(data){
     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("login-data-send", data);
 }
-
-
-
-////////
-
-// function bigCalc(startVal, event) {
-//     // imagine hundreds of lines of code here...
-//     var endVal = startVal + 2;
-//     // return to sender
-//     event.target.page.dispatchMessage("theAnswer", endVal);
-// }
-//
-// function respondToMessage(theMessageEvent) {
-//     if (theMessageEvent.name === "calcThis") {
-//         var startVal = theMessageEvent.message;
-//         bigCalc(startVal, theMessageEvent);
-//     }
-// }
-
-// safari.application.addEventListener("message", respondToMessage, false);

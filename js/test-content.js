@@ -46,23 +46,3 @@ if(window === window.top){
 }
 
 
-
-////////
-
-// var initialVal=1;
-// var calculatedVal=0 ;
-//
-// function doBigCalc(theData) {
-//     safari.self.tab.dispatchMessage("calcThis",theData);
-// }
-// doBigCalc(initialVal);
-//
-//
-// function getAnswer(theMessageEvent) {
-//     if (theMessageEvent.name === "theAnswer") {
-//         calculatedVal=theMessageEvent.message;
-//         console.log(calculatedVal);
-//     }
-// }
-// safari.self.addEventListener("message", getAnswer, false);
-

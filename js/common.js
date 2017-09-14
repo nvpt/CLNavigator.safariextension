@@ -3,6 +3,9 @@
  */
 // console.log('загрузка bg');
 
+/*
+* Константы
+* */
 var CL_ALI_UID = 'yVF2rZRRj';           //идентификатор ситилайф в алиэкспресс
 var ALI_CLEAR = 'aliexpress.com';       //"чистый" урл Aliexpress.com
 var ALI_COOKIE = 'aeu_cid';             //кука Aliexpress
@@ -11,12 +14,15 @@ var SERVER_DATA_UPDATE_TIME = (86400000 - (Math.random() * 7200000)); //86400000
 var TIMER_LIFE = 86400000;              //86400000 =  сутки. Время жизни отображения активного кэшбка
 //var MODAL_MARKERS_LIFE = 3600000;     //3600000 = 1 час. Интервал повторного отображения модалок ("ремодалок")
 
+
+/*
+* Исходные значения изменяющихся данных
+* */
 var loginData = {'test': 1};//TODO вернуть пустой объект                    //данные пользователя
 var partnersData = {};                  //рабочий объект данных партнеров .
 var partnersDataCustom = {};            //промежуточный объект данных партнеров с ссылками на сайт
 var partnersDataAdmitad = {};           //промежуточный объект данных партнеров с кэшбэк-ссылками
 var partnersVisited = {};               //объект посещенных партнеров
-
 var modalMarkers = [0];                 // для отслеживания ПОЯВЛЕНИЯ модалок внутри страниц. Первый элемент массива не проходит, поэтому ставим пустой элемент
 var timers = {};                        //время запуска активных кэшбэков. Продолжительность жизни = TIMER_LIFE
 var modalShowed = false;                //маркер, отображалась ли ремодалка. Исопльзуется для ремодалки, которая должна отобразиться, только если до этого появлялась модалка. Работает только для али.
@@ -24,6 +30,10 @@ var remodalShowed = false;              //маркер, отображалась
 var authIdentifier = 0;                 // 0 - не авторизован , >0 (id) - авторизован
 var currentCookie = -1;                 // текущее значение куки авторизации. Не должно быть равно по дефолту authIdentifier, поэтому -1. Исопльзуем, так как нет возможности брать куки в любой момент сколлбеком.
 
+
+/*
+* Геттеры-сеттеры
+* */
 function _getAliClear() {
     return ALI_CLEAR;
 }
@@ -73,15 +83,12 @@ function _getPartnersVisited() {
 }
 
 /**
- * Получение "чистого" урла открытой вкладки
- * Срабатывает для обычных доменов типа http://xxx.xxxx.xx/sdfs/sdfs/...
- * Из урла все домены четвертого и тп. уровня и хвост урла после первого слеша (вместе с ним).
+ * Регулярка для отображения требуемого вид урла
  *
- * Учитываются кириллические домены
+ * Учитываются кириллические домены (punicode)
  * @param val
  * @returns {*}
  */
-
 function getClearUrl(val) {
     if(val) { //если урл не указан, пропускаем
 
@@ -246,72 +253,3 @@ function checkTimers(el) {
         }
     }
 }
-
-
-
-// function bridge(){
-//     var initialVal=1;
-//     var calculatedVal=0 ;
-//
-//     function doBigCalc(theData) {
-//         if(safari.self.tab) {
-//             safari.self.tab.dispatchMessage("calcThis", theData);
-//         }
-//     }
-//
-//     function getAnswer(theMessageEvent) {
-//         if (theMessageEvent.name === "theAnswer") {
-//             calculatedVal=theMessageEvent.message;
-//             console.log(calculatedVal);
-//         }
-//     }
-//
-//     if(safari.self.addEventListener) {
-//         safari.self.addEventListener("message", getAnswer, false);
-//     }
-//
-//     doBigCalc(initialVal);
-// }
-// bridge();
-
-
-
-
-// /*Прием данных из bg. Прием в инъецированный скрипт*/
-// function myHendler(port) {
-//     var messageName = port.name;
-//     var messageData = port.message;
-//     // console.log('port ', port);
-//
-//     if (messageName === "global-page-sender") {
-//         // console.log('messageData ', messageData);
-//
-//         function renderModal(){
-//
-//             var test1 = document.createElement('div');
-//             test1.classList.add('test1');
-//
-//             if(messageData.profile){
-//             test1.innerText = messageData.profile.full_name;
-//             } else {
-//                 test1.innerText = 'не загружено';
-//             }
-//
-//
-//             window.addEventListener('load', function () {
-//
-//                 document.body.appendChild(test1);
-//             });
-//
-//         }
-//         renderModal();
-//     }
-// }
-//
-// if(safari.self.addEventListener) {
-//     safari.self.addEventListener("message", myHendler, false);
-//     console.log('loginData bg ', loginData);
-//     console.log('_getLoginData() bg ', _getLoginData());
-// }
-//
-//

@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // console.log('self ', safari.self);
     // console.log('extension.globalPage partnersData ', safari.extension.globalPage.contentWindow._getAliClear());
 
-    // safari.runtime.getBackgroundPage(function (bg) {
+
     var bg = safari.extension.globalPage.contentWindow;
 
 
@@ -28,9 +28,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var last = document.querySelector('.search__form-autocomplete.last');
     var requested = document.querySelector('.search__form-autocomplete.requested');
 
-    //resolutions for server responses with tags
-    //from this library https://www.npmjs.com/package/sanitize-html
-    //scripts will not be allow
+    /*
+    * resolutions for server responses with tags
+    * from this library https://www.npmjs.com/package/sanitize-html
+    * scripts will not be allow
+    * */
     var sanitizeResolutions = {
         allowedTags: ['p', 'b', 'i', 'em', 'strong', 'a', 'img', 'span'],
         allowedAttributes: {
@@ -454,15 +456,5 @@ document.addEventListener('DOMContentLoaded', function () {
         renderMainCard(tab);
         renderRecommended();
         renderLastVisited();
-        // console.log('e ', e);
     });
-    if (bg._getLoginData()){
-    console.log('bg.loginData popup ', bg.loginData);
-    console.log('bg._getLoginData() popup ', bg._getLoginData());
-    }
 });
-
-// safari.application.addEventListener("command", OpenPopUp, false);
-// function OpenPopUp(event) {
-//     var newTab = safari.application.openBrowserWindow().activeTab.url = safari.extension.baseURI + "your_pop_up.html";
-// }

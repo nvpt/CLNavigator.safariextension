@@ -405,7 +405,7 @@ window.addEventListener("message", function (port) {
 /*Передача данных в web. Отправка в инъецированный скрипт*///TODO новый мост. Переместить в глобал
 if(safari.application) {
     function myGlobalSender(attr) {
-        console.log('attr ', attr);
+        // console.log('attr ', attr);
         safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("global-page-sender", _getLoginData());
     }
 

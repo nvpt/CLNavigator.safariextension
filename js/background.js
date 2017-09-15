@@ -411,7 +411,7 @@ function globalBridge(message) {
     sendLoginData(_getLoginData());
 
 }
-safari.application.activeBrowserWindow.activeTab.addEventListener("message", globalBridge, false);//.activeBrowserWindow.activeTab - слушаем только текущую
+safari.application.addEventListener("message", globalBridge, false);//.activeBrowserWindow.activeTab - слушаем только текущую
 
 
 /*

@@ -8,8 +8,7 @@ function webHandler(message) {
     var messageName = message.name;
     var messageData = message.message;
 
-    //прием
-    if (messageName === "login-data-send") {
+    if (messageName === "partner-data-send") {
         renderTestModal(message);
     }
 }
@@ -27,13 +26,13 @@ function renderTestModal(val){
     var test1 = document.createElement('div');
     test1.classList.add('test1');
 
-    if(data.profile){
-        console.log('data.profile-true test ', data.profile);
-        console.log('data.profile-true authIdentifier test ', authIdentifier);
-        test1.innerText = data.profile.full_name;
+    if(data.name){
+        // console.log('data.profile-true test ', data.profile);
+        // console.log('data.profile-true authIdentifier test ', authIdentifier);
+        test1.innerText = data.name + '  ' +  data.sale_text;
     } else {
-        console.log('data.profile-false test ', data.profile);
-        console.log('data.profile-false authIdentifier test ', authIdentifier);
+        // console.log('data.profile-false test ', data.profile);
+        // console.log('data.profile-false authIdentifier test ', authIdentifier);
         test1.innerText = 'не загружено';
     }
 
@@ -46,12 +45,14 @@ function renderTestModal(val){
 * Отправка данных в глобал, или в инъецированные скрипты (common.js)
 * */
 
+
 /**
  * Отправка текущего урла
  * @param data
  */
 function sendWebUrl(data){
     safari.self.tab.dispatchMessage("send-url", data);
+    // safari.self.browserWindow.activeTab.dispatchMessage("send-url", data);
     // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("send-url", data);
 }
 
@@ -69,6 +70,7 @@ function sendCookies(data){
 
 if(window === window.top){
     sendWebUrl(window.location.href);
+
     sendCookies(cookiesMain);
 }
 

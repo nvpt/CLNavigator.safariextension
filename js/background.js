@@ -162,21 +162,21 @@ setInterval(checkAuthorization, SESSION_TIME);
 function uploadServerData() {
 
 
-        console.log('*1');
+        // console.log('*1');
 
         if (parseInt(currentCookie) !== 0 && parseInt(authIdentifier) !== parseInt(currentCookie)) {
-            console.log('*2');
+            // console.log('*2');
             reqProfile(
                 function (resp) {
                     loginData = resp;
                     authIdentifier = parseInt(currentCookie);
-                    console.log('*3');
+                    // console.log('*3');
 
                     //сюда
                 },
                 function () {
                     resetAuthorisation();
-                    console.log('*4');
+                    // console.log('*4');
                 }
             );
             timers = {};//сбрасываем время посещения парттнеров для нового пользователя
@@ -185,16 +185,16 @@ function uploadServerData() {
     if (parseInt(currentCookie) !== 0) {
 
         if (Object.keys(partnersDataAdmitad).length === 0) {
-            console.log('*5');
+            // console.log('*5');
             partnersDataRequest(
                 function (res) {
                     arrayToObj(res, partnersDataAdmitad);
                     partnersData = partnersDataAdmitad;
-                    console.log('*6');
+                    // console.log('*6');
                 },
                 function () {
                     // console.info('Партнеры не загружены');
-                    console.log('*7');
+                    // console.log('*7');
                 }
             );
         }
@@ -202,17 +202,17 @@ function uploadServerData() {
 
     } else {
         resetAuthorisation();
-        console.log('*8');
+        // console.log('*8');
         if (Object.keys(partnersDataCustom).length === 0) {
 
             partnersDataRequest(
                 function (res) {
                     arrayToObj(res, partnersDataCustom);
                     partnersData = partnersDataCustom;
-                    console.log('*9');
+                    // console.log('*9');
                 },
                 function () {
-                    console.log('*10');
+                    // console.log('*10');
                 }
             );
         }
@@ -222,7 +222,7 @@ function uploadServerData() {
 
     // console.log('currentCookie bg ', currentCookie);
     // console.log('authIdentifier bg ', authIdentifier);
-    console.log('loginData1 bg ', loginData);
+    // console.log('loginData1 bg ', loginData);
 }
 
 //загрузка данных партнеров при первом запуске
@@ -297,7 +297,7 @@ function checkModalMarkerAdded(partner) {
 /* Действия с табами */
 function clickTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    console.log('***************clickTab', currentUrl);
+    // console.log('***************clickTab', currentUrl);
     changeIcon(currentUrl);//при клике сверяем актуальность иконки
     addPartnerToVisited(currentUrl);
 
@@ -307,7 +307,7 @@ function clickTab() {
 function reloadTab() {
 
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    console.log('**************RELOADTAB', currentUrl);
+    // console.log('**************RELOADTAB', currentUrl);
     changeIcon(currentUrl);
     uploadServerData();
     addPartnerToVisited(currentUrl);
@@ -318,7 +318,7 @@ function reloadTab() {
 /* Обработчики действи с табами */
 
     safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
-    // safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//обновление
+    safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//обновление
 
 
 
@@ -405,9 +405,7 @@ window.addEventListener("message", function (port) {
 );
 // });
 
-function ttt(val){
-    console.log('setCookies bg ', val);
-}
+
 
 /*
 * Мост связи с веб
@@ -417,42 +415,63 @@ function globalBridge(message) {
     var messageData = message.message;
 
     //прием
+
     if (messageName === "send-url") {
         // console.log('message bg ', message);
         // console.log('send-url bg ', message);
-        receiveWebUrl(message)
+        // receiveWebUrl(message);
+
+
+            console.log('web-url bg ', message.message);
+
+        var contentUrl = message.message;
+        var clearUrl = getClearUrl(contentUrl);
+        console.log('partnersData ', partnersData);
+        console.log('clearUrl ', clearUrl);
+        console.log('partnersData[clearUrl]', partnersData[clearUrl]);
+
+        if (partnersData[clearUrl]) {
+            var partner = partnersData[clearUrl];
+            console.log(partner);
+            sendPartnerDataForModal(partner);
+        }
+
     }
 
-    if (messageName === "setCookies") {
-        return function(message){
-            console.log('setCookies bg ', message);
-        }
-    }
+    // if (messageName === "send-cookies") {
+    //     return function(message){
+    //         console.log('setCookies bg ', message);
+    //     }
+    // }
 
     //отправка
     sendLoginData(_getLoginData());
 
 }
-safari.application.addEventListener("message", globalBridge, false);//.activeBrowserWindow.activeTab - слушаем только текущую
+safari.application.addEventListener("message", globalBridge, false);
 
 
 /*
-* Привем данных из веба
+* Методы обработки принимаемых данных из веба
 * */
 function receiveWebUrl(val) {
     var name = val.name;
     var data = val.message;
 
-    // console.log('web-url bg ', data);
+    console.log('web-url bg ', data);
 }
 
 
 /**
- * Отправка данных в веб
+ * Методы отправки данных в веб
  */
 function sendLoginData(data){
-    console.log('sendLoginData bg ', data);
+    // console.log('sendLoginData bg ', data);
     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("login-data-send", data);
+}
+
+function sendPartnerDataForModal(data){
+    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("partner-data-send", data);
 }
 
 

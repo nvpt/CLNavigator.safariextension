@@ -136,7 +136,7 @@ function partnersDataRequest(resolve, reject) {
 function resetAuthorisation() {
     loginData = {};
     timers = {};
-    authIdentifier = -1;
+    authIdentifier = parseInt(-1);
     currentCookie = 0;
 }
 
@@ -160,36 +160,41 @@ setInterval(checkAuthorization, SESSION_TIME);
  * Загрузка данных партнеров
  */
 function uploadServerData() {
-console.log('currentCookie bg ', currentCookie);
-console.log('currentCookie bg = 0 ', parseInt(currentCookie) === 0);
-console.log('authIdentifier bg ', authIdentifier);
-console.log('loginData1 bg ', loginData);
 
-    if (parseInt(currentCookie) !== 0) {
 
-        if (parseInt(authIdentifier) !== parseInt(currentCookie)) {
+        console.log('*1');
+
+        if (parseInt(currentCookie) !== 0 && parseInt(authIdentifier) !== parseInt(currentCookie)) {
+            console.log('*2');
             reqProfile(
                 function (resp) {
                     loginData = resp;
                     authIdentifier = parseInt(currentCookie);
+                    console.log('*3');
+
+                    //сюда
                 },
                 function () {
                     resetAuthorisation();
+                    console.log('*4');
                 }
             );
             timers = {};//сбрасываем время посещения парттнеров для нового пользователя
         }
 
+    if (parseInt(currentCookie) !== 0) {
 
         if (Object.keys(partnersDataAdmitad).length === 0) {
-
+            console.log('*5');
             partnersDataRequest(
                 function (res) {
                     arrayToObj(res, partnersDataAdmitad);
                     partnersData = partnersDataAdmitad;
+                    console.log('*6');
                 },
                 function () {
                     // console.info('Партнеры не загружены');
+                    console.log('*7');
                 }
             );
         }
@@ -197,22 +202,27 @@ console.log('loginData1 bg ', loginData);
 
     } else {
         resetAuthorisation();
-
+        console.log('*8');
         if (Object.keys(partnersDataCustom).length === 0) {
 
             partnersDataRequest(
                 function (res) {
                     arrayToObj(res, partnersDataCustom);
                     partnersData = partnersDataCustom;
+                    console.log('*9');
                 },
                 function () {
-
+                    console.log('*10');
                 }
             );
         }
         partnersData = partnersDataCustom;
     }
 
+
+    console.log('currentCookie bg ', currentCookie);
+    console.log('authIdentifier bg ', authIdentifier);
+    console.log('loginData1 bg ', loginData);
 }
 
 //загрузка данных партнеров при первом запуске
@@ -287,7 +297,7 @@ function checkModalMarkerAdded(partner) {
 /* Действия с табами */
 function clickTab() {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    // console.log('clickTab');
+    console.log('***************clickTab', currentUrl);
     changeIcon(currentUrl);//при клике сверяем актуальность иконки
     addPartnerToVisited(currentUrl);
 
@@ -295,8 +305,9 @@ function clickTab() {
 
 
 function reloadTab() {
-    // console.log('reloadTab');
+
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
+    console.log('**************reloadTab', currentUrl);
     changeIcon(currentUrl);
     uploadServerData(currentUrl);
     addPartnerToVisited(currentUrl);
@@ -307,7 +318,7 @@ function reloadTab() {
 /* Обработчики действи с табами */
 if (safari && safari.application) {
     safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
-    safari.application.activeBrowserWindow.activeTab.addEventListener("navigate", reloadTab, true);//обновление
+    safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//обновление
 }
 
 
@@ -440,7 +451,7 @@ function receiveWebUrl(val) {
  * Отправка данных в веб
  */
 function sendLoginData(data){
-    // console.log('sendLoginData bg ', data);
+    console.log('sendLoginData bg ', data);
     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("login-data-send", data);
 }
 

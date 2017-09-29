@@ -220,8 +220,8 @@ function uploadServerData() {
     }
 
 
-    console.log('currentCookie bg ', currentCookie);
-    console.log('authIdentifier bg ', authIdentifier);
+    // console.log('currentCookie bg ', currentCookie);
+    // console.log('authIdentifier bg ', authIdentifier);
     console.log('loginData1 bg ', loginData);
 }
 
@@ -307,19 +307,19 @@ function clickTab() {
 function reloadTab() {
 
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    console.log('**************reloadTab', currentUrl);
+    console.log('**************RELOADTAB', currentUrl);
     changeIcon(currentUrl);
-    uploadServerData(currentUrl);
+    uploadServerData();
     addPartnerToVisited(currentUrl);
     // test();
 }
 
 
 /* Обработчики действи с табами */
-if (safari && safari.application) {
+
     safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
-    safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//обновление
-}
+    // safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//обновление
+
 
 
 

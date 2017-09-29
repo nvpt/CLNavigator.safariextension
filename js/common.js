@@ -221,8 +221,8 @@ function getCookiesAuth(incMsg) {//TODO настроить проверку р-�
     if (incMsg.name === "send-cookies") {
         if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
             currentCookie = parseInt(cookiesToObj(cookiesValue)['auth']);
-            console.log('cookie_auth common ', currentCookie);
-            console.log('cookies common ', cookies);
+            // console.log('cookie_auth common ', currentCookie);
+            // console.log('cookies common ', cookies);
         }
     }
 }

@@ -26,10 +26,12 @@ window.postMessage({
 
 // port.onMessage.addListener(function (msg) {
 window.addEventListener("message", function (port) {
+
     var msg = port.data;
     var partnerData = msg.currentPartner;
     var timers = msg.timers;
     var modalMarkers = msg.modalMarkers;
+
     var currentUrl = document.location.href;//will work in ff?
 
     var ANCHOR = document.createElement('div');

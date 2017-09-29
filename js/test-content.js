@@ -8,15 +8,19 @@ function webHandler(message) {
     var messageName = message.name;
     var messageData = message.message;
 
-    if (messageName === "partner-data-send") {
+    if (messageName === "login-data-send") {
         renderTestModal(message);
     }
+
+    // if (messageName === "partner-data-send") {
+    //     renderTestModal(message);
+    // }
 }
 safari.self.addEventListener("message", webHandler, false);
 
 
 /**
- * Вывод прнятых данных в модалку на вебстранице
+ * Вывод принятых данных в модалку на вебстранице
  * @param val
  */
 function renderTestModal(val){
@@ -26,13 +30,16 @@ function renderTestModal(val){
     var test1 = document.createElement('div');
     test1.classList.add('test1');
 
-    if(data.name){
-        // console.log('data.profile-true test ', data.profile);
-        // console.log('data.profile-true authIdentifier test ', authIdentifier);
-        test1.innerText = data.name + '  ' +  data.sale_text;
+    if(data.profile){
+        // if(data.name){
+        console.log('data.profile-true test ', data.profile);
+        console.log('data.profile-true authIdentifier test ', authIdentifier);
+        test1.innerText = data.profile.full_name;
+            // test1.innerText = data.name + '  ' +  data.sale_text;
+
     } else {
-        // console.log('data.profile-false test ', data.profile);
-        // console.log('data.profile-false authIdentifier test ', authIdentifier);
+        console.log('data.profile-false test ', data.profile);
+        console.log('data.profile-false authIdentifier test ', authIdentifier);
         test1.innerText = 'не загружено';
     }
 
@@ -40,6 +47,8 @@ function renderTestModal(val){
         document.body.appendChild(test1);
     });
 }
+
+
 
 /*
 * Отправка данных в глобал, или в инъецированные скрипты (common.js)
@@ -50,10 +59,9 @@ function renderTestModal(val){
  * Отправка текущего урла
  * @param data
  */
+//start connect
 function sendWebUrl(data){
     safari.self.tab.dispatchMessage("send-url", data);
-    // safari.self.browserWindow.activeTab.dispatchMessage("send-url", data);
-    // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("send-url", data);
 }
 
 
@@ -62,6 +70,7 @@ function sendWebUrl(data){
 * */
 var cookiesMain = document.cookie.split(';');
 
+
 function sendCookies(data){
     safari.self.tab.dispatchMessage("send-cookies", data);
 // console.log('browser cookiesMain ', cookiesMain);
@@ -69,8 +78,17 @@ function sendCookies(data){
 
 
 if(window === window.top){
-    sendWebUrl(window.location.href);
+    sendWebUrl(
+        window.location.href
+    //     {
+    //     from: 'content',
+    //     id: 'startConnect',
+    //     url: document.location.href
+    // }
+    );
 
+
+    // safari.self.tab.dispatchMessage("send-url", window.location.href);//вариант sendWebUrl
     sendCookies(cookiesMain);
 }
 

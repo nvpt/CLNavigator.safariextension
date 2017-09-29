@@ -60,6 +60,47 @@ function changeIcon(url) {
 }
 
 
+/**
+ * Куки
+ */
+
+function cookiesToObj(arr) {
+    var obj = {};
+    for (var i = 0; i < arr.length; i++) {
+        var cookie = arr[i].split('=');
+        var cookieName = cookie[0].trim();
+        var cookieValue = cookie.splice(1, cookie.length).join('=');
+        obj[cookieName] = cookieValue;
+    }
+    return obj;
+}
+
+function getCookiesAuth(incMsg) {//TODO настроить проверку р-куки
+    var cookies = incMsg;
+
+    var cookiesValue = incMsg.message;
+    var cookiesUrl = incMsg.target['url'];
+
+    if (incMsg.name === "send-cookies") {
+        console.log('cookies!!! ', cookies);
+        if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
+            currentCookie = parseInt(cookiesToObj(cookiesValue)['auth']);
+            // console.log('cookie_auth common ', currentCookie);
+            // console.log('cookies common ', cookies);
+        }
+    }
+}
+
+safari.application.addEventListener("message", getCookiesAuth, false);//проверяем куку авторизации; выполняется при каждом обновлении страницы
+
+
+function _getCookies(url, name, cb) {//for aliexpress//TODO проверить корректность работы
+    safari.cookies.get({
+        url: url,
+        name: name
+    }, cb);
+}
+
 
 /* Запросы */
 
@@ -327,10 +368,11 @@ function reloadTab() {
 
 /* Мост между content и background *///TODO переписать под апи сафари. Разместитьинлайном в глобале. Ответ будет в тест-контенте
 
-// safari.runtime.onConnect.addListener(function (port) {
-//     port.onMessage.addListener(function (msg) {
+
+// safari.application.addEventListener("message", function (port) {//использовать
 window.addEventListener("message", function (port) {
-        var msg = port.data;
+        // var msg = port.data;
+        var msg = port.message;
         //порядок запросов не менять
         // console.log('МОСТ');
         if (msg.from === 'content') {
@@ -419,7 +461,7 @@ function globalBridge(message) {
     if (messageName === "send-url") {
         // console.log('message bg ', message);
         // console.log('send-url bg ', message);
-        // receiveWebUrl(message);
+        receiveWebUrl(message);//тестовое
 
 
             console.log('web-url bg ', message.message);

@@ -1,3 +1,5 @@
+console.log('--bg--');
+
 /* Обработчики иконок */
 
 /**
@@ -83,7 +85,7 @@ function arrayToObj(arr, obj) {
  * @param reject
  */
 function reqProfile(resolve, reject) {
-    if(safari && safari.application) {
+    // if(safari && safari.application) {
         var url = 'https://cl.world/api/v2/profile/menu';
         var req = new XMLHttpRequest();
         req.open('GET', url);
@@ -97,7 +99,7 @@ function reqProfile(resolve, reject) {
                 reject();
             }
         });
-    }
+    // }
 }
 
 
@@ -134,8 +136,8 @@ function partnersDataRequest(resolve, reject) {
 function resetAuthorisation() {
     loginData = {};
     timers = {};
-    authIdentifier = 0;
-    currentCookie = -1;
+    authIdentifier = -1;
+    currentCookie = 0;
 }
 
 
@@ -158,12 +160,12 @@ setInterval(checkAuthorization, SESSION_TIME);
  * Загрузка данных партнеров
  */
 function uploadServerData() {
-// console.log('ipload currentCookie ', currentCookie);
-// console.log('ipload currentCookie = -1 ', parseInt(currentCookie) === -1);
-// console.log('ipload authIdentifier ', authIdentifier);
-// console.log('ipload loginData1 ', loginData);
+console.log('currentCookie bg ', currentCookie);
+console.log('currentCookie bg = 0 ', parseInt(currentCookie) === 0);
+console.log('authIdentifier bg ', authIdentifier);
+console.log('loginData1 bg ', loginData);
 
-    if (parseInt(currentCookie) !== -1) {
+    if (parseInt(currentCookie) !== 0) {
 
         if (parseInt(authIdentifier) !== parseInt(currentCookie)) {
             reqProfile(
@@ -234,7 +236,7 @@ function updateServerData() {
 
     partnersDataRequest(//запрос в любом случае, поэтому условия внутри
         function (res) {
-            if (parseInt(currentCookie) !== -1) {
+            if (parseInt(currentCookie) !== 0) {
                 arrayToObj(res, partnersDataAdmitad);
                 partnersData = partnersDataAdmitad;
             } else {
@@ -392,8 +394,9 @@ window.addEventListener("message", function (port) {
 );
 // });
 
-
-
+function ttt(val){
+    console.log('setCookies bg ', val);
+}
 
 /*
 * Мост связи с веб
@@ -404,7 +407,15 @@ function globalBridge(message) {
 
     //прием
     if (messageName === "send-url") {
-        reciveWebUrl(message)
+        // console.log('message bg ', message);
+        // console.log('send-url bg ', message);
+        receiveWebUrl(message)
+    }
+
+    if (messageName === "setCookies") {
+        return function(message){
+            console.log('setCookies bg ', message);
+        }
     }
 
     //отправка
@@ -417,18 +428,21 @@ safari.application.addEventListener("message", globalBridge, false);//.activeBro
 /*
 * Привем данных из веба
 * */
-function reciveWebUrl(val) {
+function receiveWebUrl(val) {
     var name = val.name;
     var data = val.message;
 
-    console.log('web url is ', data)
+    // console.log('web-url bg ', data);
 }
-
 
 
 /**
  * Отправка данных в веб
  */
 function sendLoginData(data){
+    // console.log('sendLoginData bg ', data);
     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("login-data-send", data);
 }
+
+
+

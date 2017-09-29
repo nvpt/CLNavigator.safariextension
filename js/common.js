@@ -1,7 +1,7 @@
 /**
  * Created by CityLife on 23.12.16.
  */
-// console.log('загрузка bg');
+console.log('--common--');
 
 /*
 * Константы
@@ -27,8 +27,8 @@ var modalMarkers = [0];                 // для отслеживания ПО�
 var timers = {};                        //время запуска активных кэшбэков. Продолжительность жизни = TIMER_LIFE
 var modalShowed = false;                //маркер, отображалась ли ремодалка. Исопльзуется для ремодалки, которая должна отобразиться, только если до этого появлялась модалка. Работает только для али.
 var remodalShowed = false;              //маркер, отображалась ли ремодалка
-var authIdentifier = 0;                 // 0 - не авторизован , >0 (id) - авторизован
-var currentCookie = -1;                 // текущее значение куки авторизации. Не должно быть равно по дефолту authIdentifier, поэтому -1. Исопльзуем, так как нет возможности брать куки в любой момент сколлбеком.
+var authIdentifier = -1;                 // 0 - не авторизован , >0 (id) - авторизован
+var currentCookie = 0;                 // текущее значение куки авторизации. Не должно быть равно по дефолту authIdentifier, поэтому -1. Используем, так как нет возможности брать куки в любой момент с коллбеком.
 
 
 /*
@@ -199,14 +199,7 @@ function checkSafeResponse(obj) {
 }
 
 
-/*
-*Куки
-* */
-var cookiesMain = document.cookie.split(';');//не удалять этот блок. работает  из браузера забирая куки. С ним можем отслеживать куки в расширении
-if (safari.self.tab) {
-    safari.self.tab.dispatchMessage("setCookies", cookiesMain);
-    // console.log('browser cookiesMain ', cookiesMain);
-}
+
 
 function cookiesToObj(arr) {
     var obj = {};
@@ -221,11 +214,16 @@ function cookiesToObj(arr) {
 
 function getCookiesAuth(incMsg) {//TODO настроить проверку р-куки
     var cookies = incMsg;
-    // console.log('cookies ', cookies);
+
     var cookiesValue = incMsg.message;
     var cookiesUrl = incMsg.target['url'];
-    if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
-        currentCookie = cookiesToObj(cookiesValue)['auth'];
+
+    if (incMsg.name === "send-cookies") {
+        if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
+            currentCookie = cookiesToObj(cookiesValue)['auth'];
+            console.log('cookie_auth common ', currentCookie);
+            console.log('cookies common ', cookies);
+        }
     }
 }
 if(safari && safari.application) {

@@ -1,7 +1,7 @@
 /**
  * Created by CityLife on 29.12.16.
  */
-console.log('загрузка content');
+console.log('--content--');
 
 var SHOW_MODAL_TIME = 50;//5000
 var HIDE_MODAL_TIME = 5000;//15000//15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20

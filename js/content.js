@@ -15,6 +15,8 @@ var HIDE_CASHBACK_TIME = 12000;//7000 = 7сек. Время скрытия мо�
 //     console.log('authorizationStatus content 2', authorizationStatus);
 // }
 
+
+//>>отправка
 window.postMessage({
     from: 'content',
     id: 'startConnect',
@@ -52,9 +54,9 @@ window.addEventListener("message", function (port) {
     var clButton = document.createElement('a');
     var reactivation = document.createElement('div');
 
-
+//<<прием
     if (msg.from === 'bg') {//ответы из bg
-
+//<<прием
         if (msg.id === 'showModal') {//отображение модалки
 
             //рендер компонентнов модалки
@@ -139,6 +141,7 @@ window.addEventListener("message", function (port) {
 
                 close.addEventListener('click', function () {
                     ANCHOR.style.display = 'none';
+                    //>>отправка
                     window.postMessage({
                         from: 'content',
                         id: 'modalMarkerAdded',
@@ -154,6 +157,7 @@ window.addEventListener("message", function (port) {
 
             setTimeout(function () {
                 ANCHOR.style.display = 'none';
+                //>>отправка
                 window.postMessage({
                     from: 'content',
                     id: 'modalMarkerAdded',
@@ -163,6 +167,7 @@ window.addEventListener("message", function (port) {
 
             //отображение информации об активном кэшбэке зависит от данных в timers
             if ((timers) && (timers.hasOwnProperty(getClearUrl(currentUrl)))) {
+                //>>отправка
                 window.postMessage({
                     from: 'content',
                     id: 'modalMarkerAdded',
@@ -183,7 +188,7 @@ window.addEventListener("message", function (port) {
             clButton.setAttribute('href', partnerData.href);
 
             clButton.addEventListener('click', function () {//функция активации кэшбэка из модалки. После задействования в background передается об этом информация
-
+                //>>отправка
                 window.postMessage({
                     from: 'content',
                     id: 'setCashbackClick',
@@ -194,7 +199,7 @@ window.addEventListener("message", function (port) {
             });
 
         }
-
+        //<<прием
         else if (msg.id === 'showRemodal') {//выводим модалку с реактивацией (ремодалка)
             partnerData = msg.currentPartner;
             var modalShowed = msg.modalShowed;
@@ -295,6 +300,7 @@ window.addEventListener("message", function (port) {
                         }
                         if (!document.querySelector('#remodalCL2017')) {
                             document.body.appendChild(REANCHOR);
+                            //>>отправка
                             window.postMessage({//возвращаем в bg значение remodalShowed
                                 from: 'content',
                                 id: 'remodalShowed',
@@ -306,6 +312,7 @@ window.addEventListener("message", function (port) {
 
                         close.addEventListener('click', function () {
                             REANCHOR.style.display = 'none';
+                            //>>отправка
                             window.postMessage({
                                 from: 'content',
                                 id: 'remodalShowed',
@@ -318,6 +325,8 @@ window.addEventListener("message", function (port) {
 
                 setTimeout(function () {//прячем ремодалку через HIDE_MODAL_TIME времени
                     REANCHOR.style.display = 'none';
+
+                    //>>отправка
                     window.postMessage({
                         from: 'content',
                         id: 'remodalShowed',
@@ -332,6 +341,7 @@ window.addEventListener("message", function (port) {
                 clButton.setAttribute('href', msg.currentPartner.href);
 
                 clButton.addEventListener('click', function () {//функция активации кэшбэка из модалки. После задействования в background передается об этом информация
+                    //>>отрпавка
                     window.postMessage({
                         from: 'content',
                         id: 'setCashbackClick',
@@ -345,7 +355,7 @@ window.addEventListener("message", function (port) {
                 return false;
             }
         }
-
+        //<<прием
         else if (msg.id === 'hideRemodal') {//прнудительное скрытие ремодалки
             if (document.querySelector('#remodalCL2017')) {
                 document.querySelector('#remodalCL2017').style.display = 'none';

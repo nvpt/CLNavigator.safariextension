@@ -82,7 +82,7 @@ function getCookiesAuth(incMsg) {//TODO настроить проверку р-�
     var cookiesUrl = incMsg.target['url'];
 
     if (incMsg.name === "send-cookies") {
-        console.log('cookies!!! ', cookies);
+        // console.log('cookies!!! ', cookies);
         if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
             currentCookie = parseInt(cookiesToObj(cookiesValue)['auth']);
             // console.log('cookie_auth common ', currentCookie);
@@ -456,37 +456,38 @@ function globalBridge(message) {
     var messageName = message.name;
     var messageData = message.message;
 
-    //прием
-
+    //<<прием
     if (messageName === "send-url") {
-        // console.log('message bg ', message);
-        // console.log('send-url bg ', message);
+
         receiveWebUrl(message);//тестовое
 
-
-            console.log('web-url bg ', message.message);
+        // console.log('web-url bg ', message.message);
 
         var contentUrl = message.message;
         var clearUrl = getClearUrl(contentUrl);
-        console.log('partnersData ', partnersData);
-        console.log('clearUrl ', clearUrl);
-        console.log('partnersData[clearUrl]', partnersData[clearUrl]);
+        // console.log('partnersData ', partnersData);
+        // console.log('clearUrl ', clearUrl);
+        // console.log('partnersData[clearUrl]', partnersData[clearUrl]);
 
         if (partnersData[clearUrl]) {
             var partner = partnersData[clearUrl];
-            console.log(partner);
+            // console.log(partner);
+            //>>отправка
             sendPartnerDataForModal(partner);
         }
 
     }
 
+    //<<прием
     // if (messageName === "send-cookies") {
     //     return function(message){
     //         console.log('setCookies bg ', message);
     //     }
     // }
 
-    //отправка
+
+
+    //>>отправка
     sendLoginData(_getLoginData());
 
 }
@@ -500,7 +501,7 @@ function receiveWebUrl(val) {
     var name = val.name;
     var data = val.message;
 
-    console.log('web-url bg ', data);
+    // console.log('web-url bg ', data);
 }
 
 

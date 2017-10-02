@@ -1,20 +1,22 @@
 console.log('--test-content--');
-
+if(window === window.top){
 /*
 * Прием данных из глобал
 * */
-
 function webHandler(message) {
     var messageName = message.name;
     var messageData = message.message;
 
-    if (messageName === "login-data-send") {
-        renderTestModal(message);
-    }
-
-    // if (messageName === "partner-data-send") {
+    //<<прием
+    // if (messageName === "login-data-send") {
     //     renderTestModal(message);
     // }
+
+    //<<прием
+    if (messageName === "partner-data-send") {
+        // console.log('PARTNER-DATA-SEND');
+        renderTestModal(message);
+    }
 }
 safari.self.addEventListener("message", webHandler, false);
 
@@ -30,16 +32,9 @@ function renderTestModal(val){
     var test1 = document.createElement('div');
     test1.classList.add('test1');
 
-    if(data.profile){
-        // if(data.name){
-        console.log('data.profile-true test ', data.profile);
-        console.log('data.profile-true authIdentifier test ', authIdentifier);
-        test1.innerText = data.profile.full_name;
-            // test1.innerText = data.name + '  ' +  data.sale_text;
-
+    if(data.name){
+        test1.innerText = data.name + '  ' +  data.sale_text;
     } else {
-        console.log('data.profile-false test ', data.profile);
-        console.log('data.profile-false authIdentifier test ', authIdentifier);
         test1.innerText = 'не загружено';
     }
 
@@ -47,7 +42,6 @@ function renderTestModal(val){
         document.body.appendChild(test1);
     });
 }
-
 
 
 /*
@@ -70,14 +64,13 @@ function sendWebUrl(data){
 * */
 var cookiesMain = document.cookie.split(';');
 
-
 function sendCookies(data){
     safari.self.tab.dispatchMessage("send-cookies", data);
 // console.log('browser cookiesMain ', cookiesMain);
 }
 
 
-if(window === window.top){
+    //>>отправка
     sendWebUrl(
         window.location.href
     //     {
@@ -86,9 +79,10 @@ if(window === window.top){
     //     url: document.location.href
     // }
     );
-
-
     // safari.self.tab.dispatchMessage("send-url", window.location.href);//вариант sendWebUrl
+
+
+    //>>отправка
     sendCookies(cookiesMain);
 }
 

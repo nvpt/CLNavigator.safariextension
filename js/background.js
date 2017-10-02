@@ -369,15 +369,18 @@ function reloadTab() {
 /* Мост между content и background *///TODO переписать под апи сафари. Разместитьинлайном в глобале. Ответ будет в тест-контенте
 
 
-// safari.application.addEventListener("message", function (port) {//использовать
-window.addEventListener("message", function (port) {
+safari.application.addEventListener("message", function (data) {
+// window.addEventListener("message", function (port) {
         // var msg = port.data;
-        var msg = port.message;
+        // var msg = port.message;
+        var messageName = data.name;
+        var msg = data.message;
+
         //порядок запросов не менять
         // console.log('МОСТ');
 
         //<<прием
-        if (msg.from === 'content') {
+        if (messageName === 'content') {
             var contentUrl = msg.url;
             var clearUrl = getClearUrl(contentUrl);
             //<<прием
@@ -410,14 +413,24 @@ window.addEventListener("message", function (port) {
                 if (partnersData[clearUrl]) {
                     partner = partnersData[clearUrl];
                     //>>отправка
-                    window.postMessage({//и отправляем в контент колбэк с этими данными
-                        from: 'bg',
-                        id: 'showModal',
-                        currentPartner: partner,
-                        timers: timers,
-                        modalMarkers: modalMarkers,
-                        loginData: _getLoginData()
-                    }, '*');
+                    // window.postMessage({//и отправляем в контент колбэк с этими данными
+                    //     from: 'bg',
+                    //     id: 'showModal',
+                    //     currentPartner: partner,
+                    //     timers: timers,
+                    //     modalMarkers: modalMarkers,
+                    //     loginData: _getLoginData()
+                    // }, '*');
+
+                    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                        {
+                            from: 'bg',
+                            id: 'showModal',
+                            currentPartner: partner,
+                            timers: timers,
+                            modalMarkers: modalMarkers,
+                            loginData: _getLoginData()
+                        });
                 }
                 //<<прием
                 if (clearUrl === ALI_CLEAR) {//если сайт - Aliexpress
@@ -426,22 +439,39 @@ window.addEventListener("message", function (port) {
                             if (partnersData[clearUrl]) {
                                 delete timers[ALI_CLEAR];
                                 //>>отправка
-                                window.postMessage({//и запустим в контенте колбэк с этими данными
-                                    from: 'bg',
-                                    id: 'showRemodal',
-                                    currentPartner: partner,
-                                    timers: timers,
-                                    modalMarkers: modalMarkers,
-                                    modalShowed: modalShowed,
-                                    remodalShowed: remodalShowed
-                                }, '*');
+                                // window.postMessage({//и запустим в контенте колбэк с этими данными
+                                //     from: 'bg',
+                                //     id: 'showRemodal',
+                                //     currentPartner: partner,
+                                //     timers: timers,
+                                //     modalMarkers: modalMarkers,
+                                //     modalShowed: modalShowed,
+                                //     remodalShowed: remodalShowed
+                                // }, '*');
+
+                                safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                                    {
+                                        from: 'bg',
+                                        id: 'showRemodal',
+                                        currentPartner: partner,
+                                        timers: timers,
+                                        modalMarkers: modalMarkers,
+                                        modalShowed: modalShowed,
+                                        remodalShowed: remodalShowed
+                                    });
                             }
                         } else {//если да
                             //>>отправка
-                            window.postMessage({//запустим колбэк для скрытия ремодалки
-                                from: 'bg',
-                                id: 'hideRemodal'
-                            }, '*');
+                            // window.postMessage({//запустим колбэк для скрытия ремодалки
+                            //     from: 'bg',
+                            //     id: 'hideRemodal'
+                            // }, '*');
+
+                            safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                                {
+                                    from: 'bg',
+                                    id: 'hideRemodal'
+                                });
                         }
                     });
                 }

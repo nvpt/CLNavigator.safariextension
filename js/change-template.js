@@ -62,7 +62,7 @@ safari.application.addEventListener("message", function(msg){
 
     //прием стало
     var messageName = msg.name;
-    var messageData = msg.message;
+    var msg = msg.message;
 
     if (messageName === "send-url") {
         ///...

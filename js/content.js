@@ -5,7 +5,7 @@ console.log('--content--');
 
 var SHOW_MODAL_TIME = 50;//5000
 var HIDE_MODAL_TIME = 5000;//15000//15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
-var HIDE_CASHBACK_TIME = 12000;//7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
+var HIDE_CASHBACK_TIME = 22000;//7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 
 
 // if(currentUrl.indexOf('cl.world') !== -1){
@@ -17,19 +17,28 @@ var HIDE_CASHBACK_TIME = 12000;//7000 = 7сек. Время скрытия мо�
 
 
 //>>отправка
-window.postMessage({
-    from: 'content',
+// window.postMessage({
+//     from: 'content',
+//     id: 'startConnect',
+//     url: document.location.href
+// }, '*');
+
+safari.self.tab.dispatchMessage("content", {
+    // from: 'content',
     id: 'startConnect',
-    url: document.location.href
-}, '*');
+    url: window.location.href
+});
 
 
 
 
-// port.onMessage.addListener(function (msg) {
-window.addEventListener("message", function (port) {
+// window.addEventListener("message", function (port) {
+safari.self.addEventListener("message", function(data) {
 
-    var msg = port.data;
+    // var msg = port.data;
+    var messageName = data.name;
+    var msg = data.message;
+
     var partnerData = msg.currentPartner;
     var timers = msg.timers;
     var modalMarkers = msg.modalMarkers;
@@ -55,7 +64,8 @@ window.addEventListener("message", function (port) {
     var reactivation = document.createElement('div');
 
 //<<прием
-    if (msg.from === 'bg') {//ответы из bg
+//     if (msg.from === 'bg') {//ответы из bg
+       if (messageName === 'bg') {//ответы из bg
 //<<прием
         if (msg.id === 'showModal') {//отображение модалки
 
@@ -142,11 +152,17 @@ window.addEventListener("message", function (port) {
                 close.addEventListener('click', function () {
                     ANCHOR.style.display = 'none';
                     //>>отправка
-                    window.postMessage({
+                    // window.postMessage({
+                    //     from: 'content',
+                    //     id: 'modalMarkerAdded',
+                    //     url: currentUrl
+                    // }, '*');
+
+                    safari.self.tab.dispatchMessage("content", {
                         from: 'content',
                         id: 'modalMarkerAdded',
                         url: currentUrl
-                    }, '*');
+                    })
                 });
             }
 
@@ -158,21 +174,34 @@ window.addEventListener("message", function (port) {
             setTimeout(function () {
                 ANCHOR.style.display = 'none';
                 //>>отправка
-                window.postMessage({
+                // window.postMessage({
+                //     from: 'content',
+                //     id: 'modalMarkerAdded',
+                //     url: currentUrl
+                // }, '*');
+
+                safari.self.tab.dispatchMessage("content", {
                     from: 'content',
                     id: 'modalMarkerAdded',
                     url: currentUrl
-                }, '*');
+                })
             }, HIDE_MODAL_TIME);
 
             //отображение информации об активном кэшбэке зависит от данных в timers
             if ((timers) && (timers.hasOwnProperty(getClearUrl(currentUrl)))) {
                 //>>отправка
-                window.postMessage({
+                // window.postMessage({
+                //     from: 'content',
+                //     id: 'modalMarkerAdded',
+                //     url: currentUrl
+                // }, '*');
+
+                safari.self.tab.dispatchMessage("content", {
                     from: 'content',
                     id: 'modalMarkerAdded',
                     url: currentUrl
-                }, '*');
+                });
+
                 cashbackActive.style.display = 'flex';
                 setTimeout(function () {//после уведомления модалкой об активации кэшбэка, автоматически прячем ее через HIDE_CASHBACK_TIME
                     ANCHOR.style.display = 'none';
@@ -189,13 +218,21 @@ window.addEventListener("message", function (port) {
 
             clButton.addEventListener('click', function () {//функция активации кэшбэка из модалки. После задействования в background передается об этом информация
                 //>>отправка
-                window.postMessage({
+                // window.postMessage({
+                //     from: 'content',
+                //     id: 'setCashbackClick',
+                //     url: currentUrl,
+                //     timer: new Date().getTime(),
+                //     partnerId: partnerData.id
+                // }, '*');
+
+                safari.self.tab.dispatchMessage("content", {
                     from: 'content',
                     id: 'setCashbackClick',
                     url: currentUrl,
                     timer: new Date().getTime(),
                     partnerId: partnerData.id
-                }, '*');
+                });
             });
 
         }
@@ -301,24 +338,38 @@ window.addEventListener("message", function (port) {
                         if (!document.querySelector('#remodalCL2017')) {
                             document.body.appendChild(REANCHOR);
                             //>>отправка
-                            window.postMessage({//возвращаем в bg значение remodalShowed
+                            // window.postMessage({//возвращаем в bg значение remodalShowed
+                            //     from: 'content',
+                            //     id: 'remodalShowed',
+                            //     url: currentUrl,
+                            //     remodalShowed: true
+                            // }, '*');
+
+                            safari.self.tab.dispatchMessage("content", {
                                 from: 'content',
                                 id: 'remodalShowed',
                                 url: currentUrl,
                                 remodalShowed: true
-                            }, '*');
+                            });
                         }
 
 
                         close.addEventListener('click', function () {
                             REANCHOR.style.display = 'none';
                             //>>отправка
-                            window.postMessage({
+                            // window.postMessage({
+                            //     from: 'content',
+                            //     id: 'remodalShowed',
+                            //     url: currentUrl,
+                            //     remodalShowed: true
+                            // }, '*');
+
+                            safari.self.tab.dispatchMessage("content", {
                                 from: 'content',
                                 id: 'remodalShowed',
                                 url: currentUrl,
                                 remodalShowed: true
-                            }, '*');
+                            });
                         });
                     });
                 }
@@ -327,12 +378,20 @@ window.addEventListener("message", function (port) {
                     REANCHOR.style.display = 'none';
 
                     //>>отправка
-                    window.postMessage({
+                    // window.postMessage({
+                    //     from: 'content',
+                    //     id: 'remodalShowed',
+                    //     url: currentUrl,
+                    //     remodalShowed: true
+                    // }, '*');
+
+                    safari.self.tab.dispatchMessage("content", {
                         from: 'content',
                         id: 'remodalShowed',
                         url: currentUrl,
                         remodalShowed: true
-                    }, '*');
+                    });
+
                 }, HIDE_MODAL_TIME);
 
                 //прописываемзначение кэшбэка и ставим иконку партнера
@@ -342,14 +401,23 @@ window.addEventListener("message", function (port) {
 
                 clButton.addEventListener('click', function () {//функция активации кэшбэка из модалки. После задействования в background передается об этом информация
                     //>>отрпавка
-                    window.postMessage({
-                        from: 'content',
+                    // window.postMessage({
+                    //     from: 'content',
+                    //     id: 'setCashbackClick',
+                    //     url: currentUrl,
+                    //     timer: new Date().getTime(),
+                    //     partnerId: partnerData.id,
+                    //     remodalShowed: false
+                    // }, '*');
+
+                    safari.self.tab.dispatchMessage("content", {
+                        ffrom: 'content',
                         id: 'setCashbackClick',
                         url: currentUrl,
                         timer: new Date().getTime(),
                         partnerId: partnerData.id,
                         remodalShowed: false
-                    }, '*');
+                    });
                 });
             } else {
                 return false;

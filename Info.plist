@@ -61,6 +61,8 @@
 			</array>
 			<key>Start</key>
 			<array>
+				<string>js/sanitize-html.js</string>
+				<string>js/punycode.js</string>
 				<string>js/common.js</string>
 			</array>
 		</dict>

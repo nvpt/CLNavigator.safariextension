@@ -50,6 +50,7 @@ if(window === window.top) {
         var msg = data.message;
 
         var partnerData = msg.currentPartner;
+        console.log('partnerData=============== ', partnerData);
         var timers = msg.timers;
         var modalMarkers = msg.modalMarkers;
 

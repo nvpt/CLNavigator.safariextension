@@ -375,17 +375,19 @@ window.addEventListener("message", function (port) {
         var msg = port.message;
         //порядок запросов не менять
         // console.log('МОСТ');
+
+        //<<прием
         if (msg.from === 'content') {
             var contentUrl = msg.url;
             var clearUrl = getClearUrl(contentUrl);
-
+            //<<прием
             if (msg.id === 'modalMarkerAdded') {
                 if (partnersData[clearUrl]) {
                     var partner = partnersData[clearUrl];
                     checkModalMarkerAdded(partner);
                 }
             }
-
+            //<<прием
             if (msg.id === 'setCashbackClick') {
                 modalShowed = true;
                 remodalShowed = false;
@@ -398,16 +400,16 @@ window.addEventListener("message", function (port) {
                     }
                 }
             }
-
+            //<<прием
             if (msg.id === 'remodalShowed') {//активация маркера remodalShowed
                 remodalShowed = msg.remodalShowed;
             }
-
+            //<<прием
             if (msg.id === 'startConnect') {//начальная связь от content.js
 
                 if (partnersData[clearUrl]) {
                     partner = partnersData[clearUrl];
-
+                    //>>отправка
                     window.postMessage({//и отправляем в контент колбэк с этими данными
                         from: 'bg',
                         id: 'showModal',
@@ -417,12 +419,13 @@ window.addEventListener("message", function (port) {
                         loginData: _getLoginData()
                     }, '*');
                 }
-
+                //<<прием
                 if (clearUrl === ALI_CLEAR) {//если сайт - Aliexpress
                     _getCookies(contentUrl, ALI_COOKIE, function (e) {//кука aeu_cid содежит наш идентификатор "yVF2rZRRj"?
                         if ((e) && (e.value.indexOf(CL_ALI_UID) === -1)) {//если нет, то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку
                             if (partnersData[clearUrl]) {
                                 delete timers[ALI_CLEAR];
+                                //>>отправка
                                 window.postMessage({//и запустим в контенте колбэк с этими данными
                                     from: 'bg',
                                     id: 'showRemodal',
@@ -434,6 +437,7 @@ window.addEventListener("message", function (port) {
                                 }, '*');
                             }
                         } else {//если да
+                            //>>отправка
                             window.postMessage({//запустим колбэк для скрытия ремодалки
                                 from: 'bg',
                                 id: 'hideRemodal'
@@ -473,7 +477,12 @@ function globalBridge(message) {
             var partner = partnersData[clearUrl];
             // console.log(partner);
             //>>отправка
-            sendPartnerDataForModal(partner);
+            // sendPartnerDataForModal(partner);
+            safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("partner-data-send",
+                {
+                partner: partner
+                });
+
         }
 
     }

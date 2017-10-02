@@ -27,7 +27,7 @@ safari.self.addEventListener("message", webHandler, false);
  */
 function renderTestModal(val){
     var name = val.name;
-    var data = val.message;
+    var data = val.message.partner;
 
     var test1 = document.createElement('div');
     test1.classList.add('test1');

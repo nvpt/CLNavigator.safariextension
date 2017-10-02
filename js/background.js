@@ -75,23 +75,43 @@ function cookiesToObj(arr) {
     return obj;
 }
 
-function getCookiesAuth(incMsg) {//TODO настроить проверку р-куки
-    var cookies = incMsg;
-
-    var cookiesValue = incMsg.message;
-    var cookiesUrl = incMsg.target['url'];
+function getCookiesAuth(incMsg) {
 
     if (incMsg.name === "send-cookies") {
-        // console.log('cookies!!! ', cookies);
+        var cookiesValue = incMsg.message;
+        var cookiesUrl = incMsg.target['url'];
+
         if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
             currentCookie = parseInt(cookiesToObj(cookiesValue)['auth']);
-            // console.log('cookie_auth common ', currentCookie);
-            // console.log('cookies common ', cookies);
+        }
+    }
+}
+safari.application.addEventListener("message", getCookiesAuth, false);//проверяем куку авторизации; выполняется при каждом обновлении страницы
+
+function getCookiesAli(incMsg) {
+
+
+    // console.log('incMsg!!! ', incMsg);
+    // console.log('cookiesValue!!! ', cookiesValue);
+
+    // console.log('cookiesValue+++ aeu_cid', cookiesValue[aeu_cid]);
+    // console.log('cookiesUrl!!! ', cookiesUrl);
+    // console.log('clear cookiesUrl*** ', getClearUrl(cookiesUrl));
+    // console.log('clear cookiesUrl*** ', getClearUrl(cookiesUrl));
+
+    if (incMsg.name === "send-cookies") {
+        var cookiesValue = incMsg.message;
+        var cookiesUrl = incMsg.target['url'];
+        var cookiesObj = cookiesToObj(cookiesValue);
+        console.log('cookiesToObj!!! ', cookiesToObj(cookiesValue));
+
+        if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
+            currentCookie = parseInt(cookiesToObj(cookiesValue)['auth']);
         }
     }
 }
 
-safari.application.addEventListener("message", getCookiesAuth, false);//проверяем куку авторизации; выполняется при каждом обновлении страницы
+// safari.application.addEventListener("message", getCookiesAli, false);
 
 
 function _getCookies(url, name, cb) {//for aliexpress//TODO проверить корректность работы
@@ -203,24 +223,17 @@ setInterval(checkAuthorization, SESSION_TIME);
  */
 function uploadServerData() {
 
-
-        // console.log('*1');
-
         if (parseInt(currentCookie) !== 0 && parseInt(authIdentifier) !== parseInt(currentCookie)) {
-            // console.log('*2');
+
             reqProfile(
                 function (resp) {
                     loginData = resp;
                     authIdentifier = parseInt(currentCookie);
                     modalMarkers = [0];//при смене пользователя также сбрасываем маркеры отображавшихся модалок
-
-                    // console.log('*3');
-
                     //сюда
                 },
                 function () {
                     resetAuthorisation();
-                    // console.log('*4');
                 }
             );
             timers = {};//сбрасываем время посещения парттнеров для нового пользователя
@@ -229,16 +242,14 @@ function uploadServerData() {
     if (parseInt(currentCookie) !== 0) {
 
         if (Object.keys(partnersDataAdmitad).length === 0) {
-            // console.log('*5');
+
             partnersDataRequest(
                 function (res) {
                     arrayToObj(res, partnersDataAdmitad);
                     partnersData = partnersDataAdmitad;
-                    // console.log('*6');
                 },
                 function () {
                     // console.info('Партнеры не загружены');
-                    // console.log('*7');
                 }
             );
         }
@@ -246,17 +257,16 @@ function uploadServerData() {
 
     } else {
         resetAuthorisation();
-        // console.log('*8');
+
         if (Object.keys(partnersDataCustom).length === 0) {
 
             partnersDataRequest(
                 function (res) {
                     arrayToObj(res, partnersDataCustom);
                     partnersData = partnersDataCustom;
-                    // console.log('*9');
                 },
                 function () {
-                    // console.log('*10');
+
                 }
             );
         }
@@ -359,19 +369,13 @@ function reloadTab() {
 }
 
 
-/* Обработчики действи с табами */
-
+    /* Обработчики действи с табами */
     safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
     safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//обновление
 
 
 
-
-
-
-/* Мост между content и background *///TODO переписать под апи сафари. Разместитьинлайном в глобале. Ответ будет в тест-контенте
-
-
+/* Мост между content и background *///TODO Разместить инлайном в глобале.
 safari.application.addEventListener("message", function (data) {
 // window.addEventListener("message", function (port) {
         // var msg = port.data;
@@ -437,8 +441,13 @@ safari.application.addEventListener("message", function (data) {
                 }
                 //<<прием
                 if (clearUrl === ALI_CLEAR) {//если сайт - Aliexpress
-                    _getCookies(contentUrl, ALI_COOKIE, function (e) {//кука aeu_cid содежит наш идентификатор "yVF2rZRRj"?
-                        if ((e) && (e.value.indexOf(CL_ALI_UID) === -1)) {//если нет, то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку
+
+                    safari.application.addEventListener("message", function(data){
+                        var cookiesValue = data.message;
+                        var cookiesUrl = data.target['url'];
+                        var cookiesObj = cookiesToObj(cookiesValue);
+
+                        if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) === -1)) {//если кука aeu_cid не содежит наш идентификатор "yVF2rZRRj", то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку
                             if (partnersData[clearUrl]) {
                                 delete timers[ALI_CLEAR];
                                 //>>отправка
@@ -470,13 +479,55 @@ safari.application.addEventListener("message", function (data) {
                             //     id: 'hideRemodal'
                             // }, '*');
 
-                            safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
-                                {
-                                    from: 'bg',
-                                    id: 'hideRemodal'
-                                });
+                            // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                            //     {
+                            //         from: 'bg',
+                            //         id: 'hideRemodal'
+                            //     });
                         }
-                    });
+                    }, false);
+
+
+                    // _getCookies(contentUrl, ALI_COOKIE, function (e) {//кука aeu_cid содежит наш идентификатор "yVF2rZRRj"?
+                    //     if ((e) && (e.value.indexOf(CL_ALI_UID) === -1)) {//если нет, то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку
+                    //         if (partnersData[clearUrl]) {
+                    //             delete timers[ALI_CLEAR];
+                    //             //>>отправка
+                    //             // window.postMessage({//и запустим в контенте колбэк с этими данными
+                    //             //     from: 'bg',
+                    //             //     id: 'showRemodal',
+                    //             //     currentPartner: partner,
+                    //             //     timers: timers,
+                    //             //     modalMarkers: modalMarkers,
+                    //             //     modalShowed: modalShowed,
+                    //             //     remodalShowed: remodalShowed
+                    //             // }, '*');
+                    //
+                    //             safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                    //                 {
+                    //                     from: 'bg',
+                    //                     id: 'showRemodal',
+                    //                     currentPartner: partner,
+                    //                     timers: timers,
+                    //                     modalMarkers: modalMarkers,
+                    //                     modalShowed: modalShowed,
+                    //                     remodalShowed: remodalShowed
+                    //                 });
+                    //         }
+                    //     } else {//если да
+                    //         //>>отправка
+                    //         // window.postMessage({//запустим колбэк для скрытия ремодалки
+                    //         //     from: 'bg',
+                    //         //     id: 'hideRemodal'
+                    //         // }, '*');
+                    //
+                    //         safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                    //             {
+                    //                 from: 'bg',
+                    //                 id: 'hideRemodal'
+                    //             });
+                    //     }
+                    // });
                 }
             }
         }
@@ -489,75 +540,77 @@ safari.application.addEventListener("message", function (data) {
 /*
 * Мост связи с веб
 * */
-function globalBridge(message) {
-    var messageName = message.name;
-    var messageData = message.message;
-
-    //<<прием
-    if (messageName === "send-url") {
-
-        receiveWebUrl(message);//тестовое
-
-        // console.log('web-url bg ', message.message);
-
-        var contentUrl = message.message;
-        var clearUrl = getClearUrl(contentUrl);
-        // console.log('partnersData ', partnersData);
-        // console.log('clearUrl ', clearUrl);
-        // console.log('partnersData[clearUrl]', partnersData[clearUrl]);
-
-        if (partnersData[clearUrl]) {
-            var partner = partnersData[clearUrl];
-            // console.log(partner);
-            //>>отправка
-            // sendPartnerDataForModal(partner);
-            safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("partner-data-send",
-                {
-                partner: partner
-                });
-
-        }
-
-    }
-
-    //<<прием
-    // if (messageName === "send-cookies") {
-    //     return function(message){
-    //         console.log('setCookies bg ', message);
-    //     }
-    // }
-
-
-
-    //>>отправка
-    sendLoginData(_getLoginData());
-
-}
-safari.application.addEventListener("message", globalBridge, false);
+// function globalBridge(message) {
+//     var messageName = message.name;
+//     var messageData = message.message;
+//
+//     //<<прием
+//     if (messageName === "send-url") {
+//
+//         receiveWebUrl(message);//тестовое
+//
+//         // console.log('web-url bg ', message.message);
+//
+//         var contentUrl = message.message;
+//         var clearUrl = getClearUrl(contentUrl);
+//         // console.log('partnersData ', partnersData);
+//         // console.log('clearUrl ', clearUrl);
+//         // console.log('partnersData[clearUrl]', partnersData[clearUrl]);
+//
+//         if (partnersData[clearUrl]) {
+//             var partner = partnersData[clearUrl];
+//             // console.log(partner);
+//             //>>отправка
+//             // sendPartnerDataForModal(partner);
+//             safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("partner-data-send",
+//                 {
+//                 partner: partner
+//                 });
+//
+//         }
+//
+//     }
+//
+//     //<<прием
+//     // if (messageName === "send-cookies") {
+//     //     return function(message){
+//     //         console.log('setCookies bg ', message);
+//     //     }
+//     // }
+//
+//
+//
+//     //>>отправка
+//     sendLoginData(_getLoginData());
+//
+// }
+// safari.application.addEventListener("message", globalBridge, false);
 
 
 /*
 * Методы обработки принимаемых данных из веба
 * */
-function receiveWebUrl(val) {
-    var name = val.name;
-    var data = val.message;
-
-    // console.log('web-url bg ', data);
-}
+// function receiveWebUrl(val) {
+//     var name = val.name;
+//     var data = val.message;
+//
+//     // console.log('web-url bg ', data);
+// }
 
 
 /**
  * Методы отправки данных в веб
  */
-function sendLoginData(data){
-    // console.log('sendLoginData bg ', data);
-    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("login-data-send", data);
-}
+// function sendLoginData(data){
+//     // console.log('sendLoginData bg ', data);
+//     if(data){
+//     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("login-data-send", data);
+//     }
+// }
 
-function sendPartnerDataForModal(data){
-    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("partner-data-send", data);
-}
+// function sendPartnerDataForModal(data){
+//     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("partner-data-send", data);
+// }
 
 
 

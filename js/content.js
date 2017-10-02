@@ -3,8 +3,8 @@
  */
 console.log('--content--');
 
-var SHOW_MODAL_TIME = 50;//5000
-var HIDE_MODAL_TIME = 5000;//15000//15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
+var SHOW_MODAL_TIME = 50;//5000//TODO temp
+var HIDE_MODAL_TIME = 5000;//TODO temp//15000//15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
 var HIDE_CASHBACK_TIME = 22000;//7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 
 if(window === window.top) {
@@ -50,7 +50,6 @@ if(window === window.top) {
         var msg = data.message;
 
         var partnerData = msg.currentPartner;
-        console.log('partnerData=============== ', partnerData);
         var timers = msg.timers;
         var modalMarkers = msg.modalMarkers;
 
@@ -252,7 +251,7 @@ if(window === window.top) {
                 partnerData = msg.currentPartner;
                 var modalShowed = msg.modalShowed;
                 var remodalShowed = msg.remodalShowed;
-                currentUrl = document.location.href;
+                currentUrl = window.location.href;
 
                 if (modalShowed) {//ремодалка выведется только, если предварительно всплывала модалка
 
@@ -343,7 +342,7 @@ if(window === window.top) {
 
                         // document.addEventListener('DOMContentLoaded', function () { //не для сафари
                         window.addEventListener('load', function () {//для сафари
-                            if (document.querySelector('#modalCL2017')) {//на вский случай прячем основную модалку
+                            if (document.querySelector('#modalCL2017')) {//на вяский случай прячем основную модалку
                                 document.querySelector('#modalCL2017').style.display = 'none';
                             }
                             if (!document.querySelector('#remodalCL2017')) {
@@ -405,10 +404,11 @@ if(window === window.top) {
 
                     }, HIDE_MODAL_TIME);
 
-                    //прописываемзначение кэшбэка и ставим иконку партнера
-                    clPartnerLogo.setAttribute('src', msg.currentPartner.logo_url);
-                    cashbackValue.innerText = msg.currentPartner.sale_text;
-                    clButton.setAttribute('href', msg.currentPartner.href);
+                    //прописываем значение кэшбэка и ставим иконку партнера
+                    clPartnerLogo.setAttribute('src', partnerData.logo_url);
+                    cashbackValue.innerText = partnerData.sale_text;
+                    clButton.setAttribute('href', partnerData.href);
+
 
                     clButton.addEventListener('click', function () {//функция активации кэшбэка из модалки. После задействования в background передается об этом информация
                         //>>отрпавка
@@ -430,12 +430,13 @@ if(window === window.top) {
                             remodalShowed: false
                         });
                     });
-                } else {
+                }
+                else {//? нужно? TODO
                     return false;
                 }
             }
             //<<прием
-            else if (msg.id === 'hideRemodal') {//прнудительное скрытие ремодалки
+            else if (msg.id === 'hideRemodal') {//принудительное скрытие ремодалки
                 if (document.querySelector('#remodalCL2017')) {
                     document.querySelector('#remodalCL2017').style.display = 'none';
                     document.querySelector('#remodalCL2017').style.opacity = 0;

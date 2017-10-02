@@ -121,9 +121,10 @@
 		box-sizing: border-box!important;
 
 		.cashback-active {
-			display: none!important;
+			display: none;
 			//display: flex!important;
 			position: absolute!important;
+			left: 0!important;
 			justify-content: center!important;
 			align-items: center!important;
 			background: url('https://clcorp.ru/images/extenion/check-icon.png') 20px center no-repeat, linear-gradient(to right, #2CC79D 0%, #26B890 100%) no-repeat center!important;
@@ -190,7 +191,7 @@
 		text-align: center!important;
 		text-decoration: none !important;
 		border-radius: 6px!important;
-		font-size: 16px!important;
+		font-size: 15px!important;
 		font-weight: bold!important;
 
 		&:hover,
@@ -298,8 +299,9 @@
 
 		.reactivation {
 			position: absolute!important;
+			left: 0!important;
 			top: 10px!important;
-			display: flex!important;
+			display: flex;
 			width: 100%!important;
 			height: 15px!important;
 			padding: 0!important;

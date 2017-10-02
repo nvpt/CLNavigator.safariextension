@@ -179,6 +179,7 @@ function resetAuthorisation() {
     timers = {};
     authIdentifier = parseInt(-1);
     currentCookie = 0;
+    modalMarkers=[0];
 }
 
 
@@ -211,6 +212,8 @@ function uploadServerData() {
                 function (resp) {
                     loginData = resp;
                     authIdentifier = parseInt(currentCookie);
+                    modalMarkers = [0];//при смене пользователя также сбрасываем маркеры отображавшихся модалок
+
                     // console.log('*3');
 
                     //сюда

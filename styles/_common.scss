@@ -6,12 +6,20 @@ body {
   padding: 0;
 }
 
-.wrapper {
-  font-size: 0;
-}
+
 
 .modalCL2017,
 .popup {
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .wrapper {
+    font-size: 0;
+  }
+
 
 
   a {

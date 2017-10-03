@@ -14,13 +14,17 @@ body {
   margin: 0;
   padding: 0; }
 
-.wrapper {
-  font-size: 0; }
-
 .modalCL2017,
 .popup {
   /*END Общие*/
   /*Сетка*/ }
+  .modalCL2017 *,
+  .popup * {
+    margin: 0;
+    padding: 0; }
+  .modalCL2017 .wrapper,
+  .popup .wrapper {
+    font-size: 0; }
   .modalCL2017 a,
   .popup a {
     outline: none; }

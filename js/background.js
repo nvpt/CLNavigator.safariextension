@@ -6,7 +6,7 @@ console.log('--bg--');
  * Иконка не партнера. дефолтная
  */
 function markNotPartner() {
-    var iconUri = safari.extension.baseURI + 'img/logo.png';
+    var iconUri = safari.extension.baseURI + 'img/icon/Icon-32.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -16,7 +16,7 @@ function markNotPartner() {
  * Иконка на партнере
  */
 function markPartner() {
-    var iconUri = safari.extension.baseURI + 'img/balance.png';
+    var iconUri = safari.extension.baseURI + 'img/icon/partner-32.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -26,7 +26,7 @@ function markPartner() {
  */
 //TODO описать вращения иконки
 function markCheckPartner() {
-    var iconUri = safari.extension.baseURI + 'img/dynamic.png';
+    var iconUri = safari.extension.baseURI + 'img/icon/wait-32.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '...';
 }
@@ -35,7 +35,7 @@ function markCheckPartner() {
  * Иконка кэшбэка
  */
 function markCashbackActive() {
-    var iconUri = safari.extension.baseURI + 'img/search.png';
+    var iconUri = safari.extension.baseURI + 'img/icon/done-32.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -63,7 +63,6 @@ function changeIcon(url) {
 /**
  * Куки
  */
-
 function cookiesToObj(arr) {
     var obj = {};
     for (var i = 0; i < arr.length; i++) {
@@ -75,51 +74,37 @@ function cookiesToObj(arr) {
     return obj;
 }
 
-function getCookiesAuth(incMsg) {
+function getCookiesAuth(msg) {
 
-    if (incMsg.name === "send-cookies") {
-        var cookiesValue = incMsg.message;
-        var cookiesUrl = incMsg.target['url'];
+    if (msg.name === "send-cookies") {
+        var cookiesValue = msg.message;
+        var cookiesUrl = msg.target['url'];
 
-        if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
-            currentCookie = parseInt(cookiesToObj(cookiesValue)['auth']);
+        if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {//TODO добавить урл профиля. Проверить куку там
+            authCookie = parseInt(cookiesToObj(cookiesValue)['auth']);
         }
     }
 }
+
 safari.application.addEventListener("message", getCookiesAuth, false);//проверяем куку авторизации; выполняется при каждом обновлении страницы
 
-function getCookiesAli(incMsg) {
-
-
-    // console.log('incMsg!!! ', incMsg);
-    // console.log('cookiesValue!!! ', cookiesValue);
-
-    // console.log('cookiesValue+++ aeu_cid', cookiesValue[aeu_cid]);
-    // console.log('cookiesUrl!!! ', cookiesUrl);
-    // console.log('clear cookiesUrl*** ', getClearUrl(cookiesUrl));
-    // console.log('clear cookiesUrl*** ', getClearUrl(cookiesUrl));
-
-    if (incMsg.name === "send-cookies") {
-        var cookiesValue = incMsg.message;
-        var cookiesUrl = incMsg.target['url'];
-        var cookiesObj = cookiesToObj(cookiesValue);
-        console.log('cookiesToObj!!! ', cookiesToObj(cookiesValue));
-
-        if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
-            currentCookie = parseInt(cookiesToObj(cookiesValue)['auth']);
-        }
-    }
-}
+// function getCookiesAli(msg) {//TODO потом
+//
+//
+//     if (msg.name === "send-cookies") {
+//         var cookiesValue = msg.message;
+//         var cookiesUrl = msg.target['url'];
+//         var cookiesObj = cookiesToObj(cookiesValue);
+//         console.log('cookiesToObj!!! ', cookiesToObj(cookiesValue));
+//
+//         if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
+//             authIdentifier = parseInt(cookiesToObj(cookiesValue)['auth']);
+//         }
+//     }
+// }
 
 // safari.application.addEventListener("message", getCookiesAli, false);
 
-
-function _getCookies(url, name, cb) {//for aliexpress//TODO проверить корректность работы
-    safari.cookies.get({
-        url: url,
-        name: name
-    }, cb);
-}
 
 
 /* Запросы */
@@ -132,7 +117,8 @@ function _getCookies(url, name, cb) {//for aliexpress//TODO проверить �
 function arrayToObj(arr, obj) {
     for (var i = 0; i < arr.length; i++) {
         var partner = arr[i];
-        // if(!partner.site_url){//проверка на корректность указанного урла
+        /* проверка на корректность указанного урла */
+        // if(!partner.site_url){
         //     console.log('partner no url ', partner);
         // }
         obj[getClearUrl(partner.site_url)] = partner;
@@ -146,21 +132,20 @@ function arrayToObj(arr, obj) {
  * @param reject
  */
 function reqProfile(resolve, reject) {
-    // if(safari && safari.application) {
-        var url = 'https://cl.world/api/v2/profile/menu';
-        var req = new XMLHttpRequest();
-        req.open('GET', url);
-        req.send();
-        req.addEventListener('load', function () {
-            if (req.status === 200) {
-                var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
-                resolve(response);
-            } else {
-                console.error('error authorization');
-                reject();
-            }
-        });
-    // }
+    var url = 'https://cl.world/api/v2/profile/menu';
+    var req = new XMLHttpRequest();
+    req.open('GET', url);
+    req.send();
+    req.addEventListener('load', function () {
+        if (req.status === 200) {
+            var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
+            console.log('response ', response);
+            resolve(response);
+        } else {
+            console.error('error authorization');
+            reject();
+        }
+    });
 }
 
 
@@ -176,13 +161,14 @@ function partnersDataRequest(resolve, reject) {
         req.open('GET', url);
         req.send();
         req.addEventListener('load', function () {
+
             if (req.status === 200) {
                 var response = JSON.parse(req.responseText);
                 for (var i = 0; i < response.length; i++) {
                     checkSafeResponse(response[i]);
                 }
-
                 resolve(response);
+
             } else {
                 reject();
             }
@@ -192,54 +178,39 @@ function partnersDataRequest(resolve, reject) {
 
 
 /**
- * Сброс авторизации
+ * Сброс авторизации и маркеров посещений
  */
 function resetAuthorisation() {
     loginData = {};
+    authIdentifier = 0;
+    authCookie = 0;
     timers = {};
-    authIdentifier = parseInt(-1);
-    currentCookie = 0;
     modalMarkers=[0];
 }
 
 
 /**
- * Проверка авторизации
+ * Проверка ссылок партнеров
  */
-function checkAuthorization() {
-    reqProfile(function (resp) {
-        loginData = resp;
+function checkPartnersLink() {
 
-    }, function () {
-        resetAuthorisation();
-    });
-}
+    if (parseInt(authIdentifier) === 0) {
 
-//чтобы не вылетала авторизация, каждые SESSION_TIME пингуем наш сервер
-setInterval(checkAuthorization, SESSION_TIME);
+        if (Object.keys(partnersDataCustom).length === 0) {
 
-/**
- * Загрузка данных партнеров
- */
-function uploadServerData() {
-
-        if (parseInt(currentCookie) !== 0 && parseInt(authIdentifier) !== parseInt(currentCookie)) {
-
-            reqProfile(
-                function (resp) {
-                    loginData = resp;
-                    authIdentifier = parseInt(currentCookie);
-                    modalMarkers = [0];//при смене пользователя также сбрасываем маркеры отображавшихся модалок
-                    //сюда
+            partnersDataRequest(
+                function (res) {
+                    arrayToObj(res, partnersDataCustom);
+                    partnersData = partnersDataCustom;
                 },
                 function () {
-                    resetAuthorisation();
+                    // console.info('Партнеры не загружены');
                 }
             );
-            timers = {};//сбрасываем время посещения парттнеров для нового пользователя
         }
+        partnersData = partnersDataCustom;
 
-    if (parseInt(currentCookie) !== 0) {
+    } else {
 
         if (Object.keys(partnersDataAdmitad).length === 0) {
 
@@ -254,53 +225,73 @@ function uploadServerData() {
             );
         }
         partnersData = partnersDataAdmitad;
+    }
+}
 
-    } else {
+/**
+ * Проверка авторизации
+ */
+function checkAuthorisation(){
+    if (parseInt(authIdentifier) === 0) {
         resetAuthorisation();
+    }
+}
 
-        if (Object.keys(partnersDataCustom).length === 0) {
+/**
+ * Загрузка данных партнеров
+ */
 
-            partnersDataRequest(
-                function (res) {
-                    arrayToObj(res, partnersDataCustom);
-                    partnersData = partnersDataCustom;
+function uploadServerData(url) { /* TODO проверить что быстрее орабатывает, проверка куки или эта функция, т.к. сравниваем с authCookie */
+    console.log(1);
+
+    /* сравнение идентификатора авторизации (authIdentifier) c кукой авторизации
+     актуально только при открытой вкладке с нашего сайта,
+      т.к. доступа к глобальному хранилищу кук в сафари нет */
+    if (url.indexOf('cl.world') !== -1) {//TODO возможно добавить урл кабинета
+
+        /* если не авторизованы, или id авторизации не совпадает с id в текущих куках, то отправляем запрос */
+        if (parseInt(authIdentifier) === 0 || (parseInt(authIdentifier) !== parseInt(authCookie) && parseInt(authCookie) !== 0)) {
+
+            console.log(2);
+
+            reqProfile(
+                function (resp) {
+                    loginData = resp;
+                    authIdentifier = parseInt(loginData.profile.id);//перезаписываем идентификатор
+                    authCookie = parseInt(loginData.profile.id);//вместе с кукой
+
+                    /* так как идет переавторизация, то в любом слючае сбрасываем маркеры посещений */
+                    modalMarkers = [0];
+                    timers = {};
+
+                    checkPartnersLink();
                 },
                 function () {
-
+                    resetAuthorisation();
+                    checkPartnersLink();
                 }
             );
         }
-        partnersData = partnersDataCustom;
+
+    } else {
+        checkAuthorisation();
+        checkPartnersLink();
     }
-
-
-    // console.log('currentCookie bg ', currentCookie);
-    // console.log('authIdentifier bg ', authIdentifier);
-    // console.log('loginData1 bg ', loginData);
 }
 
-//загрузка данных партнеров при первом запуске
+/* актуализируем данные сразу при запуске расширения */
 uploadServerData();
 
 
 /**
  * Обновление данных партнеров. Для периодической загрузки данных раз в 22 - 24 часа
  */
-
+//TODO проверить
 function updateServerData() {
-
-    reqProfile(
-        function (resp) {
-            loginData = resp;
-        },
-        function () {
-            resetAuthorisation();
-        }
-    );
-
+    
     partnersDataRequest(//запрос в любом случае, поэтому условия внутри
         function (res) {
-            if (parseInt(currentCookie) !== 0) {
+            if (parseInt(authIdentifier) !== 0) {
                 arrayToObj(res, partnersDataAdmitad);
                 partnersData = partnersDataAdmitad;
             } else {
@@ -315,7 +306,28 @@ function updateServerData() {
         });
 }
 
-setInterval(updateServerData, SERVER_DATA_UPDATE_TIME);
+setInterval(updateServerData, PARTNERS_UPDATE_TIME);
+
+
+/**
+ * Проверка авторизации
+ */
+function updateAuthorization() {
+    reqProfile(function (resp) {
+        loginData = resp;
+        authIdentifier =  loginData.profile.id;//TODO проверить корректность
+        authCookie =  loginData.profile.id;//TODO проверить корректность
+    }, function () {
+        resetAuthorisation();
+    });
+}
+
+/* проверяем сразу при запуске расширения */
+updateAuthorization();
+
+/* и затем каждые AUTHORISTION_UPDATE_TIME */
+setInterval(updateAuthorization, AUTHORISATION_UPDATE_TIME);
+
 
 
 /* Проверяем наличие данных партнера в массиве. Если нет, то запрашиваем */
@@ -350,46 +362,51 @@ function checkModalMarkerAdded(partner) {
 
 /* Действия с табами */
 function clickTab() {
+
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    // console.log('***************clickTab', currentUrl);
+
     changeIcon(currentUrl);//при клике сверяем актуальность иконки
     addPartnerToVisited(currentUrl);
 
+    // console.log('***************clickTab', currentUrl);
 }
 
 
 function reloadTab() {
 
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
-    // console.log('**************RELOADTAB', currentUrl);
+
     changeIcon(currentUrl);
-    uploadServerData();
+    uploadServerData(currentUrl);
     addPartnerToVisited(currentUrl);
-    // test();
+
+    // console.log('**************RELOADTAB', currentUrl);
+    console.log('loginData ', loginData);
+    console.log('authCookie ', authCookie);
+    console.log('authIdentifier ', authIdentifier);
 }
 
 
-    /* Обработчики действи с табами */
-    safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
-    safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//обновление
+/* Обработчики действи с табами */
+safari.application.activeBrowserWindow.addEventListener("activate", clickTab, true);//клик по табу
+safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, true);//обновление
 
 
 
 /* Мост между content и background *///TODO Разместить инлайном в глобале.
 safari.application.addEventListener("message", function (data) {
-// window.addEventListener("message", function (port) {
-        // var msg = port.data;
-        // var msg = port.message;
+
         var messageName = data.name;
         var msg = data.message;
 
-        //порядок запросов не менять
+        //порядок запросов не менять (?)
         // console.log('МОСТ');
 
         //<<прием
         if (messageName === 'content') {
             var contentUrl = msg.url;
             var clearUrl = getClearUrl(contentUrl);
+
             //<<прием
             if (msg.id === 'modalMarkerAdded') {
                 if (partnersData[clearUrl]) {
@@ -397,38 +414,38 @@ safari.application.addEventListener("message", function (data) {
                     checkModalMarkerAdded(partner);
                 }
             }
+
             //<<прием
             if (msg.id === 'setCashbackClick') {
                 modalShowed = true;
                 remodalShowed = false;
-                if (Object.keys(loginData).length > 0) { //если юзер залогинен, активируем кэшбэк по клику
+
+                /* если юзер залогинен, активируем кэшбэк по клику */
+                if (Object.keys(loginData).length > 0) {
                     _addToTimers(clearUrl, msg.timer);
                     for (var i = 0; i < modalMarkers.length; i++) {
                         if (modalMarkers[i] === msg.partnerId) {
-                            modalMarkers.splice(i, 1);//удаляем маркер отображени модалки, чтобы после активации кэшбэка модалка отобразилась заново еще раз
+                            /* удаляем маркер отображени модалки,
+                            чтобы после активации кэшбэка модалка отобразилась заново еще раз,
+                             уже с уведомлением, что кэшбэк активирован */
+                            modalMarkers.splice(i, 1);
                         }
                     }
                 }
             }
+
             //<<прием
             if (msg.id === 'remodalShowed') {//активация маркера remodalShowed
                 remodalShowed = msg.remodalShowed;
             }
+
             //<<прием
             if (msg.id === 'startConnect') {//начальная связь от content.js
 
                 if (partnersData[clearUrl]) {
                     partner = partnersData[clearUrl];
-                    //>>отправка
-                    // window.postMessage({//и отправляем в контент колбэк с этими данными
-                    //     from: 'bg',
-                    //     id: 'showModal',
-                    //     currentPartner: partner,
-                    //     timers: timers,
-                    //     modalMarkers: modalMarkers,
-                    //     loginData: _getLoginData()
-                    // }, '*');
 
+                    //>>отправка
                     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                         {
                             from: 'bg',
@@ -440,6 +457,7 @@ safari.application.addEventListener("message", function (data) {
                         });
                 }
                 //<<прием
+                //TODO переписать
                 if (clearUrl === ALI_CLEAR) {//если сайт - Aliexpress
 
                     safari.application.addEventListener("message", function(data){
@@ -450,17 +468,8 @@ safari.application.addEventListener("message", function (data) {
                         if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) === -1)) {//если кука aeu_cid не содежит наш идентификатор "yVF2rZRRj", то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку
                             if (partnersData[clearUrl]) {
                                 delete timers[ALI_CLEAR];
-                                //>>отправка
-                                // window.postMessage({//и запустим в контенте колбэк с этими данными
-                                //     from: 'bg',
-                                //     id: 'showRemodal',
-                                //     currentPartner: partner,
-                                //     timers: timers,
-                                //     modalMarkers: modalMarkers,
-                                //     modalShowed: modalShowed,
-                                //     remodalShowed: remodalShowed
-                                // }, '*');
 
+                                //>>отправка
                                 safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                                     {
                                         from: 'bg',
@@ -473,12 +482,9 @@ safari.application.addEventListener("message", function (data) {
                                     });
                             }
                         } else {//если да
-                            //>>отправка
-                            // window.postMessage({//запустим колбэк для скрытия ремодалки
-                            //     from: 'bg',
-                            //     id: 'hideRemodal'
-                            // }, '*');
 
+                            //>>отправка
+                            //TODO в сафари срабатывает сразу. и закрывает окно
                             // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                             //     {
                             //         from: 'bg',
@@ -486,131 +492,9 @@ safari.application.addEventListener("message", function (data) {
                             //     });
                         }
                     }, false);
-
-
-                    // _getCookies(contentUrl, ALI_COOKIE, function (e) {//кука aeu_cid содежит наш идентификатор "yVF2rZRRj"?
-                    //     if ((e) && (e.value.indexOf(CL_ALI_UID) === -1)) {//если нет, то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку
-                    //         if (partnersData[clearUrl]) {
-                    //             delete timers[ALI_CLEAR];
-                    //             //>>отправка
-                    //             // window.postMessage({//и запустим в контенте колбэк с этими данными
-                    //             //     from: 'bg',
-                    //             //     id: 'showRemodal',
-                    //             //     currentPartner: partner,
-                    //             //     timers: timers,
-                    //             //     modalMarkers: modalMarkers,
-                    //             //     modalShowed: modalShowed,
-                    //             //     remodalShowed: remodalShowed
-                    //             // }, '*');
-                    //
-                    //             safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
-                    //                 {
-                    //                     from: 'bg',
-                    //                     id: 'showRemodal',
-                    //                     currentPartner: partner,
-                    //                     timers: timers,
-                    //                     modalMarkers: modalMarkers,
-                    //                     modalShowed: modalShowed,
-                    //                     remodalShowed: remodalShowed
-                    //                 });
-                    //         }
-                    //     } else {//если да
-                    //         //>>отправка
-                    //         // window.postMessage({//запустим колбэк для скрытия ремодалки
-                    //         //     from: 'bg',
-                    //         //     id: 'hideRemodal'
-                    //         // }, '*');
-                    //
-                    //         safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
-                    //             {
-                    //                 from: 'bg',
-                    //                 id: 'hideRemodal'
-                    //             });
-                    //     }
-                    // });
                 }
             }
         }
     }
 );
-// });
-
-
-
-/*
-* Мост связи с веб
-* */
-// function globalBridge(message) {
-//     var messageName = message.name;
-//     var messageData = message.message;
-//
-//     //<<прием
-//     if (messageName === "send-url") {
-//
-//         receiveWebUrl(message);//тестовое
-//
-//         // console.log('web-url bg ', message.message);
-//
-//         var contentUrl = message.message;
-//         var clearUrl = getClearUrl(contentUrl);
-//         // console.log('partnersData ', partnersData);
-//         // console.log('clearUrl ', clearUrl);
-//         // console.log('partnersData[clearUrl]', partnersData[clearUrl]);
-//
-//         if (partnersData[clearUrl]) {
-//             var partner = partnersData[clearUrl];
-//             // console.log(partner);
-//             //>>отправка
-//             // sendPartnerDataForModal(partner);
-//             safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("partner-data-send",
-//                 {
-//                 partner: partner
-//                 });
-//
-//         }
-//
-//     }
-//
-//     //<<прием
-//     // if (messageName === "send-cookies") {
-//     //     return function(message){
-//     //         console.log('setCookies bg ', message);
-//     //     }
-//     // }
-//
-//
-//
-//     //>>отправка
-//     sendLoginData(_getLoginData());
-//
-// }
-// safari.application.addEventListener("message", globalBridge, false);
-
-
-/*
-* Методы обработки принимаемых данных из веба
-* */
-// function receiveWebUrl(val) {
-//     var name = val.name;
-//     var data = val.message;
-//
-//     // console.log('web-url bg ', data);
-// }
-
-
-/**
- * Методы отправки данных в веб
- */
-// function sendLoginData(data){
-//     // console.log('sendLoginData bg ', data);
-//     if(data){
-//     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("login-data-send", data);
-//     }
-// }
-
-// function sendPartnerDataForModal(data){
-//     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("partner-data-send", data);
-// }
-
-
 

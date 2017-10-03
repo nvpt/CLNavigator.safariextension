@@ -1,54 +1,57 @@
 /*Общие*/
-* {
-  margin: 0;
-  padding: 0;
-}
 
 body {
   font-size: 14px;
+  margin: 0;
+  padding: 0;
 }
 
 .wrapper {
   font-size: 0;
 }
 
-a {
-  outline: none;
+.modalCL2017,
+.popup {
 
-  &:hover,
-  &:focus,
-  &:active {
-    outline:none;
+
+  a {
+    outline: none;
+
+    &:hover,
+    &:focus,
+    &:active {
+      outline:none;
+    }
   }
-}
 
 
-strong {
-  font-family:ProximaBold, sans-serif;
-}
+  strong {
+    font-family:ProximaBold, sans-serif;
+  }
 
-/*END Общие*/
+  /*END Общие*/
 
-/*Сетка*/
-[class^="part-"] {
-  display: inline-block;
-  font-size: 0;
-}
+  /*Сетка*/
+  [class^="part-"] {
+    display: inline-block;
+    font-size: 0;
+  }
 
-.part-30 {
-  width: 30%;
-}
+  .part-30 {
+    width: 30%;
+  }
 
-.part-45 {
-  width: 45%;
-}
+  .part-45 {
+    width: 45%;
+  }
 
-.part-55 {
-	width: 55%;
-}
+  .part-55 {
+    width: 55%;
+  }
 
-.part-70 {
-  width: 70%;
+  .part-70 {
+    width: 70%;
+  }
 }
 
 /*END Сетка*/

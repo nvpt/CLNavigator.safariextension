@@ -1,4 +1,4 @@
-@import  "_fonts";
+//@import  "_fonts";
 
 .modalCL2017 {
 	position: fixed!important;
@@ -326,35 +326,4 @@
 		}
 	}
 
-}
-
-
-.test1 {
-	position: fixed!important;
-	display: flex!important;
-	align-items: center!important;
-	justify-content: center!important;
-	color: rgb(255, 255, 255)!important;
-	z-index: 9999!important;
-	top: 0px!important;
-	left: 0px!important;
-	width: 300px!important;
-	height: 300px!important;
-	background-color: #0b27ff!important;
-}
-
-
-
-.test2 {
-	position: fixed!important;
-	display: flex!important;
-	align-items: center!important;
-	justify-content: center!important;
-	color: rgb(255, 255, 255)!important;
-	z-index: 9999!important;
-	top: 0px!important;
-	left: 0px!important;
-	width: 300px!important;
-	height: 300px!important;
-	background-color: #4bfff8!important;
 }

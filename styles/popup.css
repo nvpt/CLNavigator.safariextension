@@ -9,79 +9,45 @@
   font-family: ProximaLight;
   src: url(../fonts/proxima/ProximaNova-Light.otf); }
 /*Общие*/
-* {
+body {
+  font-size: 14px;
   margin: 0;
   padding: 0; }
-
-body {
-  font-size: 14px; }
 
 .wrapper {
   font-size: 0; }
 
-a {
-  outline: none; }
-  a:hover, a:focus, a:active {
+.modalCL2017,
+.popup {
+  /*END Общие*/
+  /*Сетка*/ }
+  .modalCL2017 a,
+  .popup a {
     outline: none; }
-
-strong {
-  font-family: ProximaBold, sans-serif; }
-
-/*END Общие*/
-/*Сетка*/
-[class^="part-"] {
-  display: inline-block;
-  font-size: 0; }
-
-.part-30 {
-  width: 30%; }
-
-.part-45 {
-  width: 45%; }
-
-.part-55 {
-  width: 55%; }
-
-.part-70 {
-  width: 70%; }
-
-/*END Сетка*/
-/*Общие*/
-* {
-  margin: 0;
-  padding: 0; }
-
-body {
-  font-size: 14px; }
-
-.wrapper {
-  font-size: 0; }
-
-a {
-  outline: none; }
-  a:hover, a:focus, a:active {
-    outline: none; }
-
-strong {
-  font-family: ProximaBold, sans-serif; }
-
-/*END Общие*/
-/*Сетка*/
-[class^="part-"] {
-  display: inline-block;
-  font-size: 0; }
-
-.part-30 {
-  width: 30%; }
-
-.part-45 {
-  width: 45%; }
-
-.part-55 {
-  width: 55%; }
-
-.part-70 {
-  width: 70%; }
+    .modalCL2017 a:hover, .modalCL2017 a:focus, .modalCL2017 a:active,
+    .popup a:hover,
+    .popup a:focus,
+    .popup a:active {
+      outline: none; }
+  .modalCL2017 strong,
+  .popup strong {
+    font-family: ProximaBold, sans-serif; }
+  .modalCL2017 [class^="part-"],
+  .popup [class^="part-"] {
+    display: inline-block;
+    font-size: 0; }
+  .modalCL2017 .part-30,
+  .popup .part-30 {
+    width: 30%; }
+  .modalCL2017 .part-45,
+  .popup .part-45 {
+    width: 45%; }
+  .modalCL2017 .part-55,
+  .popup .part-55 {
+    width: 55%; }
+  .modalCL2017 .part-70,
+  .popup .part-70 {
+    width: 70%; }
 
 /*END Сетка*/
 .popup .button-cl {
@@ -149,44 +115,6 @@ strong {
       width: 50px;
       z-index: 10; }
 
-/*Общие*/
-* {
-  margin: 0;
-  padding: 0; }
-
-body {
-  font-size: 14px; }
-
-.wrapper {
-  font-size: 0; }
-
-a {
-  outline: none; }
-  a:hover, a:focus, a:active {
-    outline: none; }
-
-strong {
-  font-family: ProximaBold, sans-serif; }
-
-/*END Общие*/
-/*Сетка*/
-[class^="part-"] {
-  display: inline-block;
-  font-size: 0; }
-
-.part-30 {
-  width: 30%; }
-
-.part-45 {
-  width: 45%; }
-
-.part-55 {
-  width: 55%; }
-
-.part-70 {
-  width: 70%; }
-
-/*END Сетка*/
 .popup .tabs__buttons {
   display: flex;
   justify-content: space-around;
@@ -219,44 +147,6 @@ strong {
   .popup .tabs__body.active {
     display: block; }
 
-/*Общие*/
-* {
-  margin: 0;
-  padding: 0; }
-
-body {
-  font-size: 14px; }
-
-.wrapper {
-  font-size: 0; }
-
-a {
-  outline: none; }
-  a:hover, a:focus, a:active {
-    outline: none; }
-
-strong {
-  font-family: ProximaBold, sans-serif; }
-
-/*END Общие*/
-/*Сетка*/
-[class^="part-"] {
-  display: inline-block;
-  font-size: 0; }
-
-.part-30 {
-  width: 30%; }
-
-.part-45 {
-  width: 45%; }
-
-.part-55 {
-  width: 55%; }
-
-.part-70 {
-  width: 70%; }
-
-/*END Сетка*/
 .popup .search {
   display: inline-block;
   width: 100%;

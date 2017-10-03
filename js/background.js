@@ -321,7 +321,7 @@ setInterval(updateServerData, SERVER_DATA_UPDATE_TIME);
 /* Проверяем наличие данных партнера в массиве. Если нет, то запрашиваем */
 function addPartnerToVisited(url) {
     var clearUrl = getClearUrl(url);
-    if ((clearUrl !== undefined) && (!partnersVisited[clearUrl]) && (partnersData[clearUrl])) {
+    if (clearUrl && (url !== undefined) && (!partnersVisited[clearUrl]) && (partnersData[clearUrl])) {
         partnersVisited[clearUrl] = partnersData[clearUrl];
         markCheckPartner();
         setTimeout(function () {

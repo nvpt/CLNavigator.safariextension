@@ -4,7 +4,7 @@
 console.log('--content--');
 
 var SHOW_MODAL_TIME = 50;//5000//TODO temp
-var HIDE_MODAL_TIME = 5000;//TODO temp//15000//15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
+var HIDE_MODAL_TIME = 25000;//TODO temp//15000//15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
 var HIDE_CASHBACK_TIME = 22000;//7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 
 if(window === window.top) {
@@ -71,6 +71,7 @@ if(window === window.top) {
         var cashbackActive = document.createElement('div');
         var clButtonWrap = document.createElement('div');
         var clButton = document.createElement('a');
+        var clButtonInner = document.createElement('span');
         var reactivation = document.createElement('div');
 
 //<<прием
@@ -88,7 +89,7 @@ if(window === window.top) {
                 clLogo.classList.add('cl-logo');
 
                 clLogoImg.classList.add('cl-logo__img');
-                clLogoImg.setAttribute('src', 'https://cl.world/images/extenion/logo.png');
+                clLogoImg.setAttribute('src', safari.extension.baseURI + 'img/logo.png');
 
                 close.classList.add('cl-close');
 
@@ -114,9 +115,12 @@ if(window === window.top) {
 
                 clButtonWrap.classList.add('button-cl__wrapper');
 
-                clButton.innerHTML = '<span>Активировать</span>';
+
                 clButton.classList.add('button-cl', 'button-cl_pink', 'cl-partner__link', 'button-cl_glass');
                 clButton.setAttribute('href', '');
+
+                clButtonInner.innerText = 'Активировать';
+                clButton.appendChild(clButtonInner);
 
                 clButtonWrap.appendChild(clButton);
 
@@ -140,7 +144,7 @@ if(window === window.top) {
                 ANCHOR.appendChild(modalBody);
                 ANCHOR.appendChild(modalFooter);
 
-                for (var i = 0; i < modalMarkers.length; i++) { //если маркер отображения есть то модалку прячем. Смотрим по маркеру из массива в background.js
+                for (var i = 0; i < modalMarkers.length; i++) { //если маркер отображения есть то модалку прячем. Смотрим по маркеру из массива в common.js
 
                     if (modalMarkers[i] === partnerData.id) {
                         ANCHOR.style.opacity = 0;
@@ -268,7 +272,7 @@ if(window === window.top) {
 
                     clLogoImg = document.createElement('img');
                     clLogoImg.classList.add('cl-logo__img');
-                    clLogoImg.setAttribute('src', 'https://cl.world/images/extenion/logo.png');
+                    clLogoImg.setAttribute('src', safari.extension.baseURI + 'img/logo.png');
 
                     close = document.createElement('div');
                     close.classList.add('cl-close');
@@ -306,11 +310,14 @@ if(window === window.top) {
                     clButtonWrap.classList.add('button-cl__wrapper');
 
                     clButton = document.createElement('a');
-                    clButton.innerHTML = '<span>Активировать повторно</span>';
+
                     clButton.classList.add('button-cl', 'button-cl_pink', 'cl-partner__link');
                     clButton.setAttribute('href', '');
 
+                    clButtonInner = document.createElement('span');
+                    clButtonInner.innerText = 'Активировать повторно';
 
+                    clButton.appendChild(clButtonInner);
                     clButtonWrap.appendChild(clButton);
 
                     modalFooter.appendChild(reactivation);

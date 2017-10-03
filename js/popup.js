@@ -152,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var currentTabUrl = tab.url;
         var rightUrl = bg.getClearUrl(currentTabUrl);
-
         var partner = document.querySelector('.partner');
         var partnerName = document.querySelector('.partner__name');
         var partnerUrl = document.querySelector('.partner__url');
@@ -179,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         if (Object.keys(bg._getPartnersData()).length > 0) {//проверяем, подгрузился ли массив партнеров
-            if ((bg._getPartnersData()[rightUrl]) && (rightUrl !== undefined)) {
+            if ((bg._getPartnersData()[rightUrl]) && (currentTabUrl !== undefined)) {
                 var el = bg._getPartnersData()[rightUrl];
                 // console.log('el ', el);
                 partner.style.display = 'flex';
@@ -207,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         bg._setModalMarkers(modalMarkers);
                     }
 
-                    if (rightUrl == bg._getAliClear()) {
+                    if (rightUrl === bg._getAliClear()) {
                         bg._setModalShowed(true);
                         if (bg._getRemodalShowed()) {
                             bg._setRemodalShowed(false);

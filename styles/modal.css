@@ -22,15 +22,15 @@
   background: #fbfbfb !important;
   z-index: 99999999999 !important;
   opacity: 0;
-  -webkit-animation: fadein 0.8s !important !important;
+  -webkit-animation: fadein 0.8s;
   /* Safari, Chrome and Opera > 12.1 */
-  -moz-animation: fadein 0.8s !important !important;
+  -moz-animation: fadein 0.8s;
   /* Firefox < 16 */
-  -ms-animation: fadein 0.8s !important !important;
+  -ms-animation: fadein 0.8s;
   /* Internet Explorer */
-  -o-animation: fadein 0.8s !important !important;
+  -o-animation: fadein 0.8s;
   /* Opera < 12.1 */
-  animation: fadein 0.8s !important !important;
+  animation: fadein 0.8s;
   overflow: hidden;
   /* Firefox < 16 */
   /* Safari, Chrome and Opera > 12.1 */
@@ -38,29 +38,29 @@
   /* Opera < 12.1 */ }
 @keyframes fadein {
   from {
-    opacity: 0 !important; }
+    opacity: 0; }
   to {
-    opacity: 1 !important; } }
+    opacity: 1; } }
 @-moz-keyframes fadein {
   from {
-    opacity: 0 !important; }
+    opacity: 0; }
   to {
-    opacity: 1 !important; } }
+    opacity: 1; } }
 @-webkit-keyframes fadein {
   from {
-    opacity: 0 !important; }
+    opacity: 0; }
   to {
-    opacity: 1 !important; } }
+    opacity: 1; } }
 @-ms-keyframes fadein {
   from {
-    opacity: 0 !important; }
+    opacity: 0; }
   to {
-    opacity: 1 !important; } }
+    opacity: 1; } }
 @-o-keyframes fadein {
   from {
-    opacity: 0 !important; }
+    opacity: 0; }
   to {
-    opacity: 1 !important; } }
+    opacity: 1; } }
   .modalCL2017__header {
     display: flex !important;
     width: 100% !important;
@@ -206,9 +206,6 @@
     justify-content: space-between !important;
     width: 100px !important;
     background-color: transparent !important; }
-    .modalCL2017 .cl-logo__img {
-      max-width: 100px !important;
-      max-height: 50px !important; }
   .modalCL2017 .cashback-no-link {
     cursor: default !important;
     width: 100% !important;

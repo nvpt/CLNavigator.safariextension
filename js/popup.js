@@ -1,7 +1,7 @@
 /**
  * Created by CityLife on 23.12.16.
  */
-console.log('загрузка popup');
+// console.log('загрузка popup');
 
 document.addEventListener('DOMContentLoaded', function () {
 

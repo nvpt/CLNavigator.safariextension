@@ -1,7 +1,7 @@
 /**
  * Created by CityLife on 29.12.16.
  */
-console.log('--content--');
+// console.log('--content--');
 
 var SHOW_MODAL_TIME = 50; //TODO temp //5000
 var HIDE_MODAL_TIME = 25000; //TODO temp //15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
@@ -149,8 +149,12 @@ if(window === window.top) {
                 ANCHOR.style.opacity = 1;
 
                 /* пресекаем дублирование добавления модалки */
-                if (!document.querySelector("#modalCL2017")) {
-
+                /* вторым условием избегаем при первичном запуске
+                 отображения всех модалок в текущем окне*/
+                if ((!document.querySelector("#modalCL2017")) &&
+                    ((window.location.href).indexOf(getClearUrl(partnerData.site_url)))!== -1 ){
+console.log('window.location.href ', window.location.href);
+console.log('partnerData.site_url ', getClearUrl(partnerData.site_url));
                     setTimeout(function () {
                         document.body.appendChild(ANCHOR);
                     }, SHOW_MODAL_TIME);
@@ -328,11 +332,15 @@ if(window === window.top) {
                     if (!remodalShowed) {
 
                         window.addEventListener('load', function () {
+
                             /* прячем основную модалку */
+                            /* вторым условием избегаем при первичном запуске
+                            отображения всех модалок в текущем окне*/
                             if (document.querySelector('#modalCL2017')) {
                                 document.querySelector('#modalCL2017').style.display = 'none';
                             }
-                            if (!document.querySelector('#remodalCL2017')) {
+                            if ((!document.querySelector('#remodalCL2017')) &&
+                                ((window.location.href).indexOf(getClearUrl(partnerData.site_url)))!== -1 ){
                                 document.body.appendChild(REANCHOR);
 
                                 //>>отправка

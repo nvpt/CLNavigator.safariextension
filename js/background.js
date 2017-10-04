@@ -197,7 +197,7 @@ function checkPartnersLink() {
     if (parseInt(authIdentifier) === 0) {
 
         if (Object.keys(partnersDataCustom).length === 0) {
-            console.log('partnersDataRequest 1');
+            // console.log('partnersDataRequest 1');
             partnersDataRequest(
                 function (res) {
                     arrayToObj(res, partnersDataCustom);
@@ -213,7 +213,7 @@ function checkPartnersLink() {
     } else {
 
         if (Object.keys(partnersDataAdmitad).length === 0) {
-            console.log('partnersDataRequest 2');
+            // console.log('partnersDataRequest 2');
             partnersDataRequest(
                 function (res) {
                     arrayToObj(res, partnersDataAdmitad);
@@ -265,11 +265,11 @@ function uploadServerData(url) {
                     /* так как идет переавторизация, то в любом слючае сбрасываем маркеры посещений */
                     modalMarkers = [0];
                     timers = {};
-                    console.log('checkPartnersLink 1');
+                    // console.log('checkPartnersLink 1');
                     checkPartnersLink();
                 },
                 function () {
-                    console.log('checkPartnersLink 2');
+                    // console.log('checkPartnersLink 2');
                     resetAuthorisation();
                     checkPartnersLink();
                 }
@@ -277,7 +277,7 @@ function uploadServerData(url) {
         }
 
     } else {
-        console.log('checkPartnersLink 3');
+        // console.log('checkPartnersLink 3');
         checkAuthorisation();
         checkPartnersLink();
         // console.log(6);
@@ -290,7 +290,7 @@ function uploadServerData(url) {
   * */
 (function(){
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;
-    console.log('reserv upload currentUrl', currentUrl);
+    // console.log('reserv upload currentUrl', currentUrl);
     uploadServerData(currentUrl);
 })();
 
@@ -298,8 +298,8 @@ function uploadServerData(url) {
  * Обновление данных партнеров раз в 22 - 24 часа
  */
 function updateServerData() {
-    console.log('partnersDataRequest 3');
-    console.log('updateServerData 1');
+    // console.log('partnersDataRequest 3');
+    // console.log('updateServerData 1');
     partnersDataRequest(//запрос в любом случае, поэтому условия внутри
         function (res) {
             if (parseInt(authIdentifier) !== 0) {
@@ -471,7 +471,7 @@ safari.application.addEventListener("message", function (data) {
 
                 if (partnersData[clearUrl]) {
                     partner = partnersData[clearUrl];
-console.log('partner ', partner);
+                    // console.log('partner ', partner);
                     //>>отправка
                     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                         {
@@ -486,19 +486,31 @@ console.log('partner ', partner);
                 //<<прием
                 //TODO переписать
                 /* если сайт - Aliexpress */
-                if (clearUrl === ALI_CLEAR) {
+                if ((clearUrl === ALI_CLEAR)) {
+                    console.log(0);
+                    safari.application.addEventListener("message", function (data) {
 
-                    safari.application.addEventListener("message", function(data){
-                        var cookiesValue = data.message;
-                        var cookiesUrl = data.target['url'];
-                        var cookiesObj = cookiesToObj(cookiesValue);
+                        console.log(1);
+
+                        if (data.name === 'ali-cookies') {
+                            var cookiesName = data.name;
+                            var cookiesValue = data.message;
+                            var cookiesUrl = data.target['url'];
+                            var cookiesObj = cookiesToObj(cookiesValue);
+                        console.log(2);
+                        console.log('cookies  ', data);
+                        console.log('cookiesName ', data.name);
+                        console.log('cookiesValue ', data.message);
+                        console.log('cookiesObj ', cookiesObj);
+                        console.log('cookiesObj.aeu_cid ', cookiesObj.aeu_cid);
 
                         /* если кука aeu_cid не содежит идентификатор "yVF2rZRRj",
                          то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку */
                         if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) === -1)) {
+                            console.log(3);
                             if (partnersData[clearUrl]) {
                                 delete timers[ALI_CLEAR];
-
+                                console.log(4);
                                 //>>отправка
                                 safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                                     {
@@ -512,7 +524,7 @@ console.log('partner ', partner);
                                     });
                             }
                         } else {//если да
-
+                            console.log(5);
                             //>>отправка
                             //TODO в сафари срабатывает сразу. и закрывает окно
                             // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
@@ -520,6 +532,7 @@ console.log('partner ', partner);
                             //         from: 'bg',
                             //         id: 'hideRemodal'
                             //     });
+                        }
                         }
                     }, false);
                 }

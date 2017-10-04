@@ -3,29 +3,37 @@
  */
 // console.log('--content--');
 
-var SHOW_MODAL_TIME = 50; //TODO temp //5000
-var HIDE_MODAL_TIME = 25000; //TODO temp //15000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
-var HIDE_CASHBACK_TIME = 22000; //7000 = 7сек. Время скрытия модалки после демонстрации, что кэшбэк активен
+var SHOW_MODAL_TIME = 500; //3000 = 3сек. Задержка перед открытием окна
+var HIDE_MODAL_TIME = 20000; //20000 = 20сек. Время скрытия модалки после отображения. Поставить секунд 15-20
+var HIDE_CASHBACK_TIME = 15000; //15000 = 15сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 
 if(window === window.top) {
 
     /*
     *Отправка куки
     * */
-    if((window.location.href).indexOf('cl.world') !== -1){ //TODO проверить корректность
+
+    /* куки отслеживания авторизации */
+    if((window.location.href).indexOf('cl.world') !== -1){
         var cookiesMain = document.cookie.split(';');
-        console.log('cookiesMain ', cookiesMain);
         function sendCookies(data) {
             safari.self.tab.dispatchMessage("send-cookies", data);
-            // console.log('browser cookiesMain ', cookiesMain);
         }
         sendCookies(cookiesMain);
     }
 
+    /* временное решение для переопределения */
+    if((window.location.href).indexOf(ALI_CLEAR) !== -1){
+        var cookiesMain = document.cookie.split(';');
+        function sendCookies(data) {
+            safari.self.tab.dispatchMessage("ali-cookies", data);
+        }
+        sendCookies(cookiesMain);
+    }
 
     //>>отправка
     /* Старт связки */
-    safari.self.tab.dispatchMessage("content", {
+    safari.self.tab.dispatchMessage("content", {//TODO переименовать в startConnect
         // from: 'content',
         id: 'startConnect',
         url: window.location.href
@@ -153,8 +161,6 @@ if(window === window.top) {
                  отображения всех модалок в текущем окне*/
                 if ((!document.querySelector("#modalCL2017")) &&
                     ((window.location.href).indexOf(getClearUrl(partnerData.site_url)))!== -1 ){
-console.log('window.location.href ', window.location.href);
-console.log('partnerData.site_url ', getClearUrl(partnerData.site_url));
                     setTimeout(function () {
                         document.body.appendChild(ANCHOR);
                     }, SHOW_MODAL_TIME);
@@ -341,6 +347,8 @@ console.log('partnerData.site_url ', getClearUrl(partnerData.site_url));
                             }
                             if ((!document.querySelector('#remodalCL2017')) &&
                                 ((window.location.href).indexOf(getClearUrl(partnerData.site_url)))!== -1 ){
+
+                            // if (!document.querySelector('#remodalCL2017')){
                                 document.body.appendChild(REANCHOR);
 
                                 //>>отправка
@@ -401,7 +409,7 @@ console.log('partnerData.site_url ', getClearUrl(partnerData.site_url));
                         });
                     });
                 }
-                else {//TODO нужно?
+                else {
                     return false;
                 }
             }

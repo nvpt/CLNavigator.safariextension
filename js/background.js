@@ -6,7 +6,7 @@ console.log('--bg--');
  * Иконка не партнера. дефолтная
  */
 function markNotPartner() {
-    var iconUri = safari.extension.baseURI + 'img/icon/Icon-32.png';
+    var iconUri = safari.extension.baseURI + 'img/icon/Icon-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -16,7 +16,7 @@ function markNotPartner() {
  * Иконка на партнере
  */
 function markPartner() {
-    var iconUri = safari.extension.baseURI + 'img/icon/partner-32.png';
+    var iconUri = safari.extension.baseURI + 'img/icon/partner-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -26,7 +26,7 @@ function markPartner() {
  */
 //TODO описать вращения иконки
 function markCheckPartner() {
-    var iconUri = safari.extension.baseURI + 'img/icon/wait-32.png';
+    var iconUri = safari.extension.baseURI + 'img/icon/wait-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '...';
 }
@@ -35,7 +35,7 @@ function markCheckPartner() {
  * Иконка кэшбэка
  */
 function markCashbackActive() {
-    var iconUri = safari.extension.baseURI + 'img/icon/done-32.png';
+    var iconUri = safari.extension.baseURI + 'img/icon/done-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -47,7 +47,7 @@ function markCashbackActive() {
  */
 function changeIcon(url) {
     var clearUrl = getClearUrl(url);
-    if ((clearUrl !== undefined) && (partnersData[clearUrl])) {
+    if ((url !== undefined) && (partnersData[clearUrl])) {
         checkTimers(clearUrl);//сначала проверям, еще живой таймер кэшбка
         if (timers[clearUrl]) {//и затем в зависимости от условия меняем иконку
             markCashbackActive();
@@ -132,6 +132,7 @@ function arrayToObj(arr, obj) {
  * @param reject
  */
 function reqProfile(resolve, reject) {
+    console.log('ЗАПРОС АВТОРИЗАЦИИ!!!');
     var url = 'https://cl.world/api/v2/profile/menu';
     var req = new XMLHttpRequest();
     req.open('GET', url);
@@ -155,25 +156,24 @@ function reqProfile(resolve, reject) {
  * @param reject
  */
 function partnersDataRequest(resolve, reject) {
-    if(safari && safari.application) {
-        var url = 'https://cl.world/api/v2/cases/index?limit=10000&show=1&non_strict=0&lang=ru&r1=' + Math.random();
-        var req = new XMLHttpRequest();
-        req.open('GET', url);
-        req.send();
-        req.addEventListener('load', function () {
+    console.log('ЗАПРОС ДАННЫХ ПАРТНЕРОВ!!!');
+    var url = 'https://cl.world/api/v2/cases/index?limit=10000&show=1&non_strict=0&lang=ru&r1=' + Math.random();
+    var req = new XMLHttpRequest();
+    req.open('GET', url);
+    req.send();
+    req.addEventListener('load', function () {
 
-            if (req.status === 200) {
-                var response = JSON.parse(req.responseText);
-                for (var i = 0; i < response.length; i++) {
-                    checkSafeResponse(response[i]);
-                }
-                resolve(response);
-
-            } else {
-                reject();
+        if (req.status === 200) {
+            var response = JSON.parse(req.responseText);
+            for (var i = 0; i < response.length; i++) {
+                checkSafeResponse(response[i]);
             }
-        })
-    }
+            resolve(response);
+
+        } else {
+            reject();
+        }
+    })
 }
 
 
@@ -242,17 +242,17 @@ function checkAuthorisation(){
  */
 
 function uploadServerData(url) { /* TODO проверить что быстрее орабатывает, проверка куки или эта функция, т.к. сравниваем с authCookie */
+    console.log('url ', url);
     console.log(1);
-
     /* сравнение идентификатора авторизации (authIdentifier) c кукой авторизации
      актуально только при открытой вкладке с нашего сайта,
       т.к. доступа к глобальному хранилищу кук в сафари нет */
     if (url.indexOf('cl.world') !== -1) {//TODO возможно добавить урл кабинета
-
+        console.log(2);
         /* если не авторизованы, или id авторизации не совпадает с id в текущих куках, то отправляем запрос */
-        if (parseInt(authIdentifier) === 0 || (parseInt(authIdentifier) !== parseInt(authCookie) && parseInt(authCookie) !== 0)) {
+        if (parseInt(authIdentifier) !== parseInt(authCookie)) {
 
-            console.log(2);
+            console.log(3);
 
             reqProfile(
                 function (resp) {
@@ -263,10 +263,11 @@ function uploadServerData(url) { /* TODO проверить что быстре�
                     /* так как идет переавторизация, то в любом слючае сбрасываем маркеры посещений */
                     modalMarkers = [0];
                     timers = {};
-
+                    console.log(4);
                     checkPartnersLink();
                 },
                 function () {
+                    console.log(5);
                     resetAuthorisation();
                     checkPartnersLink();
                 }
@@ -276,17 +277,20 @@ function uploadServerData(url) { /* TODO проверить что быстре�
     } else {
         checkAuthorisation();
         checkPartnersLink();
+        console.log(6);
     }
 }
 
 /* актуализируем данные сразу при запуске расширения */
-uploadServerData();
 
+(function(){
+var currentUrl = safari.application.activeBrowserWindow.activeTab.url;
+uploadServerData(currentUrl);
+})();
 
 /**
  * Обновление данных партнеров. Для периодической загрузки данных раз в 22 - 24 часа
  */
-//TODO проверить
 function updateServerData() {
     
     partnersDataRequest(//запрос в любом случае, поэтому условия внутри
@@ -315,8 +319,8 @@ setInterval(updateServerData, PARTNERS_UPDATE_TIME);
 function updateAuthorization() {
     reqProfile(function (resp) {
         loginData = resp;
-        authIdentifier =  loginData.profile.id;//TODO проверить корректность
-        authCookie =  loginData.profile.id;//TODO проверить корректность
+        authIdentifier =  parseInt(loginData.profile.id);
+        authCookie =  parseInt(loginData.profile.id);
     }, function () {
         resetAuthorisation();
     });
@@ -367,8 +371,10 @@ function clickTab() {
 
     changeIcon(currentUrl);//при клике сверяем актуальность иконки
     addPartnerToVisited(currentUrl);
-
+    uploadServerData(currentUrl);
     // console.log('***************clickTab', currentUrl);
+    console.log('authCookie ', authCookie);
+    console.log('authIdentifier ', authIdentifier);
 }
 
 

@@ -41,7 +41,7 @@
 				<key>Identifier</key>
 				<string>CLNButton</string>
 				<key>Image</key>
-				<string>img/icon/Icon-32.png</string>
+				<string>img/icon/Icon-64.png</string>
 				<key>Include By Default</key>
 				<true/>
 				<key>Label</key>

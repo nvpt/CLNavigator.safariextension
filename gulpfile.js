@@ -48,7 +48,7 @@ var projectPath = {
         scss: 'src/styles/**/*.scss'
     },
 
-    clean: ['cl-navigator.safariextension/**/*', '!cl-navigator.safariextension/.gitignore', '!cl-navigator.safariextension/info.plist']
+    clean: ['cl-navigator.safariextension/**/*', '!cl-navigator.safariextension/Settings.plist', '!cl-navigator.safariextension/Info.plist']
 };
 
 
@@ -132,7 +132,6 @@ gulp.task('build', function (cb) {
         'images',
         'jsES6',
         'js',
-        'serviceFiles',
         'scss',
         cb
     )

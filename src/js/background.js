@@ -113,7 +113,7 @@ function arrayToObj(arr, obj) {
  * @param reject
  */
 function reqProfile(resolve, reject) {
-    console.log('ЗАПРОС АВТОРИЗАЦИИ!!!');//TODO temp!!
+    //console.log('ЗАПРОС АВТОРИЗАЦИИ!!!');
     var url = 'https://cl.world/api/v2/profile/menu';
     var req = new XMLHttpRequest();
     req.open('GET', url);
@@ -137,7 +137,7 @@ function reqProfile(resolve, reject) {
  * @param reject
  */
 function partnersDataRequest(resolve, reject) {
-    console.log('ЗАПРОС ДАННЫХ ПАРТНЕРОВ!!!');//TODO temp!!
+    //console.log('ЗАПРОС ДАННЫХ ПАРТНЕРОВ!!!');
     var url = 'https://cl.world/api/v2/cases/index?limit=10000&show=1&non_strict=0&lang=ru&r1=' + Math.random();
     var req = new XMLHttpRequest();
     req.open('GET', url);
@@ -456,7 +456,6 @@ safari.application.addEventListener("message", function (data) {
                     //>>отправка
                     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                         {
-                            from: 'bg',
                             id: 'showModal',
                             currentPartner: partner,
                             timers: timers,
@@ -495,7 +494,6 @@ safari.application.addEventListener("message", function (data) {
                                 //>>отправка
                                 safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                                     {
-                                        from: 'bg',
                                         id: 'showRemodal',
                                         currentPartner: partner,
                                         timers: timers,
@@ -511,7 +509,6 @@ safari.application.addEventListener("message", function (data) {
                             //TODO в сафари срабатывает сразу. и закрывает окно
                             // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                             //     {
-                            //         from: 'bg',
                             //         id: 'hideRemodal'
                             //     });
                             //}

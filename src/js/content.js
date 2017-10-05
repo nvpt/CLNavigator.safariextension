@@ -32,7 +32,6 @@ if(window === window.top) {
     //>>отправка
     /* Старт связки */
     safari.self.tab.dispatchMessage("content", {
-        // from: 'content',
         id: 'startConnect',
         url: window.location.href
     });
@@ -168,7 +167,6 @@ if(window === window.top) {
 
                         //>>отправка
                         safari.self.tab.dispatchMessage("content", {
-                            from: 'content',
                             id: 'modalMarkerAdded',
                             url: currentUrl
                         })
@@ -186,7 +184,6 @@ if(window === window.top) {
 
                     //>>отправка
                     safari.self.tab.dispatchMessage("content", {
-                        from: 'content',
                         id: 'modalMarkerAdded',
                         url: currentUrl
                     })
@@ -197,7 +194,6 @@ if(window === window.top) {
 
                     //>>отправка
                     safari.self.tab.dispatchMessage("content", {
-                        from: 'content',
                         id: 'modalMarkerAdded',
                         url: currentUrl
                     });
@@ -225,7 +221,6 @@ if(window === window.top) {
 
                     //>>отправка
                     safari.self.tab.dispatchMessage("content", {
-                        from: 'content',
                         id: 'setCashbackClick',
                         url: currentUrl,
                         timer: new Date().getTime(),
@@ -351,7 +346,6 @@ if(window === window.top) {
 
                                 //>>отправка
                                 safari.self.tab.dispatchMessage("content", {
-                                    from: 'content',
                                     id: 'remodalShowed',
                                     url: currentUrl,
                                     remodalShowed: true
@@ -364,7 +358,6 @@ if(window === window.top) {
 
                                 //>>отправка
                                 safari.self.tab.dispatchMessage("content", {
-                                    from: 'content',
                                     id: 'remodalShowed',
                                     url: currentUrl,
                                     remodalShowed: true
@@ -379,7 +372,6 @@ if(window === window.top) {
 
                         //>>отправка
                         safari.self.tab.dispatchMessage("content", {
-                            from: 'content',
                             id: 'remodalShowed',
                             url: currentUrl,
                             remodalShowed: true
@@ -398,7 +390,6 @@ if(window === window.top) {
 
                         //>>отрпавка
                         safari.self.tab.dispatchMessage("content", {
-                            ffrom: 'content',
                             id: 'setCashbackClick',
                             url: currentUrl,
                             timer: new Date().getTime(),

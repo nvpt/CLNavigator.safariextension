@@ -145,7 +145,6 @@ if(window === window.top) {
                         ANCHOR.style.display = 'none';
 
                         safari.self.tab.dispatchMessage("content", {
-                            from: 'content',
                             id: 'modalMarkerAdded',
                             url: currentUrl
                         })
@@ -161,7 +160,6 @@ if(window === window.top) {
                     ANCHOR.style.display = 'none';
 
                     safari.self.tab.dispatchMessage("content", {
-                        from: 'content',
                         id: 'modalMarkerAdded',
                         url: currentUrl
                     })
@@ -170,7 +168,6 @@ if(window === window.top) {
                 if ((timers) && (timers.hasOwnProperty(getClearUrl(currentUrl)))) {
 
                     safari.self.tab.dispatchMessage("content", {
-                        from: 'content',
                         id: 'modalMarkerAdded',
                         url: currentUrl
                     });
@@ -193,7 +190,6 @@ if(window === window.top) {
                 clButton.addEventListener('click', function () {
 
                     safari.self.tab.dispatchMessage("content", {
-                        from: 'content',
                         id: 'setCashbackClick',
                         url: currentUrl,
                         timer: new Date().getTime(),
@@ -308,7 +304,6 @@ if(window === window.top) {
                                 document.body.appendChild(REANCHOR);
 
                                 safari.self.tab.dispatchMessage("content", {
-                                    from: 'content',
                                     id: 'remodalShowed',
                                     url: currentUrl,
                                     remodalShowed: true
@@ -320,7 +315,6 @@ if(window === window.top) {
                                 REANCHOR.style.display = 'none';
 
                                 safari.self.tab.dispatchMessage("content", {
-                                    from: 'content',
                                     id: 'remodalShowed',
                                     url: currentUrl,
                                     remodalShowed: true
@@ -333,7 +327,6 @@ if(window === window.top) {
                         REANCHOR.style.display = 'none';
 
                         safari.self.tab.dispatchMessage("content", {
-                            from: 'content',
                             id: 'remodalShowed',
                             url: currentUrl,
                             remodalShowed: true
@@ -348,7 +341,6 @@ if(window === window.top) {
                     clButton.addEventListener('click', function () {
 
                         safari.self.tab.dispatchMessage("content", {
-                            ffrom: 'content',
                             id: 'setCashbackClick',
                             url: currentUrl,
                             timer: new Date().getTime(),

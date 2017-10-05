@@ -9,17 +9,17 @@
 	<key>CFBundleDisplayName</key>
 	<string>CLNavigator</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.cl-navigator</string>
+	<string>com.CityLife.cl-navigator.safari.CLNavigator</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.1.5</string>
+	<string>1.0.0</string>
 	<key>CFBundleVersion</key>
-	<string>2.15</string>
+	<string>1.0.0</string>
 	<key>Chrome</key>
 	<dict>
 		<key>Database Quota</key>
-		<integer>104857600</integer>
+		<integer>52428800</integer>
 		<key>Global Page</key>
 		<string>global.html</string>
 		<key>Popovers</key>
@@ -88,5 +88,7 @@
 	</dict>
 	<key>Website</key>
 	<string>https://cl.world</string>
+	<key>Update From Gallery</key>
+    <true/>
 </dict>
 </plist>

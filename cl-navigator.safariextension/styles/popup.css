@@ -92,6 +92,12 @@ body
 {
     width: 70%;
 }
+.modalCL2017 .bottomPadding,
+.popup .bottomPadding
+{
+    width: 100%;
+    height: 40px;
+}
 
 /*END Сетка*/
 .popup .button-cl
@@ -583,7 +589,7 @@ body
 .popup .list-item__value
 {
     font-family: ProximaBold, sans-serif;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 800;
 
     display: block;

@@ -186,7 +186,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 partnerUrl.innerText = bg.getClearUrl(el.site_url);
                 partnerLogo.setAttribute('src', el.logo_url);
                 partnerCashback.innerText = el.sale_text;
+                var bottomPadding = document.createElement('div');
+                bottomPadding.classList.add('bottomPadding');
                 partnerDescription.innerHTML = sanitizeHtml(el.text, sanitizeResolutions);
+                partnerDescription.appendChild(bottomPadding);
                 partner.style.display = 'flex';
                 partnerLink.setAttribute('href', el.href);
 
@@ -395,7 +398,7 @@ document.addEventListener('DOMContentLoaded', function () {
      * Генерится динамически
      */
     function searchRequest(name, resolve, reject) {
-        var url = 'https://cl.world/api/v2/cases/index?&name=' + name + '&show=1&non_strict=1';
+        var url = 'https://cl.world/api/v2/cases/index?&name=' + name + '&show=1&non_strict=1&lang=ru';
         var req = new XMLHttpRequest();
         req.open('GET', url);
         req.send();

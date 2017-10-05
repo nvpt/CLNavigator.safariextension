@@ -14,26 +14,24 @@ if(window === window.top) {
     * */
 
     /* куки отслеживания авторизации */
+    function sendCookies(name, data) {
+        safari.self.tab.dispatchMessage(name, data);
+    }
+
     if((window.location.href).indexOf('cl.world') !== -1){
         var cookiesMain = document.cookie.split(';');
-        function sendCookies(data) {
-            safari.self.tab.dispatchMessage("send-cookies", data);
-        }
-        sendCookies(cookiesMain);
+        sendCookies("send-cookies", cookiesMain);
     }
 
     /* временное решение для переопределения */
     if((window.location.href).indexOf(ALI_CLEAR) !== -1){
-        var cookiesMain = document.cookie.split(';');
-        function sendCookies(data) {
-            safari.self.tab.dispatchMessage("ali-cookies", data);
-        }
-        sendCookies(cookiesMain);
+        var cookiesAli = document.cookie.split(';');
+        sendCookies("ali-cookies",cookiesAli);
     }
 
     //>>отправка
     /* Старт связки */
-    safari.self.tab.dispatchMessage("content", {//TODO переименовать в startConnect
+    safari.self.tab.dispatchMessage("content", {
         // from: 'content',
         id: 'startConnect',
         url: window.location.href

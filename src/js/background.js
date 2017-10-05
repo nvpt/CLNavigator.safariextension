@@ -85,27 +85,8 @@ function getCookiesAuth(msg) {
         }
     }
 }
-
-safari.application.addEventListener("message", getCookiesAuth, false);//проверяем куку авторизации; выполняется при каждом обновлении страницы
-
-// function getCookiesAli(msg) {//TODO потом
-//
-//
-//     if (msg.name === "send-cookies") {
-//         var cookiesValue = msg.message;
-//         var cookiesUrl = msg.target['url'];
-//         var cookiesObj = cookiesToObj(cookiesValue);
-//         console.log('cookiesToObj!!! ', cookiesToObj(cookiesValue));
-//
-//         if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
-//             authIdentifier = parseInt(cookiesToObj(cookiesValue)['auth']);
-//         }
-//     }
-// }
-
-// safari.application.addEventListener("message", getCookiesAli, false);
-
-
+/* проверяем куку авторизации; выполняется при каждом обновлении страницы */
+safari.application.addEventListener("message", getCookiesAuth, false);
 
 /* Запросы */
 
@@ -132,7 +113,7 @@ function arrayToObj(arr, obj) {
  * @param reject
  */
 function reqProfile(resolve, reject) {
-    console.log('ЗАПРОС АВТОРИЗАЦИИ!!!');
+    console.log('ЗАПРОС АВТОРИЗАЦИИ!!!');//TODO temp!!
     var url = 'https://cl.world/api/v2/profile/menu';
     var req = new XMLHttpRequest();
     req.open('GET', url);
@@ -156,7 +137,7 @@ function reqProfile(resolve, reject) {
  * @param reject
  */
 function partnersDataRequest(resolve, reject) {
-    console.log('ЗАПРОС ДАННЫХ ПАРТНЕРОВ!!!');
+    console.log('ЗАПРОС ДАННЫХ ПАРТНЕРОВ!!!');//TODO temp!!
     var url = 'https://cl.world/api/v2/cases/index?limit=10000&show=1&non_strict=0&lang=ru&r1=' + Math.random();
     var req = new XMLHttpRequest();
     req.open('GET', url);
@@ -396,7 +377,7 @@ function reloadTab(val) {
 
     /* исключаем повтор запросов для всех открытых вкладок. Только текущая */
     if(val.target.url === currentUrl){
-        // console.log('currentUrl ', currentUrl);
+
         changeIcon(currentUrl);
 
         uploadServerData(currentUrl);
@@ -487,30 +468,30 @@ safari.application.addEventListener("message", function (data) {
                 //TODO переписать
                 /* если сайт - Aliexpress */
                 if ((clearUrl === ALI_CLEAR)) {
-                    console.log(0);
+                    // console.log(0);
                     safari.application.addEventListener("message", function (data) {
 
-                        console.log(1);
+                        // console.log(1);
 
                         if (data.name === 'ali-cookies') {
                             var cookiesName = data.name;
                             var cookiesValue = data.message;
                             var cookiesUrl = data.target['url'];
                             var cookiesObj = cookiesToObj(cookiesValue);
-                        console.log(2);
-                        console.log('cookies  ', data);
-                        console.log('cookiesName ', data.name);
-                        console.log('cookiesValue ', data.message);
-                        console.log('cookiesObj ', cookiesObj);
-                        console.log('cookiesObj.aeu_cid ', cookiesObj.aeu_cid);
+                        // console.log(2);
+                        // console.log('cookies  ', data);
+                        // console.log('cookiesName ', data.name);
+                        // console.log('cookiesValue ', data.message);
+                        // console.log('cookiesObj ', cookiesObj);
+                        // console.log('cookiesObj.aeu_cid ', cookiesObj.aeu_cid);
 
                         /* если кука aeu_cid не содежит идентификатор "yVF2rZRRj",
                          то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку */
                         if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) === -1)) {
-                            console.log(3);
+                            // console.log(3);
                             if (partnersData[clearUrl]) {
                                 delete timers[ALI_CLEAR];
-                                console.log(4);
+                                // console.log(4);
                                 //>>отправка
                                 safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                                     {
@@ -523,8 +504,9 @@ safari.application.addEventListener("message", function (data) {
                                         remodalShowed: remodalShowed
                                     });
                             }
-                        } else {//если да
-                            console.log(5);
+                        }
+                            //else {//если да
+                            // console.log(5);
                             //>>отправка
                             //TODO в сафари срабатывает сразу. и закрывает окно
                             // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
@@ -532,7 +514,7 @@ safari.application.addEventListener("message", function (data) {
                             //         from: 'bg',
                             //         id: 'hideRemodal'
                             //     });
-                        }
+                            //}
                         }
                     }, false);
                 }

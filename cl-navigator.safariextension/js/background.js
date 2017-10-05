@@ -63,12 +63,7 @@ function getCookiesAuth(msg) {
         }
     }
 }
-
 safari.application.addEventListener("message", getCookiesAuth, false);
-
-
-
-
 
 
 function arrayToObj(arr, obj) {
@@ -275,6 +270,7 @@ function reloadTab(val) {
     var currentUrl = safari.application.activeBrowserWindow.activeTab.url;
 
     if(val.target.url === currentUrl){
+
         changeIcon(currentUrl);
 
         uploadServerData(currentUrl);
@@ -341,28 +337,18 @@ safari.application.addEventListener("message", function (data) {
                         });
                 }
                 if ((clearUrl === ALI_CLEAR)) {
-                    console.log(0);
                     safari.application.addEventListener("message", function (data) {
 
-                        console.log(1);
 
                         if (data.name === 'ali-cookies') {
                             var cookiesName = data.name;
                             var cookiesValue = data.message;
                             var cookiesUrl = data.target['url'];
                             var cookiesObj = cookiesToObj(cookiesValue);
-                        console.log(2);
-                        console.log('cookies  ', data);
-                        console.log('cookiesName ', data.name);
-                        console.log('cookiesValue ', data.message);
-                        console.log('cookiesObj ', cookiesObj);
-                        console.log('cookiesObj.aeu_cid ', cookiesObj.aeu_cid);
 
                         if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) === -1)) {
-                            console.log(3);
                             if (partnersData[clearUrl]) {
                                 delete timers[ALI_CLEAR];
-                                console.log(4);
                                 safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                                     {
                                         from: 'bg',
@@ -374,8 +360,6 @@ safari.application.addEventListener("message", function (data) {
                                         remodalShowed: remodalShowed
                                     });
                             }
-                        } else {
-                            console.log(5);
                         }
                         }
                     }, false);

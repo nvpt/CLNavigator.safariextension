@@ -17,31 +17,38 @@ var gulp = require('gulp'),
     scss = require('gulp-sass'),
     strip = require('gulp-strip-comments'),//чистим комменты в несжимаемых скриптах
     stylish = require('jshint-stylish'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify'),
+    watch = require('gulp-watch');
 
 
 /* Paths */
 var projectPath = {
     build: {
-        fonts: 'build/fonts/',
-        html: 'build/',
-        img: 'build/img/',
-        js: 'build/js/',
-        serviceFiles: 'build/',
-        styles: 'build/styles/'
+        fonts: 'cl-navigator.safariextension/fonts/',
+        html: 'cl-navigator.safariextension/',
+        img: 'cl-navigator.safariextension/img/',
+        js: 'cl-navigator.safariextension/js/',
+        styles: 'cl-navigator.safariextension/styles/'
     },
 
     src: {
         fonts: 'src/fonts/**/*.*',
         html: ['src/*.html', '!src/modal.html'],
         img: 'src/img/**/*.*',
-        jsES6: ['src/js/punycode.js'],
         js: ['src/js/*.js', '!src/js/punycode.js'],
-        serviceFiles: ['src/info.plist','Settings.plist'],
+        jsES6: ['src/js/punycode.js'],
         scss: ['src/styles/popup.scss', 'src/styles/modal.scss']
     },
 
-    clean: ['build/**/*', '!build/.gitignore']
+    watch: {
+        fonts: 'src/fonts/**/*.*',
+        html: 'src/**/*.html',
+        img: 'src/img/**/*.*',
+        js: 'src/js/**/*.js',
+        scss: 'src/styles/**/*.scss'
+    },
+
+    clean: ['cl-navigator.safariextension/**/*', '!cl-navigator.safariextension/.gitignore', '!cl-navigator.safariextension/info.plist']
 };
 
 
@@ -72,20 +79,6 @@ gulp.task('images', function () {
 
 
 /* JavaScript */
-gulp.task('jsES6', function (cb) {
-    pump([
-            gulp.src(projectPath.src.jsES6),
-            jshint(),
-            jshint.reporter(stylish),
-            babel({presets: ['es2015']}),
-            // babel({presets: ['babili']}),//сжатие
-            //strip(),//если надо убрать комменты
-            gulp.dest(projectPath.build.js)
-        ],
-        cb
-    );
-});
-
 gulp.task('js', function (cb) {
     pump([
             gulp.src(projectPath.src.js),
@@ -101,11 +94,18 @@ gulp.task('js', function (cb) {
     );
 });
 
-
-/* Manifest */
-gulp.task('serviceFiles', function () {
-    return gulp.src(projectPath.src.serviceFiles)
-        .pipe(gulp.dest(projectPath.build.serviceFiles))
+gulp.task('jsES6', function (cb) {
+    pump([
+            gulp.src(projectPath.src.jsES6),
+            // jshint(),
+            // jshint.reporter(stylish),
+            babel({presets: ['es2015']}),
+            // babel({presets: ['babili']}),//сжатие
+            //strip(),//если надо убрать комменты
+            gulp.dest(projectPath.build.js)
+        ],
+        cb
+    );
 });
 
 
@@ -138,8 +138,35 @@ gulp.task('build', function (cb) {
     )
 });
 
+/* Watch */
+gulp.task('watch', function () {
+
+    watch([projectPath.watch.js], function () {
+        gulp.start('js');
+    });
+
+    watch([projectPath.watch.js], function () {
+        gulp.start('jsES6');
+    });
+
+    watch([projectPath.watch.html], function () {
+        gulp.start('html');
+    });
+
+    watch([projectPath.watch.scss], function () {
+        gulp.start('scss');
+    });
+
+    watch([projectPath.watch.img], function () {
+        gulp.start('images');
+    });
+
+    watch([projectPath.watch.fonts], function () {
+        gulp.start('fonts');
+    });
+});
 
 /* Default */
-gulp.task('default', ['build'], function () {
+gulp.task('default', ['watch'], function () {
 
 });

@@ -6,20 +6,18 @@ var HIDE_CASHBACK_TIME = 15000;
 if(window === window.top) {
 
 
+    function sendCookies(name, data) {
+        safari.self.tab.dispatchMessage(name, data);
+    }
+
     if((window.location.href).indexOf('cl.world') !== -1){
         var cookiesMain = document.cookie.split(';');
-        function sendCookies(data) {
-            safari.self.tab.dispatchMessage("send-cookies", data);
-        }
-        sendCookies(cookiesMain);
+        sendCookies("send-cookies", cookiesMain);
     }
 
     if((window.location.href).indexOf(ALI_CLEAR) !== -1){
-        var cookiesMain = document.cookie.split(';');
-        function sendCookies(data) {
-            safari.self.tab.dispatchMessage("ali-cookies", data);
-        }
-        sendCookies(cookiesMain);
+        var cookiesAli = document.cookie.split(';');
+        sendCookies("ali-cookies",cookiesAli);
     }
 
     safari.self.tab.dispatchMessage("content", {

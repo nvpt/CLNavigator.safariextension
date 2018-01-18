@@ -28,7 +28,7 @@ function markCashbackActive() {
 
 function changeIcon(url) {
     var clearUrl = getClearUrl(url);
-    if ((url !== undefined) && (partnersData[clearUrl])) {
+    if (url !== undefined && clearUrl !== undefined && (partnersData[clearUrl])) {
         checkTimers(clearUrl);
         if (timers[clearUrl]) {
             markCashbackActive();
@@ -75,19 +75,52 @@ function arrayToObj(arr, obj) {
 
 
 function reqProfile(resolve, reject) {
-    var url = 'https://cl.world/api/v2/profile/menu';
+    var url = 'https://profile.cl.world/api/v3';
     var req = new XMLHttpRequest();
-    req.open('GET', url);
-    req.send();
+    req.responseType = '';
+    req.withCredentials = true;
+    req.open("POST", url);
+    req.setRequestHeader("Content-Type", "application/json");
+    req.setRequestHeader("Accept", "application/json");
+
+    req.send(JSON.stringify({
+            query : "query Profile { profile { fullName balance id paid } }",
+            variables : {locale : "ru"}
+        })
+    );
+
     req.addEventListener('load', function () {
         if (req.status === 200) {
             var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
-            resolve(response);
+            resolve(response.data);
         } else {
             reject();
         }
     });
 }
+
+var x = 1;
+var y = new Date().getTime();
+
+var currentDate = new Date().getTime();
+console.log('currentDate ', currentDate);
+
+var savedDate = parseFloat(localStorage.getItem('testData')) || 0;
+console.log('savedDate ', savedDate);
+
+console.log('интервал: ' + ((currentDate - savedDate)/ (1000 * 60)) + ' минут');
+
+
+
+function setTime (){
+    if(localStorage.getItem('testData')) {
+        console.log('localStorage is not empty');
+    } else {
+        localStorage.setItem('testData', y );
+    }
+}
+setTime ();
+
 
 
 function partnersDataRequest(resolve, reject) {

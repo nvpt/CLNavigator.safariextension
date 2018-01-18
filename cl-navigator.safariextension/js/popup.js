@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
         userLinkImg.classList.add('user__icon');
 
         var userLinkName = document.createElement('span');
-        userLinkImg.classList.add('user__name');
+        userLinkName.classList.add('user__name');
 
         var userCash = document.createElement('span');
         userCash.classList.add('user__cash');
@@ -53,11 +53,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         if ((bg._getLoginData()) && (bg._getLoginData().profile)) {
-            var el = bg._getLoginData();
+            var el = bg._getLoginData().profile;
             user.innerText = '';
             userLink.removeAttribute('class');
             userLink.innerText = '';
-            userLinkName.innerText = el.profile.full_name;
+            userLinkName.innerText = el.fullName;
             userLink.appendChild(userLinkImg);
             userLink.appendChild(userLinkName);
             userLink.setAttribute('href', 'https://cl.world/profile');
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 safari.self.hide();
             });
             userCash.style.display = 'flex';
-            userCashValue.innerText = el.profile.balance + ' руб.';
+            userCashValue.innerText = el.balance + ' руб.';
             userCash.appendChild(userCashImg);
             userCash.appendChild(userCashValue);
 
@@ -118,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var currentTabUrl = tab.url;
         var rightUrl = bg.getClearUrl(currentTabUrl);
+        console.log('rightUrl ', rightUrl);
         var partner = document.querySelector('.partner');
         var partnerName = document.querySelector('.partner__name');
         var partnerUrl = document.querySelector('.partner__url');
@@ -142,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
         if (Object.keys(bg._getPartnersData()).length > 0) {
-            if ((bg._getPartnersData()[rightUrl]) && (currentTabUrl !== undefined)) {
+            if ((bg._getPartnersData()[rightUrl]) && (currentTabUrl !== undefined) && (rightUrl !== undefined)) {
                 var el = bg._getPartnersData()[rightUrl];
                 partner.style.display = 'flex';
                 partnerName.innerText = el.name;

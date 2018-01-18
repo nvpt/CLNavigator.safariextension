@@ -47,7 +47,7 @@ function markCashbackActive() {
  */
 function changeIcon(url) {
     var clearUrl = getClearUrl(url);
-    if ((url !== undefined) && (partnersData[clearUrl])) {
+    if (url !== undefined && clearUrl !== undefined && (partnersData[clearUrl])) {
         checkTimers(clearUrl);//сначала проверям, еще живой таймер кэшбка
         if (timers[clearUrl]) {//и затем в зависимости от условия меняем иконку
             markCashbackActive();
@@ -112,23 +112,74 @@ function arrayToObj(arr, obj) {
  * @param resolve
  * @param reject
  */
+// function reqProfile(resolve, reject) {
+//     //console.log('ЗАПРОС АВТОРИЗАЦИИ!!!');
+//     var url = 'https://cl.world/api/v2/profile/menu';
+//     var req = new XMLHttpRequest();
+//     req.open('GET', url);
+//     req.send();
+//     req.addEventListener('load', function () {
+//         if (req.status === 200) {
+//             var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
+//             // console.log('response ', response);
+//             resolve(response);
+//         } else {
+//             // console.error('error authorization');
+//             reject();
+//         }
+//     });
+// }
 function reqProfile(resolve, reject) {
-    //console.log('ЗАПРОС АВТОРИЗАЦИИ!!!');
-    var url = 'https://cl.world/api/v2/profile/menu';
+    var url = 'https://profile.cl.world/api/v3';
     var req = new XMLHttpRequest();
-    req.open('GET', url);
-    req.send();
+    req.responseType = '';
+    req.withCredentials = true;
+    req.open("POST", url);
+    req.setRequestHeader("Content-Type", "application/json");
+    req.setRequestHeader("Accept", "application/json");
+
+    req.send(JSON.stringify({
+            query : "query Profile { profile { fullName balance id paid } }",
+            variables : {locale : "ru"}
+        })
+    );
+
     req.addEventListener('load', function () {
+        // console.log('req ', req);
         if (req.status === 200) {
             var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
-            // console.log('response ', response);
-            resolve(response);
+            // console.log('resp ', response.data.profile);
+            resolve(response.data);
         } else {
-            // console.error('error authorization');
             reject();
         }
     });
 }
+
+var x = 1;
+var y = new Date().getTime();
+// console.log(y);
+
+var currentDate = new Date().getTime();
+console.log('currentDate ', currentDate);
+
+var savedDate = parseFloat(localStorage.getItem('testData')) || 0;
+console.log('savedDate ', savedDate);
+
+console.log('интервал: ' + ((currentDate - savedDate)/ (1000 * 60)) + ' минут');
+
+
+
+function setTime (){
+    if(localStorage.getItem('testData')) {
+        console.log('localStorage is not empty');
+    } else {
+        localStorage.setItem('testData', y );
+    }
+}
+// localStorage.setItem('testData', y );
+setTime ();
+
 
 
 /**

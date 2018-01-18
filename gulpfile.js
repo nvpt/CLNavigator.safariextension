@@ -14,7 +14,11 @@ var gulp = require('gulp'),
     path = require('path'),
     pump = require('pump'),
     runSequence = require('run-sequence').use(gulp),
-    scss = require('gulp-sass'),
+    // scss = require('gulp-sass'),
+    less = require('gulp-less'),                     // Compile Less to CSS
+    lessReporter = require('gulp-less-reporter'),    // Error reporter for gulp-less
+    minifycss = require('gulp-minify-css'),          // Minify CSS
+    rename = require("gulp-rename"),                 // Rename files
     strip = require('gulp-strip-comments'),//чистим комменты в несжимаемых скриптах
     stylish = require('jshint-stylish'),
     uglify = require('gulp-uglify'),
@@ -37,7 +41,8 @@ var projectPath = {
         img: 'src/img/**/*.*',
         js: ['src/js/*.js', '!src/js/punycode.js'],
         jsES6: ['src/js/punycode.js'],
-        scss: ['src/styles/popup.scss', 'src/styles/modal.scss']
+        scss: ['src/styles/popup.scss', 'src/styles/modal.scss'],
+        less: ['src/styles/popup.less', 'src/styles/modal.less']
     },
 
     watch: {
@@ -45,7 +50,8 @@ var projectPath = {
         html: 'src/**/*.html',
         img: 'src/img/**/*.*',
         js: 'src/js/**/*.js',
-        scss: 'src/styles/**/*.scss'
+        scss: 'src/styles/**/*.scss',
+        less: 'src/styles/**/*.less'
     },
 
     clean: ['cl-navigator.safariextension/**/*', '!cl-navigator.safariextension/Settings.plist', '!cl-navigator.safariextension/Info.plist']
@@ -110,18 +116,41 @@ gulp.task('jsES6', function (cb) {
 
 
 /* SCSS */
-gulp.task('scss', function () {
-    return gulp.src(projectPath.src.scss)
-        .pipe(scss().on('error', scss.logError))
+// gulp.task('scss', function () {
+//     return gulp.src(projectPath.src.scss)
+//         .pipe(scss().on('error', scss.logError))
+//         .pipe(autoprefixer([
+//             'iOS >= 8',
+//             'Safari >= 9'
+//         ]))
+//         .pipe(csscomb())
+//         // .pipe(cleancss())
+//         .pipe(gulp.dest(projectPath.build.styles))
+// });
+
+
+/* LESS */
+gulp.task('less', function () {
+    return gulp.src(projectPath.src.less)
+        .pipe(less({
+            paths: [path.join(__dirname, 'less', 'includes')]
+        }))
+        .on('error', lessReporter)
         .pipe(autoprefixer([
-            'iOS >= 6',
-            'Safari >= 6'
+            'iOS >= 8',
+            'Safari >= 9'
         ]))
         .pipe(csscomb())
+        .pipe(gulp.dest(projectPath.build.styles))
+        .pipe(rename({suffix: '.min'}))
+        .pipe(minifycss())
+        // .pipe(sourcemaps.write('./'))
+        // .pipe(size({
+        //     title: 'LESS'
+        // }))
         // .pipe(cleancss())
         .pipe(gulp.dest(projectPath.build.styles))
 });
-
 
 /* Build */
 gulp.task('build', function (cb) {
@@ -132,7 +161,7 @@ gulp.task('build', function (cb) {
         'images',
         'jsES6',
         'js',
-        'scss',
+        'less',
         cb
     )
 });
@@ -153,7 +182,7 @@ gulp.task('watch', function () {
     });
 
     watch([projectPath.watch.scss], function () {
-        gulp.start('scss');
+        gulp.start('less');
     });
 
     watch([projectPath.watch.img], function () {

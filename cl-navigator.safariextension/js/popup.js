@@ -118,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var currentTabUrl = tab.url;
         var rightUrl = bg.getClearUrl(currentTabUrl);
-        console.log('rightUrl ', rightUrl);
         var partner = document.querySelector('.partner');
         var partnerName = document.querySelector('.partner__name');
         var partnerUrl = document.querySelector('.partner__url');

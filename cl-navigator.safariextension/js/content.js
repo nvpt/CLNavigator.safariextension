@@ -1,7 +1,7 @@
 
-var SHOW_MODAL_TIME = 500; 
-var HIDE_MODAL_TIME = 20000; 
-var HIDE_CASHBACK_TIME = 15000; 
+var SHOW_MODAL_TIME = 2500; 
+var HIDE_MODAL_TIME = 180000; 
+var HIDE_CASHBACK_TIME = 30000; 
 
 if(window === window.top) {
 

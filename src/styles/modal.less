@@ -16,12 +16,12 @@
 	background: #fbfbfb!important;
 	z-index: 99999999999!important;
 	opacity: 0;
-	$animation-time: 0.8s;
-	-webkit-animation: fadein $animation-time; /* Safari, Chrome and Opera > 12.1 */
-	-moz-animation: fadein $animation-time; /* Firefox < 16 */
-	-ms-animation: fadein $animation-time; /* Internet Explorer */
-	-o-animation: fadein $animation-time; /* Opera < 12.1 */
-	animation: fadein $animation-time;
+	@animation-time: 0.8s;
+	-webkit-animation: fadein @animation-time; /* Safari, Chrome and Opera > 12.1 */
+	-moz-animation: fadein @animation-time; /* Firefox < 16 */
+	-ms-animation: fadein @animation-time; /* Internet Explorer */
+	-o-animation: fadein @animation-time; /* Opera < 12.1 */
+	animation: fadein @animation-time;
 	overflow: hidden;
 
 	@keyframes fadein {

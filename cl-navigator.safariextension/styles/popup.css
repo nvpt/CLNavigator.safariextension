@@ -1,18 +1,21 @@
 @font-face
 {
     font-family: ProximaRegular;
+    font-weight: normal;
 
     src: url(../fonts/proxima/ProximaNova-Reg.otf);
 }
 @font-face
 {
-    font-family: ProximaBold;
+    font-family: ProximaRegular;
+    font-weight: bold;
 
     src: url(../fonts/proxima/ProximaNova-Bold.otf);
 }
 @font-face
 {
-    font-family: ProximaLight;
+    font-family: ProximaRegular;
+    font-weight: 200;
 
     src: url(../fonts/proxima/ProximaNova-Light.otf);
 }
@@ -56,9 +59,12 @@ body
     outline: none;
 }
 .modalCL2017 strong,
-.popup strong
+.popup strong,
+.modalCL2017 .strong,
+.popup .strong
 {
-    font-family: ProximaBold, sans-serif;
+    font-family: ProximaRegular, sans-serif;
+    font-weight: bold;
 }
 .modalCL2017 [class^='part-'],
 .popup [class^='part-']
@@ -72,6 +78,11 @@ body
 {
     width: 30%;
 }
+.modalCL2017 .part-40,
+.popup .part-40
+{
+    width: 40%;
+}
 .modalCL2017 .part-45,
 .popup .part-45
 {
@@ -81,6 +92,11 @@ body
 .popup .part-55
 {
     width: 55%;
+}
+.modalCL2017 .part-60,
+.popup .part-60
+{
+    width: 60%;
 }
 .modalCL2017 .part-70,
 .popup .part-70
@@ -317,6 +333,7 @@ body
 .popup .search__field
 {
     font-size: 18px;
+    line-height: 45px;
 
     position: relative;
 
@@ -336,9 +353,10 @@ body
 }
 .popup .search__field::-webkit-input-placeholder
 {
-    font-family: ProximaBold, sans-serif;
-    font-size: 13px;
-    line-height: 25px;
+    font-family: ProximaRegular, sans-serif;
+    font-size: 14px;
+    font-weight: normal;
+    font-weight: bold;
 
     text-transform: uppercase;
 
@@ -347,7 +365,6 @@ body
 .popup .search__field::-moz-placeholder
 {
     font-size: 13px;
-    line-height: 25px;
 
     text-transform: uppercase;
 
@@ -355,9 +372,10 @@ body
 }
 .popup .search__field:-moz-placeholder
 {
-    font-family: ProximaBold, sans-serif;
+    font-family: ProximaRegular, sans-serif;
     font-size: 13px;
-    line-height: 25px;
+    font-weight: normal;
+    font-weight: bold;
 
     text-transform: uppercase;
 
@@ -365,9 +383,10 @@ body
 }
 .popup .search__field:-ms-input-placeholder
 {
-    font-family: ProximaBold, sans-serif;
+    font-family: ProximaRegular, sans-serif;
     font-size: 13px;
-    line-height: 25px;
+    font-weight: normal;
+    font-weight: bold;
 
     text-transform: uppercase;
 
@@ -386,6 +405,7 @@ body
 }
 .popup .search-list__wrap
 {
+    position: relative;
     z-index: 200;
 
     overflow: auto;
@@ -415,8 +435,11 @@ body
 }
 .popup .search-list__content
 {
+    position: relative;
+    z-index: 20;
+
     margin-top: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 .popup .search-list__content_last
 {
@@ -438,6 +461,18 @@ body
     bottom: -25px;
 
     box-shadow: 0 -20px 20px 20px #fff;
+}
+.popup .search-list__spinner-wrap
+{
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+
+    overflow: hidden;
+
+    width: 100%;
+    height: 100%;
 }
 .popup .list-item
 {
@@ -539,8 +574,9 @@ body
 }
 .popup .list-item__cashback
 {
-    font-family: ProximaBold, sans-serif;
+    font-family: ProximaRegular, sans-serif;
     font-size: 14px;
+    font-weight: normal;
     font-weight: bold;
 
     text-align: right;
@@ -549,8 +585,9 @@ body
 }
 .popup .list-item__value
 {
-    font-family: ProximaBold, sans-serif;
+    font-family: ProximaRegular, sans-serif;
     font-size: 22px;
+    font-weight: normal;
     font-weight: 800;
 
     display: block;
@@ -560,6 +597,7 @@ body
 .popup
 {
     font-family: ProximaRegular, sans-serif;
+    font-weight: normal;
 
     display: -webkit-flex;
     display:         flex;
@@ -656,8 +694,8 @@ body
             flex-direction: column;
 
     box-sizing: border-box;
-    width: calc(80%);
-    padding: 20px 25px;
+    width: calc(100% - 20px);
+    padding: 20px;
 
     border-radius: 6px;
     background-color: #fff;
@@ -761,7 +799,7 @@ body
 
     width: 100%;
     height: 100%;
-    margin-top: 0;
+    margin-top: 8px;
 
     text-transform: uppercase;
 
@@ -791,6 +829,7 @@ body
 {
     font-family: ProximaRegular, sans-serif;
     font-size: 18px;
+    font-weight: normal;
 
     width: 100%;
 
@@ -800,19 +839,31 @@ body
 {
     font-family: ProximaRegular, sans-serif;
     font-size: 14px;
+    font-weight: normal;
 
     color: #919191;
 }
 .popup .partner__cashback
 {
-    font-family: ProximaBold, sans-serif;
+    font-family: ProximaRegular, sans-serif;
     font-size: 22px;
+    font-weight: normal;
 
     text-transform: lowercase;
 
     color: #676a82;
 }
-.popup .partner__cashback span
+.popup .partner__cashback-label
+{
+    font-family: ProximaRegular, sans-serif;
+    font-size: 22px;
+    font-weight: normal;
+
+    text-transform: lowercase;
+
+    color: #676a82;
+}
+.popup .partner__cashback-value
 {
     font-weight: bold;
 
@@ -823,6 +874,18 @@ body
     font-size: 16px;
 
     padding: 20px 0;
+}
+.popup .partner__description ul
+{
+    padding: 20px 0;
+}
+.popup .partner__description li
+{
+    margin-left: 25px;
+    padding-bottom: 7px;
+    padding-left: 5px;
+
+    list-style-type: circle;
 }
 .popup .partner__close-icon
 {
@@ -847,10 +910,16 @@ body
 {
     box-shadow: inset 0 0 0 23px rgba(117, 117, 117, .22);
 }
+.popup .partner .textBottomPadding
+{
+    height: 40px;
+}
 .popup .user
 {
-    font-family: ProximaBold, sans-serif;
+    font-family: ProximaRegular, sans-serif;
     font-size: 14px;
+    font-weight: normal;
+    font-weight: bold;
 
     display: -webkit-flex;
     display:         flex;
@@ -889,6 +958,8 @@ body
 {
     padding: 15px 15px 15px 30px;
 
+    cursor: pointer;
+
     border: none;
 }
 .popup .user__login-link_logged:hover,
@@ -905,7 +976,7 @@ body
 {
     overflow: hidden;
 
-    max-width: 125px;
+    max-width: 175px;
 
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -925,4 +996,138 @@ body
 .popup .user__cash-value
 {
     font-size: 16px;
+}
+.popup .language
+{
+    font-size: 16px;
+
+    position: relative;
+}
+.popup .language__list
+{
+    position: absolute;
+    z-index: 50;
+    top: 0;
+    left: 0;
+
+    visibility: hidden;
+
+    max-width: 100%;
+    margin-left: 0;
+    padding-left: 0;
+
+    list-style: none;
+
+    transition: all .3s;
+
+    opacity: 0;
+    border-radius: 4px;
+    box-shadow: 1px -1px 7px grey;
+}
+.popup .language__list.visible
+{
+    visibility: visible;
+
+    opacity: 1;
+}
+.popup .language__item
+{
+    padding: 4px 15px;
+
+    cursor: pointer;
+    transition: all .3s;
+
+    background: #fff;
+}
+.popup .language__item.active
+{
+    background: #efefef;
+}
+.popup .language__item:hover
+{
+    background: #d2d2d2;
+}
+.popup .language__item:focus,
+.popup .language__item:active
+{
+    background: #bebebe;
+}
+.popup .language__current
+{
+    font-size: 16px;
+
+    z-index: 100;
+
+    padding: 4px 15px;
+
+    cursor: pointer;
+    text-align: right;
+
+    color: #3b3a3a;
+    border: 1px solid #fe5f86;
+    border-radius: 4px;
+    background: #fff;
+}
+.popup .cl-spinner
+{
+    font-size: 15px;
+    font-weight: bold;
+    line-height: 28px;
+
+    position: absolute;
+
+    display: none;
+            flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    transition: all .3s;
+    -webkit-animation: scaling 1.8s infinite;
+            animation: scaling 1.8s infinite;
+    text-align: center;
+
+    color: #b3b3b3;
+
+    -webkit-justify-content: center;
+            justify-content: center;
+    -webkit-flex-direction: column;
+    -webkit-align-items: center;
+            align-items: center;
+}
+@-webkit-keyframes scaling
+{
+    from
+    {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+    }
+    50%
+    {
+        -webkit-transform: scale(1.2);
+                transform: scale(1.2);
+    }
+    to
+    {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+    }
+}
+@keyframes scaling
+{
+    from
+    {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+    }
+    50%
+    {
+        -webkit-transform: scale(1.2);
+                transform: scale(1.2);
+    }
+    to
+    {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+    }
 }

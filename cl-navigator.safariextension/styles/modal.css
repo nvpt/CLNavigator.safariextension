@@ -1,6 +1,7 @@
 .modalCL2017
 {
     font-family: ProximaRegular, sans-serif !important;
+    font-weight: normal;
 
     position: fixed!important;
     z-index: 99999999999!important;
@@ -84,9 +85,9 @@
     margin-right: -8px !important;
 
     cursor: pointer!important;
-    transition: all .3s!important;
+    transition: all .3s;
 
-    background: url('https://clcorp.ru/images/extenion/close-gray.png') center no-repeat !important;
+    background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABGdBTUEAALGPC/xhBQAAAPJJREFUKBWdkkEOwiAQRQuhZ9BbmJjoot17kGovZVoP0n2blIWX8ATum+L/CIQ04MLZAPPfn5lSigIxz/NhHMcL97+CDFkygptlWZ7GGIlzX9d1K4QwcQFoYpqmDmsDbVVKHSVMO2cie3WA8MbYxBxZeiQ6DDj3Edh489bkGE412MopACM9CEJrfFHmqqq68VOyI3nYr7GJuWDkIdXZQlEnnhm8yb8idMx181WTo6ZMBGnKXY6iiOu/pwCnBTMZsCvyrcAzOiGhCTG2I0ELr+ZLWOYsy7J8AX47U+f/UwQZl+sc86bH6lrrPTt7OLeSIUv9Ay5F0Z1QvLY9AAAAAElFTkSuQmCC') center no-repeat !important;
 }
 .modalCL2017 .cl-close:hover
 {
@@ -127,7 +128,7 @@
     line-height: 27px!important;
 
     position: absolute!important;
-    z-index: 200!important;
+    z-index: 300!important;
     left: 0!important;
 
     display: none;

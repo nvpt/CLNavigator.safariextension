@@ -1,58 +1,59 @@
-//@import "common";
+
 .popup {
 	.tabs {
 
-		&__buttons {
-			display: flex;
-			justify-content: space-around;
-			height: 0; //temp
+	&__buttons {
+		display: flex;
+		justify-content: space-around;
+		height: 0;//temp
+	}
+
+	&__button-wrap {
+		flex-grow: 1;
+
+		.tabs__button {
+			margin-right: -1px;
 		}
-
-		&__button-wrap {
-			flex-grow: 1;
-
+		&:last-of-type {
 			.tabs__button {
-				margin-right: -1px;
-			}
-			&:last-of-type {
-				.tabs__button {
-					margin-right: 0; /* проверка отображения коммента */
-				}
-			}
-		}
-
-		&__button {
-			text-align: center;
-			border: 1px solid #7777B9;
-			//padding: 10px;
-			padding: 0; //temp
-
-			&:hover {
-				background-color: rgb(164, 185, 231);
-			}
-			&:focus,
-			&:active,
-			&.active {
-				background-color: rgb(164, 185, 231);
-				border-bottom-color: transparent;
-			}
-		}
-
-		&__content {
-			position: relative;
-			padding: 0 17px;
-			height: 395px;
-			background-color: #fff;
-			box-sizing: border-box;
-		}
-
-		&__body {
-			display: none;
-			max-height: 365px;
-
-			&.active {
-				display: block;
+				margin-right: 0; /* проверка отображения коммента */
 			}
 		}
 	}
-}
+
+	&__button {
+		text-align: center;
+		border: 1px solid #7777B9;
+		//padding: 10px;
+		padding: 0; //temp
+
+		&:hover {
+			background-color: rgb(164, 185, 231);
+		}
+		&:focus,
+		&:active,
+		&.active {
+			background-color: rgb(164, 185, 231);
+			border-bottom-color: transparent;
+		}
+	}
+
+	@contentHeight: 365px;
+
+	&__content {
+		position: relative;
+		padding: 0 17px;
+		height: 395px;
+		background-color: #fff;
+		box-sizing: border-box;
+	}
+
+	&__body {
+		display: none;
+		max-height: @contentHeight;
+
+		&.active {
+			display: block;
+		}
+	}
+}}

@@ -1,15 +1,25 @@
+/**
+ * Created by CityLife on 23.12.16.
+ */
+// console.log('загрузка popup');
 
 document.addEventListener('DOMContentLoaded', function () {
 
+    // console.log('application ', safari.application);
+    // console.log('extension ', safari.extension);
+    // console.log('self ', safari.self);
+    // console.log('extension.globalPage partnersData ', safari.extension.globalPage.contentWindow._getAliClear());
 
 
     var bg = safari.extension.globalPage.contentWindow;
 
 
+    //табы
     var tabsButtons = document.querySelectorAll('.tabs__button');
     var tabsBodies = document.querySelectorAll('.tabs__body');
 
 
+    //список партнеров
     var partnerThumb = document.querySelectorAll('.list-item');
     var recommendedWrap = document.querySelector('.search-list__content_recommended');
     var lastWrap = document.querySelector('.search-list__content_last');
@@ -18,6 +28,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var last = document.querySelector('.search__form-autocomplete.last');
     var requested = document.querySelector('.search__form-autocomplete.requested');
 
+    /*
+    * resolutions for server responses with tags
+    * from this library https://www.npmjs.com/package/sanitize-html
+    * scripts will not be allow
+    * */
     var sanitizeResolutions = {
         allowedTags: ['p', 'b', 'i', 'em', 'strong', 'a', 'img', 'span'],
         allowedAttributes: {
@@ -28,8 +43,12 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
 
+    /**
+     *Личниый кабинет
+     */
     function showUserData() {
 
+        //юзер
         var user = document.querySelector('.user');
         var userLink = document.createElement('a');
         userLink.setAttribute('target', '_blank');
@@ -91,7 +110,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // showUserData();
 
+    /**
+     * Переключение табов внутри окна попапа
+     */
     function selectTab() {
         for (var i = 0; i < tabsButtons.length; i++) {
             (function (e) {
@@ -114,6 +137,16 @@ document.addEventListener('DOMContentLoaded', function () {
     selectTab();
 
 
+    /**
+     * Рендер карточки партнера
+     * * 0. создаем короткий урл
+     * 1. проверяем, совпадает ли короткий урл активной вкладки с урлом одного из элементов массива. Массив
+     * используем для быстроты отображения данных. Запрос на сервер всегда отображает с задержкой.
+     * 2. если совпадает урл, то запрашиваем данные этого элемента из объекта. Иначе спрашиваем на сервере
+     * 2.1. если залогинен, то на ссылке текст Активировать, если не залогинен, то на ссылке текст Войти, чтоб
+     * активировать
+     * 3. если не совпадает урл, то прячем карточку отображения информации партнера
+     */
     function renderMainCard(tab) {
 
         var currentTabUrl = tab.url;
@@ -125,6 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var partnerCashback = document.querySelector('.partner__cashback > span');
         var partnerDescription = document.querySelector('.partner__description');
 
+        //для предотвращения дублирования событий на обработчике кликов, необходимо генерить элемент с обработчиком внутри это ункции
         var partnerLinkWrap = document.querySelector('.button-cl__wrapper');
         partnerLinkWrap.innerText='';
         var partnerLink = document.createElement('a');
@@ -134,6 +168,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var cashbackActive = document.querySelector('.cashback-active');
 
 
+        /*вид кнопки в зависимости от статуса залогирован-незалогирован*/
         if ((bg._getLoginData()) && (bg._getLoginData().profile)) {
             partnerLink.innerHTML = '<span>Активировать</span>';
         } else {
@@ -141,9 +176,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
 
-        if (Object.keys(bg._getPartnersData()).length > 0) {
+        if (Object.keys(bg._getPartnersData()).length > 0) {//проверяем, подгрузился ли массив партнеров
             if ((bg._getPartnersData()[rightUrl]) && (currentTabUrl !== undefined) && (rightUrl !== undefined)) {
                 var el = bg._getPartnersData()[rightUrl];
+                // console.log('el ', el);
                 partner.style.display = 'flex';
                 partnerName.innerText = el.name;
                 partnerUrl.innerText = bg.getClearUrl(el.site_url);
@@ -159,13 +195,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 function eventOnCardBtn () {
 
+                    // safari.application.activeBrowserWindow.openTab().url = el.href;//раскомментить, если надо target _blank
                     safari.self.hide();
 
-                    if (bg._getLoginData().profile) { 
+                    if (bg._getLoginData().profile) { //после активации через попап, модалка снова должна отобразиться с инфой об активрованном кэшбэке
                         var modalMarkers = bg._getModalMarkers();
                         for (var i = 0; i < modalMarkers.length; i++) {
                             if (modalMarkers[i] === el.id) {
-                                modalMarkers.splice(i, 1);
+                                modalMarkers.splice(i, 1);//удаляем маркер отображени модалки, чтобы после активации кэшбэка модалка отобразилась заново еще раз
                             }
                         }
                         bg._setModalMarkers(modalMarkers);
@@ -178,11 +215,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
 
-                    if ((Object.keys(bg._getLoginData()).length > 0) && (!bg._getTimers()[rightUrl])) {
+                    if ((Object.keys(bg._getLoginData()).length > 0) && (!bg._getTimers()[rightUrl])) {//если авторизованы и если в таймерах  не числится таймер текущего урла, то добавляем его кликом по кнопке
                         bg._addToTimers(rightUrl, new Date().getTime());
                         setTimeout(function () {
-                            cashbackActive.style.display = 'flex';
-                            bg.markCashbackActive();
+                            cashbackActive.style.display = 'flex';//отображаем в попапе поле с уведомлением об активном кэшбэке
+                            bg.markCashbackActive();//иконка расширения информирует об активном кэшбэке
                         }, 1200);
                     }
                 }
@@ -190,6 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 partnerLink.addEventListener('click', eventOnCardBtn, false);
 
 
+                // также, без привязки к клику по кнопке проверяем активен ли таймер кэшбэка
                 if ((bg._getLoginData()) && (bg._getTimers()[rightUrl])) {
                     cashbackActive.style.display = 'flex';
                     bg.markCashbackActive();
@@ -204,6 +242,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
             } else {
+                //если это не партнер, то карточку не отображаем
                 partnerLink.setAttribute('href', '');
                 partner.style.display = 'none';
             }
@@ -211,6 +250,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
+    /**
+     * Шаблон создания элемента списка партнеров
+     * @param el
+     * @param target
+     */
     function listItemRender(el, target) {
         if (el.id) {
             var searchItem = document.createElement('li');
@@ -272,6 +316,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /**
+     * Рендер рекомендуемых партнеров
+     * partners - прописаны в отдельном файле. Подключаются в html файле
+     */
     function renderRecommended() {
         recommended.innerText='';
         for (var i = 0; i < partners.length; i++) {
@@ -284,6 +332,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /**
+     * Рендер последних посещенных партнеров
+     * Генерится динамически, обновляясь при каждом посещени новой страницы очередного партнера
+     */
     function renderLastVisited() {
         last.innerText='';
         var keys = Object.keys(bg._getPartnersVisited());
@@ -300,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
+    /*Поиск-автокомплит*/
     var searchField = document.querySelector('.search__autocomplete');
 
     var btnClearSearchField = document.querySelector('.search__clear');
@@ -339,6 +392,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
+    /**
+     * Рендер списка по запросу поиска
+     * Генерится динамически
+     */
     function searchRequest(name, resolve, reject) {
         var url = 'https://cl.world/api/v2/cases/index?&name=' + name + '&show=1&non_strict=1&lang=ru';
         var req = new XMLHttpRequest();
@@ -359,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function renderRequestedList(elements) {
         var arr = elements;
-        requested.innerHTML = '';
+        requested.innerHTML = '';//при каждом новом вводе буквы обновляем выводимый список
         for (var i = 0; i < arr.length; i++) {
             listItemRender(arr[i], requested);
         }
@@ -371,24 +428,32 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 
+    /**
+     * Динамический вывод поиска
+     */
     searchField.addEventListener('input', function () {
         var searching = this.value;
         clearSearchInputValue(searching);
-        requested.innerHTML = '';
+        requested.innerHTML = '';//при каждом новом вводе буквы обновляем выводимый список
         searchRequest(searching,
             renderRequestedList,
             function (er) {
+                //console.error(er);
             }
         );
     });
 
 
+    /**
+     * В момент клика выясняем урл активной вкладки и работаем с ним
+     */
+    // console.log('tab ', safari.application.activeBrowserWindow.activeTab);
 
     safari.application.addEventListener('popover', function (e) {
         var tab = safari.application.activeBrowserWindow.activeTab;
         showUserData();
         searchField.value = '';
-        bg.checkTimers(bg.getClearUrl(tab.url));
+        bg.checkTimers(bg.getClearUrl(tab.url));//по окончании срока действия таймера кэшбэка, смена иконки и попапа будет производиться по клику на иконку
         renderMainCard(tab);
         renderRecommended();
         renderLastVisited();

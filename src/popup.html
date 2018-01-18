@@ -9,10 +9,20 @@
 <div class="popup" id="popupCL">
     <div class="popup__head-wrap">
         <div class="popup__head">
-            <a href="http://clcorp.ru" onclick="safari.application.activeBrowserWindow.openTab().url = 'https://clcorp.ru/'; safari.self.hide();" target="_blank" title="Перейти на сайт"><img src="img/logo.png" alt="City Life"
-                                                                                    class="popup__logo"></a>
-            <div class="user">
-                <a href="http://clcorp.ru" target="_blank" class="user__login-link">Войти</a>
+
+                <!-- testurl!!! -->
+                <a href="https://cl.world/" onclick="safari.application.activeBrowserWindow.openTab().url = 'https://cl.world/'; safari.self.hide();" target="_blank" title="Перейти на сайт" class="popup__logo-link">
+                    <!--<a href="https://front.zato.clcorp/" onclick="safari.application.activeBrowserWindow.openTab().url = 'https://front.zato.clcorp/'; safari.self.hide();" target="_blank" title="Перейти на сайт" class="popup__logo-link">-->
+
+                    <img src="img/logo.png" alt="City Life" class="popup__logo">
+                </a>
+                <div class="user">
+
+                    <!-- testurl!!! -->
+                    <a href="https://profile.cl.world/login" target="_blank" class="user__login-link">Войти</a>
+                    <!--<a href="https://front.zato.clcorp/" target="_blank" class="user__login-link">Войти</a>-->
+
+
                 <span class="user__cash"></span>
             </div>
         </div>
@@ -46,18 +56,24 @@
 
                         <div class="search-list__white-shadow"></div>
                         <div class="search-list__wrap">
+
+
                             <div class="search-list__content search-list__content_last">
-                                <div class="search-list__h2">Последние посещённые</div>
+                                <div class="search-list__h2 search-list__h2_visited"></div>
                                 <ul class="search__form-autocomplete last"></ul>
                             </div>
                             <div class="search-list__content search-list__content_recommended">
-                                <div class="search-list__h2">Рекомендуемые</div>
+                                <div class="search-list__h2  search-list__h2_recommended"></div>
                                 <ul class="search__form-autocomplete recommended"></ul>
                             </div>
                             <div class="search-list__content search-list__content_requested">
                                 <ul class="search__form-autocomplete requested"></ul>
                             </div>
+                            <div class="search-list__spinner-wrap">
+                                <div class="cl-spinner cl-spinner_searchList">
 
+                                </div>
+                            </div>
                         </div>
                         <div class="search-list__white-shadow search-list__white-shadow_to-top"></div>
 
@@ -146,24 +162,27 @@
                     <!--</li>-->
                     <!--</ul>-->
                     <!--</div>-->
+
                 </div>
             </div>
             <!--/Табы-->
+
             <!--Партнёр-->
             <div class="partner">
                 <div class="partner__header-wrapper">
                     <div class="partner__header">
-                        <div class="part-45">
+                        <div class="part-40">
                             <div class="label">
                                 <img class="partner__logo" src=""/>
                                 <div class="partner__url"></div>
                             </div>
                         </div>
-                        <div class="part-55">
+                        <div class="part-60">
                             <div class="info__wrap">
                                 <ul class="info">
                                     <li class="partner__name"></li>
-                                    <li class="partner__cashback">Кэшбэк: <span></span></li>
+                                    <li class="partner__cashback"><span class="partner__cashback-label">Кэшбэк</span>:
+                                        <span class="partner__cashback-value"></span></li>
                                 </ul>
                             </div>
 
@@ -173,9 +192,7 @@
                 <div class="search-list__white-shadow"></div>
                 <div class="partner__body-wrapper">
                     <div class="partner__body">
-                        <div class="partner__description">
-                            <div class="test">lorem</div>
-                        </div>
+                        <div class="partner__description"></div>
                     </div>
                 </div>
                 <div class="search-list__white-shadow search-list__white-shadow_to-top"></div>
@@ -185,7 +202,8 @@
                             Кэшбэк активирован
                         </div>
                         <div class="button-cl__wrapper">
-                            <a href="#" class="button-cl button-cl_pink partner__link button-cl_glass" >
+                            <a href="#" class="button-cl button-cl_pink button-cl_glass  partner__link "
+                               target="_blank">
                                 Активировать
                             </a>
 
@@ -199,20 +217,28 @@
 
         </div>
     </div>
+
     <div class="popup__footer-wrap">
         <div class="popup__footer">
             <a href="http://clcorp.ru/cases" onclick="safari.application.activeBrowserWindow.openTab().url = 'http://clcorp.ru/cases'; safari.self.hide();" class="all-shops" target="_blank">Больше магазинов</a>
-            <div class="signature">&copy; City Life 2016-2017</div>
+
+            <div class="popup__language-select">
+                <div class="language">
+                    <div class="language__current" data-current-lang="ru">ru</div>
+                    <ul class="language__list">
+                        <li class="language__item" data-lang="en">en</li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="signature">&copy; 2018 City Life</div>
         </div>
     </div>
 </div>
-<script>
-    console.log('загрузка popup');
-</script>
 
-<script type="text/javascript" src="js/vendor/punycode.js"></script>
-<script type="text/javascript" src="js/vendor/sanitize-html.js"></script>
-<script type="text/javascript" src="js/partners.js"></script>
+
+<script type="text/javascript" src="js/vendor/purify.js"></script>
 <script type="text/javascript" src="js/popup.js"></script>
 </body>
 </html>

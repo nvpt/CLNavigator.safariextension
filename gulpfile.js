@@ -39,9 +39,8 @@ var projectPath = {
         fonts: 'src/fonts/**/*.*',
         html: ['src/*.html', '!src/modal.html'],
         img: 'src/img/**/*.*',
-        js: ['src/js/*.js', '!src/js/punycode.js'],
-        jsES6: ['src/js/punycode.js'],
-        scss: ['src/styles/popup.scss', 'src/styles/modal.scss'],
+        js: ['src/js/**/*.js'],
+        // jsES6: ['src/js/punycode.js'],
         less: ['src/styles/popup.less', 'src/styles/modal.less']
     },
 
@@ -50,7 +49,6 @@ var projectPath = {
         html: 'src/**/*.html',
         img: 'src/img/**/*.*',
         js: 'src/js/**/*.js',
-        scss: 'src/styles/**/*.scss',
         less: 'src/styles/**/*.less'
     },
 
@@ -90,29 +88,29 @@ gulp.task('js', function (cb) {
             gulp.src(projectPath.src.js),
             // jshint(),
             // jshint.reporter(stylish),
-            // (uglify().on('error', function (e) {//не используем сжатие нигде
+            // (uglify().on('error', function (e) {//not opera, не используем сжатие нигде
             //     console.log(e);
             // })),
-            strip(),//если надо убрать комменты
-            gulp.dest(projectPath.build.js)
-        ],
-        cb
-    );
-});
-
-gulp.task('jsES6', function (cb) {
-    pump([
-            gulp.src(projectPath.src.jsES6),
-            // jshint(),
-            // jshint.reporter(stylish),
-            babel({presets: ['es2015']}),
-            // babel({presets: ['babili']}),//сжатие
             //strip(),//если надо убрать комменты
             gulp.dest(projectPath.build.js)
         ],
         cb
     );
 });
+
+// gulp.task('jsES6', function (cb) {
+//     pump([
+//             gulp.src(projectPath.src.jsES6),
+//             // jshint(),
+//             // jshint.reporter(stylish),
+//             babel({presets: ['es2015']}),
+//             // babel({presets: ['babili']}),//сжатие
+//             //strip(),//если надо убрать комменты
+//             gulp.dest(projectPath.build.js)
+//         ],
+//         cb
+//     );
+// });
 
 
 /* SCSS */
@@ -159,7 +157,6 @@ gulp.task('build', function (cb) {
         'fonts',
         'html',
         'images',
-        'jsES6',
         'js',
         'less',
         cb
@@ -173,15 +170,11 @@ gulp.task('watch', function () {
         gulp.start('js');
     });
 
-    watch([projectPath.watch.js], function () {
-        gulp.start('jsES6');
-    });
-
     watch([projectPath.watch.html], function () {
         gulp.start('html');
     });
 
-    watch([projectPath.watch.scss], function () {
+    watch([projectPath.watch.less], function () {
         gulp.start('less');
     });
 

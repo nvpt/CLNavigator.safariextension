@@ -1,11 +1,19 @@
+/**
+ * Created by CityLife on 29.12.16.
+ */
+// console.log('--content--');
 
-var SHOW_MODAL_TIME = 2500; 
-var HIDE_MODAL_TIME = 180000; 
-var HIDE_CASHBACK_TIME = 30000; 
+var SHOW_MODAL_TIME = 2500; //3000 = 2,5 сек. Задержка перед открытием окна
+var HIDE_MODAL_TIME = 180000; //180000 = 3 мин. Время скрытия модалки после отображения. Поставить секунд 15-20
+var HIDE_CASHBACK_TIME = 30000; //30000 = 30 сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 
 if(window === window.top) {
 
+    /*
+    *Отправка куки
+    * */
 
+    /* куки отслеживания авторизации */
     function sendCookies(name, data) {
         safari.self.tab.dispatchMessage(name, data);
     }
@@ -15,11 +23,14 @@ if(window === window.top) {
         sendCookies("send-cookies", cookiesMain);
     }
 
+    /* временное решение для переопределения */
     if((window.location.href).indexOf(ALI_CLEAR) !== -1){
         var cookiesAli = document.cookie.split(';');
         sendCookies("ali-cookies",cookiesAli);
     }
 
+    //>>отправка
+    /* Старт связки */
     safari.self.tab.dispatchMessage("content", {
         id: 'startConnect',
         url: window.location.href
@@ -56,10 +67,15 @@ if(window === window.top) {
         var clButtonInner = document.createElement('span');
         var reactivation = document.createElement('div');
 
+        //<<прием
+        /* ответы из bg */
         if (messageName === 'bg') {
 
+            //<<прием
+            /* отображение модалки */
             if (msg.id === 'showModal') {
 
+                /* рендер компонентнов модалки */
                 ANCHOR.id = 'modalCL2017';
                 ANCHOR.classList.add('modalCL2017');
 
@@ -123,6 +139,8 @@ if(window === window.top) {
                 ANCHOR.appendChild(modalBody);
                 ANCHOR.appendChild(modalFooter);
 
+                /* если маркер отображения есть то модалку прячем.
+                Смотрим по маркеру из массива в common.js */
                 for (var i = 0; i < modalMarkers.length; i++) {
 
                     if (modalMarkers[i] === partnerData.id) {
@@ -135,6 +153,9 @@ if(window === window.top) {
                 ANCHOR.style.display = 'flex';
                 ANCHOR.style.opacity = 1;
 
+                /* пресекаем дублирование добавления модалки */
+                /* вторым условием избегаем при первичном запуске
+                 отображения всех модалок в текущем окне*/
                 if ((!document.querySelector("#modalCL2017")) &&
                     ((window.location.href).indexOf(getClearUrl(partnerData.site_url)))!== -1 ){
                     setTimeout(function () {
@@ -144,6 +165,7 @@ if(window === window.top) {
                     close.addEventListener('click', function () {
                         ANCHOR.style.display = 'none';
 
+                        //>>отправка
                         safari.self.tab.dispatchMessage("content", {
                             id: 'modalMarkerAdded',
                             url: currentUrl
@@ -151,6 +173,7 @@ if(window === window.top) {
                     });
                 }
 
+                /* на всякий случай прячем ремодалку */
                 if (document.querySelector("#remodalCL2017")) {
                     document.querySelector("#remodalCL2017").style.display = 'none';
                 }
@@ -159,14 +182,17 @@ if(window === window.top) {
                 setTimeout(function () {
                     ANCHOR.style.display = 'none';
 
+                    //>>отправка
                     safari.self.tab.dispatchMessage("content", {
                         id: 'modalMarkerAdded',
                         url: currentUrl
                     })
                 }, HIDE_MODAL_TIME);
 
+                /* отображение информации об активном кэшбэке зависит от данных в timers */
                 if ((timers) && (timers.hasOwnProperty(getClearUrl(currentUrl)))) {
 
+                    //>>отправка
                     safari.self.tab.dispatchMessage("content", {
                         id: 'modalMarkerAdded',
                         url: currentUrl
@@ -174,6 +200,8 @@ if(window === window.top) {
 
                     cashbackActive.style.display = 'flex';
 
+                    /* после уведомления модалкой об активации кэшбэка,
+                    автоматически прячем ее через HIDE_CASHBACK_TIME */
                     setTimeout(function () {
                         ANCHOR.style.display = 'none';
                     }, HIDE_CASHBACK_TIME);
@@ -187,8 +215,11 @@ if(window === window.top) {
 
                 clButton.setAttribute('href', partnerData.href);
 
+                /* функция активации кэшбэка из модалки.
+                После задействования в background передается об этом информация */
                 clButton.addEventListener('click', function () {
 
+                    //>>отправка
                     safari.self.tab.dispatchMessage("content", {
                         id: 'setCashbackClick',
                         url: currentUrl,
@@ -198,14 +229,19 @@ if(window === window.top) {
                 });
             }
 
+            //<<прием
+            /* выводим модалку с реактивацией (ремодалка).
+            если наш кэшбэк переопределили */
             else if (msg.id === 'showRemodal') {
                 partnerData = msg.currentPartner;
                 var modalShowed = msg.modalShowed;
                 var remodalShowed = msg.remodalShowed;
                 currentUrl = window.location.href;
 
+                /* ремодалка выведется только, если предварительно всплывала модалка */
                 if (modalShowed) {
 
+                    /* рендер компонентов ремодалки */
                     var REANCHOR = document.createElement('div');
                     REANCHOR.id = 'remodalCL2017';
                     REANCHOR.classList.add('modalCL2017', 'modalCL2017_remodal');
@@ -291,18 +327,24 @@ if(window === window.top) {
                     REANCHOR.style.display = 'flex';
                     REANCHOR.style.opacity = 1;
 
+                    /* второе условие отображения ремодалки - если она до этого не отображалась */
                     if (!remodalShowed) {
 
                         window.addEventListener('load', function () {
 
+                            /* прячем основную модалку */
+                            /* вторым условием избегаем при первичном запуске
+                            отображения всех модалок в текущем окне*/
                             if (document.querySelector('#modalCL2017')) {
                                 document.querySelector('#modalCL2017').style.display = 'none';
                             }
                             if ((!document.querySelector('#remodalCL2017')) &&
                                 ((window.location.href).indexOf(getClearUrl(partnerData.site_url)))!== -1 ){
 
+                            // if (!document.querySelector('#remodalCL2017')){
                                 document.body.appendChild(REANCHOR);
 
+                                //>>отправка
                                 safari.self.tab.dispatchMessage("content", {
                                     id: 'remodalShowed',
                                     url: currentUrl,
@@ -314,6 +356,7 @@ if(window === window.top) {
                             close.addEventListener('click', function () {
                                 REANCHOR.style.display = 'none';
 
+                                //>>отправка
                                 safari.self.tab.dispatchMessage("content", {
                                     id: 'remodalShowed',
                                     url: currentUrl,
@@ -323,9 +366,11 @@ if(window === window.top) {
                         });
                     }
 
+                    /* прячем ремодалку через HIDE_MODAL_TIME времени */
                     setTimeout(function () {
                         REANCHOR.style.display = 'none';
 
+                        //>>отправка
                         safari.self.tab.dispatchMessage("content", {
                             id: 'remodalShowed',
                             url: currentUrl,
@@ -334,12 +379,16 @@ if(window === window.top) {
 
                     }, HIDE_MODAL_TIME);
 
+                    /* прописываем значение кэшбэка и ставим иконку партнера */
                     clPartnerLogo.setAttribute('src', partnerData.logo_url);
                     cashbackValue.innerText = partnerData.sale_text;
                     clButton.setAttribute('href', partnerData.href);
 
+                    /* функция активации кэшбэка из модалки.
+                    После задействования в background передается об этом информация */
                     clButton.addEventListener('click', function () {
 
+                        //>>отрпавка
                         safari.self.tab.dispatchMessage("content", {
                             id: 'setCashbackClick',
                             url: currentUrl,
@@ -354,6 +403,8 @@ if(window === window.top) {
                 }
             }
 
+            //<<прием
+            /* принудительное скрытие ремодалки */
             else if (msg.id === 'hideRemodal') {
                 if (document.querySelector('#remodalCL2017')) {
                     document.querySelector('#remodalCL2017').style.display = 'none';

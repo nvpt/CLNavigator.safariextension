@@ -7,6 +7,19 @@ let SHOW_MODAL_TIME = 2500; //3000 = 2,5 сек. Задержка перед о�
 let HIDE_MODAL_TIME = 180000; //180000 = 3 мин. Время скрытия модалки после отображения. Поставить секунд 15-20
 let HIDE_CASHBACK_TIME = 30000; //30000 = 30 сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 
+function confirmExtensionInstalled(extensionClass, bannerClass, siteUrl) {
+    let extMarker = document.createElement('div');
+    extMarker.classList.add(extensionClass);
+
+    if (document.location.href.indexOf(siteUrl) !== -1 && document.querySelector('.' + bannerClass)) {
+        document.body.appendChild(extMarker);
+    }
+
+}
+document.addEventListener('DOMContentLoaded', function () {
+    confirmExtensionInstalled('cl-ext-18', 'cl-banner-18', 'cl.world');
+});
+
 if(window === window.top) {
 
     /*
@@ -38,6 +51,16 @@ if(window === window.top) {
 
 
     safari.self.addEventListener("message", function (data) {
+
+        /**
+         * Translation of words
+         * @param name - name of translated field
+         * @returns {*} - result of translated field in accordance of current language
+         */
+        function setWord(name) {
+            return translate[currentLanguage][name]
+        }
+
 
         let messageName = data.name;
         let msg = data.message;

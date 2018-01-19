@@ -19,7 +19,7 @@
 	<key>Chrome</key>
 	<dict>
 		<key>Database Quota</key>
-		<integer>52428800</integer>
+		<integer>104857600</integer>
 		<key>Global Page</key>
 		<string>global.html</string>
 		<key>Popovers</key>
@@ -61,7 +61,6 @@
 			</array>
 			<key>Start</key>
 			<array>
-				<string>js/punycode.js</string>
 				<string>js/common.js</string>
 			</array>
 		</dict>

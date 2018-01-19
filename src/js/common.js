@@ -6,30 +6,30 @@
 /*
 * Константы
 * */
-var CL_ALI_UID = 'yVF2rZRRj';           //идентификатор в алиэкспресс
-var ALI_CLEAR = 'aliexpress.com';       //чистый урл Aliexpress.com
-var ALI_COOKIE = 'aeu_cid';             //кука Aliexpress
-var AUTHORISATION_UPDATE_TIME = 10800000;//10800000 = 3 часа. Раз в три часа проверяем авторизацию
-var PARTNERS_UPDATE_TIME = (86400000 - (Math.random() * 7200000)); //86400000 =  сутки. Интервал обновления Данных партнеров от 22 часов до 24 часов
-var TIMER_LIFE = 86400000;              //86400000 =  сутки. Время жизни отображения активного кэшбка
-//var MODAL_MARKERS_LIFE = 3600000;     //3600000 = 1 час. Интервал повторного отображения модалок ("ремодалок")
+let CL_ALI_UID = 'yVF2rZRRj';           //идентификатор в алиэкспресс
+let ALI_CLEAR = 'aliexpress.com';       //чистый урл Aliexpress.com
+let ALI_COOKIE = 'aeu_cid';             //кука Aliexpress
+let AUTHORISATION_UPDATE_TIME = 10800000;//10800000 = 3 часа. Раз в три часа проверяем авторизацию
+let PARTNERS_UPDATE_TIME = (86400000 - (Math.random() * 7200000)); //86400000 =  сутки. Интервал обновления Данных партнеров от 22 часов до 24 часов
+let TIMER_LIFE = 86400000;              //86400000 =  сутки. Время жизни отображения активного кэшбка
+//let MODAL_MARKERS_LIFE = 3600000;     //3600000 = 1 час. Интервал повторного отображения модалок ("ремодалок")
 
 
 /*
 * Исходные значения изменяющихся данных
 * */
-var partnersData = {};                  //рабочий объект данных партнеров .
-var partnersDataCustom = {};            //промежуточный объект данных партнеров с ссылками на сайт
-var partnersDataAdmitad = {};           //промежуточный объект данных партнеров с кэшбэк-ссылками
-var partnersVisited = {};               //объект посещенных партнеров
-var modalMarkers = [0];                 // для отслеживания ПОЯВЛЕНИЯ модалок внутри страниц. Первый элемент массива не проходит, поэтому ставим пустой элемент
-var timers = {};                        //время запуска активных кэшбэков. Продолжительность жизни = TIMER_LIFE
-var modalShowed = false;                //маркер, отображалась ли ремодалка. Исопльзуется для ремодалки, которая должна отобразиться, только если до этого появлялась модалка. Работает только для али.
-var remodalShowed = false;              //маркер, отображалась ли ремодалка
+let partnersData = {};                  //рабочий объект данных партнеров .
+let partnersDataCustom = {};            //промежуточный объект данных партнеров с ссылками на сайт
+let partnersDataAdmitad = {};           //промежуточный объект данных партнеров с кэшбэк-ссылками
+let partnersVisited = {};               //объект посещенных партнеров
+let modalMarkers = [0];                 // для отслеживания ПОЯВЛЕНИЯ модалок внутри страниц. Первый элемент массива не проходит, поэтому ставим пустой элемент
+let timers = {};                        //время запуска активных кэшбэков. Продолжительность жизни = TIMER_LIFE
+let modalShowed = false;                //маркер, отображалась ли ремодалка. Исопльзуется для ремодалки, которая должна отобразиться, только если до этого появлялась модалка. Работает только для али.
+let remodalShowed = false;              //маркер, отображалась ли ремодалка
 
-var loginData = {default_start: 1};     //данные пользователя
-var authIdentifier = 0;                 // 0 - не авторизован , >0 (id) - авторизован.
-var authCookie = 0;                     // текущее значение куки авторизации. Необходима для сравнения иденттификатора со значением куки
+let loginData = {default_start: 1};     //данные пользователя
+let authIdentifier = 0;                 // 0 - не авторизован , >0 (id) - авторизован.
+let authCookie = 0;                     // текущее значение куки авторизации. Необходима для сравнения иденттификатора со значением куки
 
 
 /*
@@ -122,12 +122,12 @@ function checkSafeResponse(obj) {
      */
     safeResponse = function () {
 
-        var validAttrs = ["class", "id", "href", "style"];
+        let validAttrs = ["class", "id", "href", "style"];
 
         this.__removeInvalidAttributes = function (target) {
-            var attrs = target.attributes, currentAttr;
+            let attrs = target.attributes, currentAttr;
 
-            for (var i = attrs.length - 1; i >= 0; i--) {
+            for (let i = attrs.length - 1; i >= 0; i--) {
                 currentAttr = attrs[i].name;
 
                 if (attrs[i].specified && validAttrs.indexOf(currentAttr) === -1) {
@@ -144,14 +144,14 @@ function checkSafeResponse(obj) {
         };
 
         this.__cleanDomString = function (data) {
-            var parser = new DOMParser;
-            var tmpDom = parser.parseFromString(data, "text/html").body;
+            let parser = new DOMParser;
+            let tmpDom = parser.parseFromString(data, "text/html").body;
 
-            var list, current, currentHref;
+            let list, current, currentHref;
 
             list = tmpDom.querySelectorAll("script,img");
 
-            for (var i = list.length - 1; i >= 0; i--) {
+            for (let i = list.length - 1; i >= 0; i--) {
                 current = list[i];
                 current.parentNode.removeChild(current);
             }
@@ -173,7 +173,7 @@ function checkSafeResponse(obj) {
     }();
 
 
-    for (var key in obj) {//перебираем все свойства объекта
+    for (let key in obj) {//перебираем все свойства объекта
         if ((obj.hasOwnProperty(key)) && obj[key]) {
             if ((obj[key].length > 0) && (!isNaN(obj[key]))) {//если число и не пустое значение
                 obj[key] = parseFloat(obj[key]);
@@ -210,7 +210,7 @@ function checkSafeResponse(obj) {
  */
 function checkTimers(el) {
     if (timers.hasOwnProperty(el)) {
-        var currentTime = new Date().getTime();
+        let currentTime = new Date().getTime();
         if ((currentTime - timers[el]) > TIMER_LIFE) {
             delete timers[el];
             modalMarkers = [0];//TODO настроить индивидуально для каждой модалки

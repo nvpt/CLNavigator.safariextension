@@ -11,29 +11,29 @@ document.addEventListener('DOMContentLoaded', function () {
     // console.log('extension.globalPage partnersData ', safari.extension.globalPage.contentWindow._getAliClear());
 
 
-    var bg = safari.extension.globalPage.contentWindow;
+    let bg = safari.extension.globalPage.contentWindow;
 
 
     //табы
-    var tabsButtons = document.querySelectorAll('.tabs__button');
-    var tabsBodies = document.querySelectorAll('.tabs__body');
+    let tabsButtons = document.querySelectorAll('.tabs__button');
+    let tabsBodies = document.querySelectorAll('.tabs__body');
 
 
     //список партнеров
-    var partnerThumb = document.querySelectorAll('.list-item');
-    var recommendedWrap = document.querySelector('.search-list__content_recommended');
-    var lastWrap = document.querySelector('.search-list__content_last');
-    var requestedWrap = document.querySelector('.search-list__content_requested');
-    var recommended = document.querySelector('.search__form-autocomplete.recommended');
-    var last = document.querySelector('.search__form-autocomplete.last');
-    var requested = document.querySelector('.search__form-autocomplete.requested');
+    let partnerThumb = document.querySelectorAll('.list-item');
+    let recommendedWrap = document.querySelector('.search-list__content_recommended');
+    let lastWrap = document.querySelector('.search-list__content_last');
+    let requestedWrap = document.querySelector('.search-list__content_requested');
+    let recommended = document.querySelector('.search__form-autocomplete.recommended');
+    let last = document.querySelector('.search__form-autocomplete.last');
+    let requested = document.querySelector('.search__form-autocomplete.requested');
 
     /*
     * resolutions for server responses with tags
     * from this library https://www.npmjs.com/package/sanitize-html
     * scripts will not be allow
     * */
-    var sanitizeResolutions = {
+    let sanitizeResolutions = {
         allowedTags: ['p', 'b', 'i', 'em', 'strong', 'a', 'img', 'span'],
         allowedAttributes: {
             'a': ['href'],
@@ -49,30 +49,30 @@ document.addEventListener('DOMContentLoaded', function () {
     function showUserData() {
 
         //юзер
-        var user = document.querySelector('.user');
-        var userLink = document.createElement('a');
+        let user = document.querySelector('.user');
+        let userLink = document.createElement('a');
         userLink.setAttribute('target', '_blank');
 
-        var userLinkImg = document.createElement('img');
+        let userLinkImg = document.createElement('img');
         userLinkImg.setAttribute('src', 'img/user_24x24.png');
         userLinkImg.classList.add('user__icon');
 
-        var userLinkName = document.createElement('span');
+        let userLinkName = document.createElement('span');
         userLinkName.classList.add('user__name');
 
-        var userCash = document.createElement('span');
+        let userCash = document.createElement('span');
         userCash.classList.add('user__cash');
 
-        var userCashImg = document.createElement('img');
+        let userCashImg = document.createElement('img');
         userCashImg.setAttribute('src', 'img/balance.png');
         userCashImg.classList.add('user__cash-icon');
 
-        var userCashValue = document.createElement('span');
+        let userCashValue = document.createElement('span');
         userCashValue.classList.add('user__cash-value');
 
 
         if ((bg._getLoginData()) && (bg._getLoginData().profile)) {
-            var el = bg._getLoginData().profile;
+            let el = bg._getLoginData().profile;
             user.innerText = '';
             userLink.removeAttribute('class');
             userLink.innerText = '';
@@ -116,16 +116,16 @@ document.addEventListener('DOMContentLoaded', function () {
      * Переключение табов внутри окна попапа
      */
     function selectTab() {
-        for (var i = 0; i < tabsButtons.length; i++) {
+        for (let i = 0; i < tabsButtons.length; i++) {
             (function (e) {
                 tabsButtons[e].addEventListener('click', function () {
                     partner.style.display = 'none';
-                    for (var y = 0; y < tabsButtons.length; y++) {
+                    for (let y = 0; y < tabsButtons.length; y++) {
                         tabsButtons[y].classList.remove('active');
                         tabsBodies[y].classList.remove('active');
                     }
                     tabsButtons[e].classList.add('active');
-                    var mark = tabsButtons[e].getAttribute('id');
+                    let mark = tabsButtons[e].getAttribute('id');
                     if (tabsBodies[e].classList.contains(mark)) {
                         tabsBodies[e].classList.add('active');
                     }
@@ -149,23 +149,23 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function renderMainCard(tab) {
 
-        var currentTabUrl = tab.url;
-        var rightUrl = bg.getClearUrl(currentTabUrl);
-        var partner = document.querySelector('.partner');
-        var partnerName = document.querySelector('.partner__name');
-        var partnerUrl = document.querySelector('.partner__url');
-        var partnerLogo = document.querySelector('.partner__logo');
-        var partnerCashback = document.querySelector('.partner__cashback > span');
-        var partnerDescription = document.querySelector('.partner__description');
+        let currentTabUrl = tab.url;
+        let rightUrl = bg.getClearUrl(currentTabUrl);
+        let partner = document.querySelector('.partner');
+        let partnerName = document.querySelector('.partner__name');
+        let partnerUrl = document.querySelector('.partner__url');
+        let partnerLogo = document.querySelector('.partner__logo');
+        let partnerCashback = document.querySelector('.partner__cashback > span');
+        let partnerDescription = document.querySelector('.partner__description');
 
         //для предотвращения дублирования событий на обработчике кликов, необходимо генерить элемент с обработчиком внутри это ункции
-        var partnerLinkWrap = document.querySelector('.button-cl__wrapper');
+        let partnerLinkWrap = document.querySelector('.button-cl__wrapper');
         partnerLinkWrap.innerText='';
-        var partnerLink = document.createElement('a');
+        let partnerLink = document.createElement('a');
         partnerLink.classList.add('button-cl', 'button-cl_pink', 'partner__link', 'button-cl_glass');
         partnerLinkWrap.appendChild(partnerLink);
 
-        var cashbackActive = document.querySelector('.cashback-active');
+        let cashbackActive = document.querySelector('.cashback-active');
 
 
         /*вид кнопки в зависимости от статуса залогирован-незалогирован*/
@@ -178,14 +178,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (Object.keys(bg._getPartnersData()).length > 0) {//проверяем, подгрузился ли массив партнеров
             if ((bg._getPartnersData()[rightUrl]) && (currentTabUrl !== undefined) && (rightUrl !== undefined)) {
-                var el = bg._getPartnersData()[rightUrl];
+                let el = bg._getPartnersData()[rightUrl];
                 // console.log('el ', el);
                 partner.style.display = 'flex';
                 partnerName.innerText = el.name;
                 partnerUrl.innerText = bg.getClearUrl(el.site_url);
                 partnerLogo.setAttribute('src', el.logo_url);
                 partnerCashback.innerText = el.sale_text;
-                var bottomPadding = document.createElement('div');
+                let bottomPadding = document.createElement('div');
                 bottomPadding.classList.add('bottomPadding');
                 partnerDescription.innerHTML = sanitizeHtml(el.text, sanitizeResolutions);
                 partnerDescription.appendChild(bottomPadding);
@@ -199,8 +199,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     safari.self.hide();
 
                     if (bg._getLoginData().profile) { //после активации через попап, модалка снова должна отобразиться с инфой об активрованном кэшбэке
-                        var modalMarkers = bg._getModalMarkers();
-                        for (var i = 0; i < modalMarkers.length; i++) {
+                        let modalMarkers = bg._getModalMarkers();
+                        for (let i = 0; i < modalMarkers.length; i++) {
                             if (modalMarkers[i] === el.id) {
                                 modalMarkers.splice(i, 1);//удаляем маркер отображени модалки, чтобы после активации кэшбэка модалка отобразилась заново еще раз
                             }
@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     bg.markPartner();
                 }
 
-                var closePartner = document.querySelector('.partner__close-icon');
+                let closePartner = document.querySelector('.partner__close-icon');
                 closePartner.addEventListener('click', function () {
                     partner.style.display = 'none';
                 });
@@ -257,10 +257,10 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function listItemRender(el, target) {
         if (el.id) {
-            var searchItem = document.createElement('li');
+            let searchItem = document.createElement('li');
             searchItem.classList.add('list-item');
 
-            var link = document.createElement('a');
+            let link = document.createElement('a');
             link.classList.add('list-item__link');
             link.setAttribute('href', el.site_url);
 
@@ -272,21 +272,21 @@ document.addEventListener('DOMContentLoaded', function () {
             link.setAttribute('target', "_blank");
             link.setAttribute('title', 'Открыть в новом окне ' + el.name);
 
-            var inner = document.createElement('div');
+            let inner = document.createElement('div');
             inner.classList.add('list-item__inner');
 
-            var label = document.createElement('div');
+            let label = document.createElement('div');
             label.classList.add('list-item__label');
 
-            var pictureWrap = document.createElement('div');
+            let pictureWrap = document.createElement('div');
             pictureWrap.classList.add('list-item__picture-wrap');
 
-            var picture = document.createElement('img');
+            let picture = document.createElement('img');
             picture.classList.add('list-item__picture');
             picture.setAttribute('src', el.logo_url);
             picture.setAttribute('alt', el.name);
 
-            var name = document.createElement('span');
+            let name = document.createElement('span');
             name.classList.add('list-item__name');
             name.innerText = el.name;
 
@@ -295,14 +295,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
             pictureWrap.appendChild(picture);
 
-            var info = document.createElement('div');
+            let info = document.createElement('div');
             info.classList.add('list-item__info');
 
-            var cashbackInfo = document.createElement('span');
+            let cashbackInfo = document.createElement('span');
             cashbackInfo.classList.add('list-item__cashback');
             cashbackInfo.innerText = 'Кэшбэк:';
 
-            var cashbackValue = document.createElement('span');
+            let cashbackValue = document.createElement('span');
             cashbackValue.classList.add('list-item__value');
             cashbackValue.innerText = el.sale_text;
             info.appendChild(cashbackInfo);
@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function renderRecommended() {
         recommended.innerText='';
-        for (var i = 0; i < partners.length; i++) {
+        for (let i = 0; i < partners.length; i++) {
             listItemRender(partners[i], recommended);
         }
         if (partners.length > 0) {
@@ -338,8 +338,8 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function renderLastVisited() {
         last.innerText='';
-        var keys = Object.keys(bg._getPartnersVisited());
-        for (var i = keys.length - 1; i >= 0; i--) {
+        let keys = Object.keys(bg._getPartnersVisited());
+        for (let i = keys.length - 1; i >= 0; i--) {
             listItemRender(bg._getPartnersVisited()[keys[i]], last);
         }
 
@@ -353,9 +353,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     /*Поиск-автокомплит*/
-    var searchField = document.querySelector('.search__autocomplete');
+    let searchField = document.querySelector('.search__autocomplete');
 
-    var btnClearSearchField = document.querySelector('.search__clear');
+    let btnClearSearchField = document.querySelector('.search__clear');
 
     btnClearSearchField.focus();
 
@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
             searchField.value = '';
             searchField.focus();
 
-            for (var i = 0; i < partnerThumb.length; i++) {
+            for (let i = 0; i < partnerThumb.length; i++) {
                 partnerThumb[i].style.display = 'block';
             }
         });
@@ -397,14 +397,14 @@ document.addEventListener('DOMContentLoaded', function () {
      * Генерится динамически
      */
     function searchRequest(name, resolve, reject) {
-        var url = 'https://cl.world/api/v2/cases/index?&name=' + name + '&show=1&non_strict=1&lang=ru';
-        var req = new XMLHttpRequest();
+        let url = 'https://cl.world/api/v2/cases/index?&name=' + name + '&show=1&non_strict=1&lang=ru';
+        let req = new XMLHttpRequest();
         req.open('GET', url);
         req.send();
         req.addEventListener('load', function () {
             if (req.status === 200) {
-                var pars = JSON.parse(req.responseText);
-                for (var i = 0; i < pars.length; i++) {
+                let pars = JSON.parse(req.responseText);
+                for (let i = 0; i < pars.length; i++) {
                     bg.checkSafeResponse(pars[i]);
                 }
                 resolve(pars);
@@ -415,9 +415,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function renderRequestedList(elements) {
-        var arr = elements;
+        let arr = elements;
         requested.innerHTML = '';//при каждом новом вводе буквы обновляем выводимый список
-        for (var i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             listItemRender(arr[i], requested);
         }
         if (arr.length > 0) {
@@ -432,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function () {
      * Динамический вывод поиска
      */
     searchField.addEventListener('input', function () {
-        var searching = this.value;
+        let searching = this.value;
         clearSearchInputValue(searching);
         requested.innerHTML = '';//при каждом новом вводе буквы обновляем выводимый список
         searchRequest(searching,
@@ -450,7 +450,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // console.log('tab ', safari.application.activeBrowserWindow.activeTab);
 
     safari.application.addEventListener('popover', function (e) {
-        var tab = safari.application.activeBrowserWindow.activeTab;
+        let tab = safari.application.activeBrowserWindow.activeTab;
         showUserData();
         searchField.value = '';
         bg.checkTimers(bg.getClearUrl(tab.url));//по окончании срока действия таймера кэшбэка, смена иконки и попапа будет производиться по клику на иконку

@@ -1,3 +1,9 @@
 
 /.idea/
 /node_modules/
+/cl-navigator.safariextension/fonts/
+/cl-navigator.safariextension/img/
+/cl-navigator.safariextension/js/
+/cl-navigator.safariextension/styles/
+/cl-navigator.safariextensionglobal.html
+/cl-navigator.safariextensionpopup.html

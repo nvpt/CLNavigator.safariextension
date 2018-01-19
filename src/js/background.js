@@ -6,7 +6,7 @@
  * Иконка не партнера. дефолтная
  */
 function markNotPartner() {
-    var iconUri = safari.extension.baseURI + 'img/icon/Icon-64.png';
+    let iconUri = safari.extension.baseURI + 'img/icon/Icon-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -16,7 +16,7 @@ function markNotPartner() {
  * Иконка на партнере
  */
 function markPartner() {
-    var iconUri = safari.extension.baseURI + 'img/icon/partner-64.png';
+    let iconUri = safari.extension.baseURI + 'img/icon/partner-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -26,7 +26,7 @@ function markPartner() {
  */
 //TODO описать вращения иконки
 function markCheckPartner() {
-    var iconUri = safari.extension.baseURI + 'img/icon/wait-64.png';
+    let iconUri = safari.extension.baseURI + 'img/icon/wait-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '...';
 }
@@ -35,7 +35,7 @@ function markCheckPartner() {
  * Иконка кэшбэка
  */
 function markCashbackActive() {
-    var iconUri = safari.extension.baseURI + 'img/icon/done-64.png';
+    let iconUri = safari.extension.baseURI + 'img/icon/done-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -46,7 +46,7 @@ function markCashbackActive() {
  * @param url
  */
 function changeIcon(url) {
-    var clearUrl = getClearUrl(url);
+    let clearUrl = getClearUrl(url);
     if (url !== undefined && clearUrl !== undefined && (partnersData[clearUrl])) {
         checkTimers(clearUrl);//сначала проверям, еще живой таймер кэшбка
         if (timers[clearUrl]) {//и затем в зависимости от условия меняем иконку
@@ -64,11 +64,11 @@ function changeIcon(url) {
  * Куки
  */
 function cookiesToObj(arr) {
-    var obj = {};
-    for (var i = 0; i < arr.length; i++) {
-        var cookie = arr[i].split('=');
-        var cookieName = cookie[0].trim();
-        var cookieValue = cookie.splice(1, cookie.length).join('=');
+    let obj = {};
+    for (let i = 0; i < arr.length; i++) {
+        let cookie = arr[i].split('=');
+        let cookieName = cookie[0].trim();
+        let cookieValue = cookie.splice(1, cookie.length).join('=');
         obj[cookieName] = cookieValue;
     }
     return obj;
@@ -77,11 +77,11 @@ function cookiesToObj(arr) {
 function getCookiesAuth(msg) {
 
     if (msg.name === "send-cookies") {
-        var cookiesValue = msg.message;
-        var cookiesUrl = msg.target['url'];
+        let cookiesValue = msg.message;
+        let cookiesUrl = msg.target['url'];
 
         if (cookiesUrl !== undefined && (cookiesUrl.indexOf('cl.world') !== -1) && (cookiesValue !== "")) {
-            authCookie = parseInt(cookiesToObj(cookiesValue)['auth']);
+            authCookie = parseInt(cookiesToObj(cookiesValue)['user_auth']);
         }
     }
 }
@@ -96,8 +96,8 @@ safari.application.addEventListener("message", getCookiesAuth, false);
  * @param obj
  */
 function arrayToObj(arr, obj) {
-    for (var i = 0; i < arr.length; i++) {
-        var partner = arr[i];
+    for (let i = 0; i < arr.length; i++) {
+        let partner = arr[i];
         /* проверка на корректность указанного урла */
         // if(!partner.site_url){
         //     console.log('partner no url ', partner);
@@ -112,26 +112,14 @@ function arrayToObj(arr, obj) {
  * @param resolve
  * @param reject
  */
-// function reqProfile(resolve, reject) {
-//     //console.log('ЗАПРОС АВТОРИЗАЦИИ!!!');
-//     var url = 'https://cl.world/api/v2/profile/menu';
-//     var req = new XMLHttpRequest();
-//     req.open('GET', url);
-//     req.send();
-//     req.addEventListener('load', function () {
-//         if (req.status === 200) {
-//             var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
-//             // console.log('response ', response);
-//             resolve(response);
-//         } else {
-//             // console.error('error authorization');
-//             reject();
-//         }
-//     });
-// }
+
 function reqProfile(resolve, reject) {
-    var url = 'https://profile.cl.world/api/v3';
-    var req = new XMLHttpRequest();
+
+    /* testurl!!! */
+    let url = 'https://profile.cl.world/api/v3';
+    // let url = 'http://profile.zato.clcorp/api/v3';
+    
+    let req = new XMLHttpRequest();
     req.responseType = '';
     req.withCredentials = true;
     req.open("POST", url);
@@ -147,7 +135,7 @@ function reqProfile(resolve, reject) {
     req.addEventListener('load', function () {
         // console.log('req ', req);
         if (req.status === 200) {
-            var response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
+            let response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
             // console.log('resp ', response.data.profile);
             resolve(response.data);
         } else {
@@ -156,14 +144,14 @@ function reqProfile(resolve, reject) {
     });
 }
 
-var x = 1;
-var y = new Date().getTime();
+let x = 1;
+let y = new Date().getTime();
 // console.log(y);
 
-var currentDate = new Date().getTime();
+let currentDate = new Date().getTime();
 console.log('currentDate ', currentDate);
 
-var savedDate = parseFloat(localStorage.getItem('testData')) || 0;
+let savedDate = parseFloat(localStorage.getItem('testData')) || 0;
 console.log('savedDate ', savedDate);
 
 console.log('интервал: ' + ((currentDate - savedDate)/ (1000 * 60)) + ' минут');
@@ -189,15 +177,15 @@ setTime ();
  */
 function partnersDataRequest(resolve, reject) {
     //console.log('ЗАПРОС ДАННЫХ ПАРТНЕРОВ!!!');
-    var url = 'https://cl.world/api/v2/cases/index?limit=10000&show=1&non_strict=0&lang=ru&r1=' + Math.random();
-    var req = new XMLHttpRequest();
+    let url = 'https://cl.world/api/v2/cases/index?limit=10000&show=1&non_strict=0&lang=ru&r1=' + Math.random();
+    let req = new XMLHttpRequest();
     req.open('GET', url);
     req.send();
     req.addEventListener('load', function () {
 
         if (req.status === 200) {
-            var response = JSON.parse(req.responseText);
-            for (var i = 0; i < response.length; i++) {
+            let response = JSON.parse(req.responseText);
+            for (let i = 0; i < response.length; i++) {
                 checkSafeResponse(response[i]);
             }
             resolve(response);
@@ -321,7 +309,7 @@ function uploadServerData(url) {
 Подгружает сразу один из списков ссылок партнеров
   * */
 (function(){
-    var currentUrl = safari.application.activeBrowserWindow.activeTab.url;
+    let currentUrl = safari.application.activeBrowserWindow.activeTab.url;
     // console.log('reserv upload currentUrl', currentUrl);
     uploadServerData(currentUrl);
 })();
@@ -376,7 +364,7 @@ setInterval(updateAuthorization, AUTHORISATION_UPDATE_TIME);
 
 /* Проверяем наличие данных партнера в массиве. Если нет, то запрашиваем */
 function addPartnerToVisited(url) {
-    var clearUrl = getClearUrl(url);
+    let clearUrl = getClearUrl(url);
     if (clearUrl && (url !== undefined) && (!partnersVisited[clearUrl]) && (partnersData[clearUrl])) {
         partnersVisited[clearUrl] = partnersData[clearUrl];
         markCheckPartner();
@@ -392,8 +380,8 @@ function addPartnerToVisited(url) {
  * @param partner
  */
 function checkModalMarkerAdded(partner) {
-    var markerAdded = false;
-    for (var i = 0; i < modalMarkers.length; i++) {
+    let markerAdded = false;
+    for (let i = 0; i < modalMarkers.length; i++) {
         if (partner.id === modalMarkers[i]) {
             markerAdded = true;
         }
@@ -408,7 +396,7 @@ function checkModalMarkerAdded(partner) {
 function clickTab(val) {
 // console.log('val ', val);
     /* урл текущей вкладки */
-    var currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
+    let currentUrl = safari.application.activeBrowserWindow.activeTab.url;//урл текущей вкладки
 
     /* при клике сверяем актуальность иконки */
     changeIcon(currentUrl);
@@ -424,7 +412,7 @@ function clickTab(val) {
 function reloadTab(val) {
 // console.log('val ', val);
     /* урл текущей вкладки */
-    var currentUrl = safari.application.activeBrowserWindow.activeTab.url;
+    let currentUrl = safari.application.activeBrowserWindow.activeTab.url;
 
     /* исключаем повтор запросов для всех открытых вкладок. Только текущая */
     if(val.target.url === currentUrl){
@@ -452,21 +440,21 @@ safari.application.activeBrowserWindow.addEventListener("navigate", reloadTab, t
 /* Мост между content и background *///TODO Разместить инлайном в глобале.
 safari.application.addEventListener("message", function (data) {
 
-        var messageName = data.name;
-        var msg = data.message;
+        let messageName = data.name;
+        let msg = data.message;
 
         //порядок запросов не менять (?)
         // console.log('МОСТ');
 
         //<<прием
         if (messageName === 'content') {
-            var contentUrl = msg.url;
-            var clearUrl = getClearUrl(contentUrl);
+            let contentUrl = msg.url;
+            let clearUrl = getClearUrl(contentUrl);
 
             //<<прием
             if (msg.id === 'modalMarkerAdded') {
                 if (partnersData[clearUrl]) {
-                    var partner = partnersData[clearUrl];
+                    let partner = partnersData[clearUrl];
                     checkModalMarkerAdded(partner);
                 }
             }
@@ -479,7 +467,7 @@ safari.application.addEventListener("message", function (data) {
                 /* если юзер залогинен, активируем кэшбэк по клику */
                 if (Object.keys(loginData).length > 0) {
                     _addToTimers(clearUrl, msg.timer);
-                    for (var i = 0; i < modalMarkers.length; i++) {
+                    for (let i = 0; i < modalMarkers.length; i++) {
                         if (modalMarkers[i] === msg.partnerId) {
 
                             /* удаляем маркер отображени модалки,
@@ -524,10 +512,10 @@ safari.application.addEventListener("message", function (data) {
                         // console.log(1);
 
                         if (data.name === 'ali-cookies') {
-                            var cookiesName = data.name;
-                            var cookiesValue = data.message;
-                            var cookiesUrl = data.target['url'];
-                            var cookiesObj = cookiesToObj(cookiesValue);
+                            let cookiesName = data.name;
+                            let cookiesValue = data.message;
+                            let cookiesUrl = data.target['url'];
+                            let cookiesObj = cookiesToObj(cookiesValue);
                         // console.log(2);
                         // console.log('cookies  ', data);
                         // console.log('cookiesName ', data.name);

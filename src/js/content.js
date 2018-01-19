@@ -3,9 +3,9 @@
  */
 // console.log('--content--');
 
-var SHOW_MODAL_TIME = 2500; //3000 = 2,5 сек. Задержка перед открытием окна
-var HIDE_MODAL_TIME = 180000; //180000 = 3 мин. Время скрытия модалки после отображения. Поставить секунд 15-20
-var HIDE_CASHBACK_TIME = 30000; //30000 = 30 сек. Время скрытия модалки после демонстрации, что кэшбэк активен
+let SHOW_MODAL_TIME = 2500; //3000 = 2,5 сек. Задержка перед открытием окна
+let HIDE_MODAL_TIME = 180000; //180000 = 3 мин. Время скрытия модалки после отображения. Поставить секунд 15-20
+let HIDE_CASHBACK_TIME = 30000; //30000 = 30 сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 
 if(window === window.top) {
 
@@ -19,13 +19,13 @@ if(window === window.top) {
     }
 
     if((window.location.href).indexOf('cl.world') !== -1){
-        var cookiesMain = document.cookie.split(';');
+        let cookiesMain = document.cookie.split(';');
         sendCookies("send-cookies", cookiesMain);
     }
 
     /* временное решение для переопределения */
     if((window.location.href).indexOf(ALI_CLEAR) !== -1){
-        var cookiesAli = document.cookie.split(';');
+        let cookiesAli = document.cookie.split(';');
         sendCookies("ali-cookies",cookiesAli);
     }
 
@@ -39,33 +39,33 @@ if(window === window.top) {
 
     safari.self.addEventListener("message", function (data) {
 
-        var messageName = data.name;
-        var msg = data.message;
+        let messageName = data.name;
+        let msg = data.message;
 
-        var partnerData = msg.currentPartner;
-        var timers = msg.timers;
-        var modalMarkers = msg.modalMarkers;
+        let partnerData = msg.currentPartner;
+        let timers = msg.timers;
+        let modalMarkers = msg.modalMarkers;
 
-        var currentUrl = document.location.href;
+        let currentUrl = document.location.href;
 
-        var ANCHOR = document.createElement('div');
-        var modalHeader = document.createElement('div');
+        let ANCHOR = document.createElement('div');
+        let modalHeader = document.createElement('div');
 
-        var clLogo = document.createElement('div');
-        var clLogoImg = document.createElement('img');
-        var close = document.createElement('div');
-        var modalBody = document.createElement('div');
-        var clPartner = document.createElement('div');
-        var clPartnerLogo = document.createElement('img');
-        var clPartnerInfo = document.createElement('div');
-        var cashbackLabel = document.createElement('span');
-        var cashbackValue = document.createElement('span');
-        var modalFooter = document.createElement('div');
-        var cashbackActive = document.createElement('div');
-        var clButtonWrap = document.createElement('div');
-        var clButton = document.createElement('a');
-        var clButtonInner = document.createElement('span');
-        var reactivation = document.createElement('div');
+        let clLogo = document.createElement('div');
+        let clLogoImg = document.createElement('img');
+        let close = document.createElement('div');
+        let modalBody = document.createElement('div');
+        let clPartner = document.createElement('div');
+        let clPartnerLogo = document.createElement('img');
+        let clPartnerInfo = document.createElement('div');
+        let cashbackLabel = document.createElement('span');
+        let cashbackValue = document.createElement('span');
+        let modalFooter = document.createElement('div');
+        let cashbackActive = document.createElement('div');
+        let clButtonWrap = document.createElement('div');
+        let clButton = document.createElement('a');
+        let clButtonInner = document.createElement('span');
+        let reactivation = document.createElement('div');
 
         //<<прием
         /* ответы из bg */
@@ -141,7 +141,7 @@ if(window === window.top) {
 
                 /* если маркер отображения есть то модалку прячем.
                 Смотрим по маркеру из массива в common.js */
-                for (var i = 0; i < modalMarkers.length; i++) {
+                for (let i = 0; i < modalMarkers.length; i++) {
 
                     if (modalMarkers[i] === partnerData.id) {
                         ANCHOR.style.opacity = 0;
@@ -234,15 +234,15 @@ if(window === window.top) {
             если наш кэшбэк переопределили */
             else if (msg.id === 'showRemodal') {
                 partnerData = msg.currentPartner;
-                var modalShowed = msg.modalShowed;
-                var remodalShowed = msg.remodalShowed;
+                let modalShowed = msg.modalShowed;
+                let remodalShowed = msg.remodalShowed;
                 currentUrl = window.location.href;
 
                 /* ремодалка выведется только, если предварительно всплывала модалка */
                 if (modalShowed) {
 
                     /* рендер компонентов ремодалки */
-                    var REANCHOR = document.createElement('div');
+                    let REANCHOR = document.createElement('div');
                     REANCHOR.id = 'remodalCL2017';
                     REANCHOR.classList.add('modalCL2017', 'modalCL2017_remodal');
 

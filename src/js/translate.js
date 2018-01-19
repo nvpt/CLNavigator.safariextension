@@ -1,0 +1,41 @@
+let translate = {
+    /* need to add translations by hands */
+    ru: {
+        activate: 'активировать',
+        cashback: 'кэшбэк',
+        cashbackActivated: 'кэшбэк активирован',
+        cashbackNotActivated: 'кэшбэк не активирован',
+        enter: 'Войти',
+        enterForActivation: 'войти для активации',
+        logoTitle: 'перейти на сайт',
+        lastVisitedTitle:'последние посещённые',
+        moreShopLink: 'Больше магазинов',
+        openInNewWindow: 'окрыть в новом окне',
+        reActivate: 'активировать повторно',
+        recommendedTitle:'рекомендуемые',
+        searchPlaceholder: 'найти',
+        upTo:'до',
+        spinnerSearchList1: 'Данные загружаются.',
+        spinnerSearchList2: 'Пожалуйста, повторите открытие окна'
+    },
+
+    en: {
+        activate: 'activate',
+        cashback: 'cashback',
+        cashbackActivated: 'cashback activated',
+        cashbackNotActivated: 'cashback not activated',
+        enter: 'Enter',
+        enterForActivation: 'enter for activation',
+        logoTitle: 'go to site',
+        lastVisitedTitle:'last visited',
+        moreShopLink: 'More shops',
+        openInNewWindow: 'open in new window',
+        reActivate: 're-activate',
+        recommendedTitle:'recommended',
+        searchPlaceholder: 'search',
+        upTo: 'up to',
+        spinnerSearchList1: 'The data is loading. ',
+        spinnerSearchList2: 'Please try to reopen window.'
+
+    }
+};

@@ -427,6 +427,7 @@ function updateLanguages(cb) {
                     let lang = res['items'][i]['short_name'].toLowerCase();
                     languages.push(lang);
                 }
+            // console.log('languages ', languages);
 
                 cb();
             }
@@ -514,13 +515,13 @@ function recommendedRequest(langs, resolve, reject) {
 
 function uploadRecommended() {
 
-    for (let l = 0, length = languages.length; l < length; l++) {
+    for (let i = 0, length = languages.length; i < length; i++) {
 
-        let languageCurrent = languages[l];
+        let lang = languages[i];
 
         /* create injected language object, if not created yet */
-        if (!recommendedObj[languageCurrent]) {
-            recommendedObj[languageCurrent] = {};
+        if (!recommendedObj[lang]) {
+            recommendedObj[lang] = {};
         }
     }
 
@@ -852,14 +853,17 @@ function checkAuthorization(url) {
  * @param reject
  */
 function detailedRequest(id, lang, resolve, reject) {
-// console.log('1');
+        // console.log('1');
+
 
     if (detailedRequestKey) {
         detailedRequestKey = false;
-// console.log('2');
+        // console.log('2');
+        // console.log('lang ', lang);
 
         /* testurl!!! */
         let url = 'https://profile.cl.world/api/v3';
+        let currLang = lang;
         // let url = 'http://profile.zato.clcorp/api/v3';
 
         let req = new XMLHttpRequest();
@@ -884,7 +888,7 @@ function detailedRequest(id, lang, resolve, reject) {
                         recommended
                       }
                     }`
-                , variables: {locale: lang}
+                , variables: {locale: currLang}
             })
         );
 
@@ -892,17 +896,19 @@ function detailedRequest(id, lang, resolve, reject) {
 
         req.addEventListener('load', function () {
             if (req.status === 200) {
-// console.log('3');
+            // console.log('3');
 
                 /* save tags, because there we use decor of text from site */
                 let response = JSON.parse(req.responseText);
                 let resultObj = response.data['onlinePartners'][0];
-// console.log('response ', response);
-// console.log('resultObj ', resultObj);
+
+                // console.log('response ', response);
+                // console.log('resultObj ', resultObj);
 
                 detailedRequestKey = true;
+
                 // resolve(checkSafeResponse(resultObj));
-                console.log('checkSafeResponse(resultObj) ', checkSafeResponse(resultObj));
+                // console.log('checkSafeResponse(resultObj) ', checkSafeResponse(resultObj));
                 
                 resolve(resultObj);//TODO temp
 
@@ -923,6 +929,7 @@ function detailedRequest(id, lang, resolve, reject) {
  * @param data - server response by id of current url
  */
 function addToDetailed(data) {
+// console.log('data ', data);
 
     let partnerClearUrl = getClearUrl(data.site_url);
     let partner;
@@ -966,6 +973,7 @@ function addToDetailed(data) {
  */
 function uploadDetailed(clearCurrentUrl, cb) {
 // console.log('1');
+// console.log('currentLanguage1 ', currentLanguage);
 
     /* если текущая ссылка партнера есть в общем списке */
     if (links[clearCurrentUrl]) {
@@ -984,10 +992,12 @@ function uploadDetailed(clearCurrentUrl, cb) {
 
         } else {
             // console.log('4');
+// console.log('currentLanguage2 ', currentLanguage);
 
             /* отправлять запрос для данного языка имеет смысл, только, если есть перевод для данного партнера на данном языке */
             if (checkCurrentLanguageInLink(links, clearCurrentUrl, currentLanguage)) {
                 // console.log('5');
+// console.log('currentLanguage3 ', currentLanguage);
 
                 /* иначе запрашиваем данные на сервере */
                 /* и помещаем их в детальные */
@@ -995,10 +1005,11 @@ function uploadDetailed(clearCurrentUrl, cb) {
 
                 /* до ответа запроса меняем иконку расширения */
                 markCheckPartner();
+// console.log('currentLanguage4 ', currentLanguage);
 
                 detailedRequest(id, currentLanguage,
                     (data) => {
-                        // console.log('6');
+                        // console.log('currentLanguage5', currentLanguage);
                         if (data) {
                             // console.log('7');
                             // console.log('detailed1 ', detailed);

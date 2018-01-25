@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
          * @returns {*} - result of translated field in accordance of current language
          */
         function setWord(name) {
-            return translate[currentLanguage][name]
+            return translate[currentLanguage][name];
         }
 
 
@@ -35,7 +35,17 @@ document.addEventListener('DOMContentLoaded', function () {
      * @param mean - name of tag
      * @param classValue (arr) - array of classnames without '.'
      * @param content - content of tag
-     * @returns HTMLAnchorElement | HTMLAppletElement | HTMLAreaElement | HTMLAudioElement | HTMLBaseElement | HTMLBaseFontElement | HTMLQuoteElement | HTMLBodyElement | HTMLBRElement | HTMLButtonElement | HTMLCanvasElement | HTMLTableCaptionElement | HTMLTableColElement | HTMLDataElement | HTMLDataListElement | HTMLModElement | HTMLDirectoryElement | HTMLDivElement | HTMLDListElement | HTMLEmbedElement | HTMLFieldSetElement | HTMLFontElement | HTMLFormElement | HTMLFrameElement | HTMLFrameSetElement | HTMLHeadingElement | HTMLHeadElement | HTMLHRElement | HTMLHtmlElement | HTMLIFrameElement | HTMLImageElement | HTMLInputElement | HTMLUnknownElement | HTMLLabelElement | HTMLLegendElement | HTMLLIElement | HTMLLinkElement | HTMLPreElement | HTMLMapElement | HTMLMarqueeElement | HTMLMenuElement | HTMLMetaElement | HTMLMeterElement | HTMLObjectElement | HTMLOListElement | HTMLOptGroupElement | HTMLOptionElement | HTMLOutputElement | HTMLParagraphElement | HTMLParamElement | HTMLPictureElement | HTMLProgressElement | HTMLScriptElement | HTMLSelectElement | HTMLSourceElement | HTMLSpanElement | HTMLStyleElement | HTMLTableElement | HTMLTableSectionElement | HTMLTableDataCellElement | HTMLTemplateElement | HTMLTextAreaElement | HTMLTableHeaderCellElement | HTMLTimeElement | HTMLTitleElement | HTMLTableRowElement | HTMLTrackElement | HTMLUListElement | HTMLVideoElement | MSHTMLWebViewElement -  html element
+     * @returns HTMLAnchorElement | HTMLAppletElement | HTMLAreaElement | HTMLAudioElement | HTMLBaseElement |
+     *     HTMLBaseFontElement | HTMLQuoteElement | HTMLBodyElement | HTMLBRElement | HTMLButtonElement |
+     *     HTMLCanvasElement | HTMLTableCaptionElement | HTMLTableColElement | HTMLDataElement | HTMLDataListElement |
+     *     HTMLModElement | HTMLDirectoryElement | HTMLDivElement | HTMLDListElement | HTMLEmbedElement |
+     *     HTMLFieldSetElement | HTMLFontElement | HTMLFormElement | HTMLFrameElement | HTMLFrameSetElement |
+     *     HTMLHeadingElement | HTMLHeadElement | HTMLHRElement | HTMLHtmlElement | HTMLIFrameElement |
+     *     HTMLImageElement | HTMLInputElement | HTMLUnknownElement | HTMLLabelElement | HTMLLegendElement |
+     *     HTMLLIElement | HTMLLinkElement | HTMLPreElement | HTMLMapElement | HTMLMarqueeElement | HTMLMenuElement |
+     *     HTMLMetaElement | HTMLMeterElement | HTMLObjectElement | HTMLOListElement | HTMLOptGroupElement |
+     *     HTMLOptionElement | HTMLOutputElement | HTMLParagraphElement | HTMLParamElement | HTMLPictureElement |
+     *     HTMLProgressElement | HTMLScriptElement | HTMLSelectElement | HTMLSourceElement | HTMLSpanElement | HTMLStyleElement | HTMLTableElement | HTMLTableSectionElement | HTMLTableDataCellElement | HTMLTemplateElement | HTMLTextAreaElement | HTMLTableHeaderCellElement | HTMLTimeElement | HTMLTitleElement | HTMLTableRowElement | HTMLTrackElement | HTMLUListElement | HTMLVideoElement | MSHTMLWebViewElement -  html element
      */
         function createTag(mean, classValue=[], content = ''){
             let el = document.createElement(mean);
@@ -95,8 +105,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let languages = bg._getLanguages();
 
             currentLang.addEventListener('click', () => {
-                console.log('currentLang');
-                
+
                 languagesList.classList.contains('visible') ?
                     languagesList.classList.remove('visible') :
                     languagesList.classList.add('visible');
@@ -106,8 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 let lang = langItems[i];
 
                 lang.addEventListener('click', function () {
-                    console.log('lang');
-                    
+
                     let chosenLang = (this.getAttribute('data-lang'));
                     currentLang.setAttribute('data-current-lang', chosenLang);
                     currentLang.innerText = chosenLang;
@@ -130,24 +138,15 @@ document.addEventListener('DOMContentLoaded', function () {
         /* spinners */
         let searchListSpinner = document.querySelector('.cl-spinner_searchList');
 
-        let searchListSpinnerText1 = document.createElement('span');
-        searchListSpinnerText1.innerText = setWord('spinnerSearchList1');
-        let searchListSpinnerText2 = document.createElement('span');
-        searchListSpinnerText2.innerText = setWord('spinnerSearchList2');
+        let spinnerText1 = document.createElement('span');
+        let spinnerText2 = document.createElement('span');
+        searchListSpinner.appendChild(spinnerText1);
+        searchListSpinner.appendChild(spinnerText2);
 
-        searchListSpinner.appendChild(searchListSpinnerText1);
-        searchListSpinner.appendChild(searchListSpinnerText2);
-
-
-        /* partner */
-        // let partner = document.querySelector('.partner');
-        // let partnerName = document.querySelector('.partner__name');
-        // let partnerLogo = document.querySelector('.partner__logo');
-        // let partnerCashbackLabel = document.querySelector('.partner__cashback-label');
-        // partnerCashbackLabel.innerText = setWord('cashback');
-        // let partnerCashback = document.querySelector('.partner__cashback-value');
-        // let partnerDescription = document.querySelector('.partner__description');
-        // let partnerLink = document.querySelector('.partner__link');
+        let partnerSpinnerWrap = document.querySelector('.partner__spinner-wrap');
+        let partnerSpinner = document.querySelector('.cl-spinner_partner');
+        partnerSpinner.appendChild(spinnerText1);
+        partnerSpinner.appendChild(spinnerText2);
 
         /* tabs (not used yet) */
         let tabsButtons = document.querySelectorAll('.tabs__button');
@@ -157,7 +156,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /* partners list */
         let visitedTitle = document.querySelector('.search-list__h2_visited');
-        visitedTitle.innerText = setWord('lastVisitedTitle');
         let recommendedTitle = document.querySelector('.search-list__h2_recommended');
         let partnerThumb = document.querySelectorAll('.list-item');
         let recommendedWrap = document.querySelector('.search-list__content_recommended');
@@ -171,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let textBottomPadding = document.createElement('div');
 
         let allShopsLink = document.querySelector('.all-shops');//for ff
-        allShopsLink.innerText = setWord('moreShopLink');
         allShopsLink.addEventListener('click', function (e) {//for ff
             e.preventDefault();
 
@@ -289,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function () {
          * Render of partner card
          */
         function renderMainCard(tab) {
-
+            partnerSpinnerWrap.style.display='none';
             let getCurrentLanguage = bg._getCurrentLanguage();
             let currentLanguage = getCurrentLanguage.toLowerCase();
             let currentTabUrl = tab.url;
@@ -309,20 +306,26 @@ document.addEventListener('DOMContentLoaded', function () {
             let partnerLink = document.createElement('a');
             partnerLink.classList.add('button-cl', 'button-cl_pink', 'partner__link', 'button-cl_glass');
             partnerLinkWrap.appendChild(partnerLink);
-
+            partnerLink.innerText = setWord('activate'); /* чтобы не было пустой кнопки */
 
             let cashbackActive = document.querySelector('.cashback-active');
             cashbackActive.innerText = setWord('cashbackActivated');
 
 
-            /* check the download of partners */
-            if (Object.keys(bg._getDetailed()).length > 0) {
-                // console.log('currentLanguage3 ', currentLanguage);
-                let allowShow = bg.checkCurrentLanguageInLink(bg._getLinks(), rightUrl, currentLanguage);
+
 
                 /* current translation must be available for current partner and current tub url must not be empty */
-                if (allowShow && bg._getLinks()[rightUrl] &&
-                    currentTabUrl !== undefined && rightUrl !== undefined) {
+
+            if (currentTabUrl !== undefined && rightUrl !== undefined &&
+                Object.keys(bg._getDetailed()).length > 0 && bg._getDetailed()[rightUrl]) {
+
+                partner.style.display = 'flex';
+                partnerSpinnerWrap.style.display = 'flex';
+
+                let allowShow = bg.checkCurrentLanguageInLink(bg._getLinks(), rightUrl, currentLanguage);
+
+                if (allowShow && bg._getLinks()[rightUrl]) {
+
 
                     let detailedData = bg._getDetailed()[rightUrl][currentLanguage];
                     let cashbackTimestamp = bg._getDetailed()[rightUrl]['activatedTimestamp'];
@@ -332,29 +335,31 @@ document.addEventListener('DOMContentLoaded', function () {
                     partnerLogo.setAttribute('src', detailedData.logo);
                     detailedData.less ? partnerCashback.innerText = `${setWord('upTo')} ${detailedData.cashback} %` : partnerCashback.innerText = `${detailedData.cashback} %`;
                     textBottomPadding.classList.add('textBottomPadding');
-                    partnerDescription.innerHTML = DOMPurify.sanitize(detailedData.text); // use allowed sanitize library DOMPurify for inserted HTML
+                    partnerDescription.innerHTML = DOMPurify.sanitize(detailedData.text); // use allowed sanitize
+                                                                                          // library DOMPurify for
+                                                                                          // inserted HTML
                     partnerDescription.appendChild(textBottomPadding);
-                    
+                    partnerSpinnerWrap.style.display = 'none';
 
                     /* button text and link depends on profile status */
                     if ((bg._getProfileData()) && (bg._getProfileData().profile)) {
                         partnerLink.innerText = setWord('activate');
                         partnerLink.setAttribute('href', detailedData.href);
                         partnerLink.addEventListener('click', function () {
-                        bg._setActivated(rightUrl, new Date().getTime());
+                            bg._setActivated(rightUrl, new Date().getTime());
 
-                        /* showModalTimestamp reset for secondary showing of modal window with info about cashback */
-                        bg._setShowModalTimestamp(rightUrl, null);
-                        partner.style.display = 'none';
-                        safari.self.hide();
+                            /* showModalTimestamp reset for secondary showing of modal window with info about cashback */
+                            bg._setShowModalTimestamp(rightUrl, null);
+                            partner.style.display = 'none';
+                            safari.self.hide();
 
                         });
                     } else {
                         partnerLink.innerText = setWord('enterForActivation');
                         partnerLink.setAttribute('href', 'https://profile.cl.world/login');
                         partnerLink.addEventListener('click', function () {
-                        partner.style.display = 'none';
-                        safari.self.hide();
+                            partner.style.display = 'none';
+                            safari.self.hide();
                         });
                     }
 
@@ -371,10 +376,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     closePartner.addEventListener('click', function () {
                         partner.style.display = 'none';
                     });
-
                 } else {
                     partner.style.display = 'none';
+                    partnerSpinnerWrap.style.display = 'flex';
+                    console.log('1');
                 }
+
+            } else {
+                console.log('3');
+                partner.style.display = 'none';
             }
         }
 
@@ -394,14 +404,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 link.setAttribute('target', "_blank");
                 link.setAttribute('title', `${setWord('openInNewWindow')} el.name`);
 
-                /* for ff */
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
+                link.setAttribute('href', el.site_url);
 
-                    bg.uploadDetailed(bg.getClearUrl(el.site_url), () => {}); //for ff, preloading modal window
-
-                    window.open(el.site_url, '_blank');
-                    window.close();
+                link.addEventListener('click', function () {
+                    safari.application.activeBrowserWindow.openTab().url = el.site_url;
+                    safari.self.hide();
                 });
 
                 let inner = document.createElement('div');
@@ -456,6 +463,7 @@ document.addEventListener('DOMContentLoaded', function () {
          * Recommended partners render
          */
         function renderRecommended() {
+            clearTag('.search__form-autocomplete.recommended');
             let getCurrentLanguage = bg._getCurrentLanguage();
             let currentLanguage = getCurrentLanguage.toLowerCase();
             let recommendedPartners = bg._getRecommended()[currentLanguage];
@@ -482,7 +490,8 @@ document.addEventListener('DOMContentLoaded', function () {
          * Each visited page dynamically has adding here
          */
         function renderLastVisited() {
-
+            visitedTitle.innerText = setWord('lastVisitedTitle');
+            clearTag('.search__form-autocomplete.last');
             let keys = Object.keys(bg._getDetailed());
 
             for (let i = keys.length - 1; i >= 0; i--) {
@@ -630,14 +639,16 @@ document.addEventListener('DOMContentLoaded', function () {
         safari.application.addEventListener('popover', function (e) {
             let tab = safari.application.activeBrowserWindow.activeTab;
             searchField.value = '';
-
             languages = bg._getLanguages();
             getCurrentLanguage = bg._getCurrentLanguage();
             currentLanguage = getCurrentLanguage.toLowerCase();
 
+            spinnerText1.innerText = setWord('spinnerText1');
+            spinnerText2.innerText = setWord('spinnerText2');
+            allShopsLink.innerText = setWord('moreShopLink');
+
             renderLanguagesInPopup(languages);
             changeCurrentLanguage(tab);
-
             renderLastVisited();
             renderRecommended();
             showUserData();

@@ -15,8 +15,8 @@ let translate = {
         recommendedTitle:'рекомендуемые',
         searchPlaceholder: 'найти',
         upTo:'до',
-        spinnerSearchList1: 'Данные загружаются.',
-        spinnerSearchList2: 'Пожалуйста, повторите открытие окна'
+        spinnerText1: 'Данные загружаются.',
+        spinnerText2: 'Пожалуйста, повторите открытие окна'
     },
 
     en: {
@@ -34,8 +34,8 @@ let translate = {
         recommendedTitle:'recommended',
         searchPlaceholder: 'search',
         upTo: 'up to',
-        spinnerSearchList1: 'The data is loading. ',
-        spinnerSearchList2: 'Please try to reopen window.'
+        spinnerText1: 'The data is loading. ',
+        spinnerText2: 'Please try to reopen window.'
 
     }
 };

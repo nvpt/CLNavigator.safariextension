@@ -28,9 +28,10 @@ const EXTENSION_DATA_UPDATE_INTERVAL = 86400000;    // 86400000 = 24h. Update pe
 
 
 /* profile */
-let profileData = {};                   // profile data object
+let profileData = {default_start: 1};                   // profile data object
 let authIdentifier = 0;                 // authorisation identifier  for compare with cookie authorisation; 0 - not
                                         // authorised , >0 (=id) - authorised
+let authCookie = 0;                     // current value of cookie authorisation. Will get in our site pages
 let profileTimeUpdate = null;           // time of last update profile dta. null - not authorised or not updated yet
 let profileRequestKey = true;           //  allow repeated request for profile data
 const PROFILE_UPDATE_INTERVAL = 900000; // 900000 = 15min //10800000 = 3h. Update period for profile data
@@ -139,20 +140,6 @@ function calculateTimeInterval(newTime, oldTime) {
 
 
 /**
- * Get cookies from global storage
- * @param url
- * @param name
- * @param cb
- * @private
- */
-function _getCookies(url, name, cb) {
-    chrome.cookies.get({
-        url: url,
-        name: name
-    }, cb);
-}
-
-/**
  * Куки
  */
 function cookiesToObj(arr) {
@@ -177,7 +164,8 @@ function getCookiesAuth(msg) {
         }
     }
 }
-/* проверяем куку авторизации; выполняется при каждом обновлении страницы */
+
+/* check the cookies auth for each page reloading (on the pages of our site) */
 safari.application.addEventListener("message", getCookiesAuth, false);
 
 
@@ -351,16 +339,6 @@ function checkCurrentLanguageInLink(links, currentClearUrl, currentLanguage) {
     }
 }
 
-
-/* актуализируем данные сразу при запуске расширения.
- Дубль вызова uploadServerData в reloadTab.
- Подгружает сразу один из списков ссылок партнеров
- * */
-// (function(){
-//     let currentUrl = safari.application.activeBrowserWindow.activeTab.url;
-//     // console.log('reserv upload currentUrl', currentUrl);
-//     uploadServerData(currentUrl);
-// })();
 
 
 /* ============= LANGUAGES ============= */
@@ -730,6 +708,7 @@ function profileRequest(resolve, reject) {
 function resetAuthorisation() {
     profileData = {};
     authIdentifier = 0;
+    authCookie = 0;
     profileTimeUpdate = null;
 
     resetTimestampMarkers(detailed);
@@ -748,8 +727,8 @@ function uploadProfileData() {
             /* assign id, if user authorised */
             if (profileData && profileData.profile) {
                 authIdentifier = parseInt(profileData.profile.id);
+                authCookie = parseInt(profileData.profile.id);
             }
-
         },
 
         () => {
@@ -799,45 +778,37 @@ function checkAuthorization(url) {
     /* check only on our site */
     if (url.indexOf(getClearUrl(MAIN_URL)) !== -1) {
 
-        _getCookies(MAIN_URL, 'user_auth', function (val) {
+        /* and it not equal zero */
+        if (authCookie !== 0) {
 
-            /* if we have authorisation cookie */
-            if (val && val.value) {
+            if (authIdentifier !== authCookie) {
 
-                /* and it not equal zero */
-                if (parseInt(val.value) !== 0) {
+                profileRequest(
+                    function (resp) {
+                        profileData = resp;
 
-                    /* то проверяем, равен ли макрер авторизации authIdentifier этой  куке.
-                     * Если нет, значит пользователь сменился, и надо запросить новые данные профиля.
-                     * Также, на случай если данные не подгрузились ранее при положительной куке (!=0), проверяем,
-                     * не пустой ли профиль. Если пустой, также запрашиваем данные. */
-                    if ((authIdentifier !== parseInt(val.value)) ||
-                        profileData.profile === undefined ||
-                        profileData.profile === null
-                    ) {
+                        if (profileData.profile) {
+                            authIdentifier = parseInt(profileData.profile.id);
+                            authCookie = parseInt(profileData.profile.id);
+                        }
 
-                        profileRequest(
-                            function (resp) {
-                                profileData = resp;
-                                authIdentifier = parseInt(val.value);
-                                profileTimeUpdate = currentMilliseconds();
+                        profileTimeUpdate = currentMilliseconds();
 
-                                /* так как идет переавторизация, то в любом слючае сбрасываем маркеры посещений */
-                                resetTimestampMarkers(detailed);
-                            },
-                            function () {
-                                resetAuthorisation();
-                            }
-                        );
+                        /* так как идет переавторизация, то в любом слючае сбрасываем маркеры посещений */
+                        resetTimestampMarkers(detailed);
+
+                    },
+                    function () {
+                        resetAuthorisation();
                     }
-
-                    /* при нулевом значении куки сбрасываем данные авторизации в расширении,
-                     * так как пользователь разлогинился */
-                } else {
-                    resetAuthorisation();
-                }
+                );
             }
-        });
+
+            /* при нулевом значении куки сбрасываем данные авторизации в расширении,
+             * так как пользователь разлогинился */
+        } else {
+            resetAuthorisation();
+        }
     }
 }
 
@@ -854,7 +825,6 @@ function checkAuthorization(url) {
  */
 function detailedRequest(id, lang, resolve, reject) {
         // console.log('1');
-
 
     if (detailedRequestKey) {
         detailedRequestKey = false;
@@ -1122,14 +1092,12 @@ function clickTab(val) {
     let clearUrl = getClearUrl(currentUrl);
 
     uploadExtensionData();
-    // checkAuthorization(currentUrl);
+    checkAuthorization(currentUrl);
     checkPartnerIcon(clearUrl);
     uploadDetailed(clearUrl, () => {
         /* при клике сверяем актуальность иконки */
         changeIcon(clearUrl);
     });
-    console.log('detailed ', detailed);
-    
 }
 
 
@@ -1147,7 +1115,7 @@ function reloadTab(val) {
             changeIcon(clearUrl);
         });
         uploadExtensionData();
-        // checkAuthorization(currentUrl);
+        checkAuthorization(currentUrl);
         updateProfileRepeatedly();
         checkPartnerIcon(clearUrl);
     }
@@ -1204,7 +1172,7 @@ safari.application.addEventListener("message", function (data) {
                 remodalShowed = false;
 
                 /* если юзер залогинен, активируем кэшбэк по клику */
-                if (Object.keys(loginData).length > 0) {
+                if (Object.keys(profileData).length > 0) {
                     _addToTimers(clearUrl, msg.timer);
                     for (let i = 0; i < modalMarkers.length; i++) {
                         if (modalMarkers[i] === msg.partnerId) {
@@ -1238,7 +1206,7 @@ safari.application.addEventListener("message", function (data) {
                             currentPartner: partner,
                             timers: timers,
                             modalMarkers: modalMarkers,
-                            loginData: _getLoginData()
+                            profileData: profileData
                         });
                 }
                 //<<прием

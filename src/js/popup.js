@@ -10,11 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let languages = bg._getLanguages() || ['ru', 'en'];//TODO temp
         let getCurrentLanguage = bg._getCurrentLanguage();
         let currentLanguage = getCurrentLanguage.toLowerCase();
-        console.log('currentLanguage1 ', currentLanguage);
-        
-
-
-
 
         /**
          * Translation of words
@@ -227,7 +222,6 @@ document.addEventListener('DOMContentLoaded', function () {
             userCashValue.classList.add('user__cash-value');
 
 
-
             if ((bg._getProfileData()) && (bg._getProfileData().profile)) {
                 let el = bg._getProfileData().profile;
                 user.innerText = '';
@@ -264,7 +258,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        showUserData();
+    // showUserData();
 
         /**
          * Switch tabs
@@ -288,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        selectTab();
+        selectTab();//move to safari.application.addEventListener('popover', function (e) {...
 
 
         /**
@@ -298,10 +292,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             let getCurrentLanguage = bg._getCurrentLanguage();
             let currentLanguage = getCurrentLanguage.toLowerCase();
-
-            // console.log('languages ', languages);
-            // console.log('bg._getDetailed() ', bg._getDetailed());
-
             let currentTabUrl = tab.url;
             let rightUrl = bg.getClearUrl(currentTabUrl);
 
@@ -335,10 +325,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     currentTabUrl !== undefined && rightUrl !== undefined) {
 
                     let detailedData = bg._getDetailed()[rightUrl][currentLanguage];
-                    // console.log('bg._getDetailed() ', bg._getDetailed());
-                    // console.log('currentLanguage4 ', currentLanguage);
-                    // console.log('detailedData ', detailedData);
-
                     let cashbackTimestamp = bg._getDetailed()[rightUrl]['activatedTimestamp'];
 
                     partner.style.display = 'flex';
@@ -348,10 +334,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     textBottomPadding.classList.add('textBottomPadding');
                     partnerDescription.innerHTML = DOMPurify.sanitize(detailedData.text); // use allowed sanitize library DOMPurify for inserted HTML
                     partnerDescription.appendChild(textBottomPadding);
-
-                    console.log('bg._getProfileData() ', bg._getProfileData());
-                    console.log('bg._getProfileData().profile ', bg._getProfileData().profile);
-                    
                     
 
                     /* button text and link depends on profile status */
@@ -649,18 +631,16 @@ document.addEventListener('DOMContentLoaded', function () {
             let tab = safari.application.activeBrowserWindow.activeTab;
             searchField.value = '';
 
-
             languages = bg._getLanguages();
             getCurrentLanguage = bg._getCurrentLanguage();
             currentLanguage = getCurrentLanguage.toLowerCase();
-            console.log('currentLanguage2 ', currentLanguage);
-            
 
             renderLanguagesInPopup(languages);
             changeCurrentLanguage(tab);
 
             renderLastVisited();
             renderRecommended();
+            showUserData();
             renderMainCard(tab);
         });
 

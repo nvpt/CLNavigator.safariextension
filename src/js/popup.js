@@ -296,7 +296,6 @@ document.addEventListener('DOMContentLoaded', function () {
          */
         function renderMainCard(tab) {
 
-            let languages = bg._getLanguages();
             let getCurrentLanguage = bg._getCurrentLanguage();
             let currentLanguage = getCurrentLanguage.toLowerCase();
 
@@ -358,12 +357,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         partnerLink.addEventListener('click', function (e) {
                             e.preventDefault();
                             bg._setActivated(rightUrl, new Date().getTime());
-                            chrome.tabs.update(tab.id, {url: detailedData.href});
+                            // chrome.tabs.update(tab.id, {url: detailedData.href});
 
                             /* showModalTimestamp reset for secondary showing of modal window with info about cashback */
                             bg._setShowModalTimestamp(rightUrl, null);
                             partner.style.display = 'none';
                             window.close();
+                            alert('rrr');
                         });
                     } else {
                         partnerLink.innerText = setWord('enterForActivation');
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         partnerLink.addEventListener('click', function (e) {
                             e.preventDefault();
-                            chrome.tabs.update(tab.id, {url: 'https://profile.cl.world/login'});
+                            // chrome.tabs.update(tab.id, {url: 'https://profile.cl.world/login'});
                             partner.style.display = 'none';
                             window.close();
                         });

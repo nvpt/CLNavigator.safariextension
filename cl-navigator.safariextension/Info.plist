@@ -61,6 +61,7 @@
 			</array>
 			<key>Start</key>
 			<array>
+				<string>js/translate.js</string>
 				<string>js/common.js</string>
 			</array>
 		</dict>

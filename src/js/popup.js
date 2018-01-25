@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 /* current translation must be available for current partner and current tub url must not be empty */
 
             if (currentTabUrl !== undefined && rightUrl !== undefined &&
-                Object.keys(bg._getDetailed()).length > 0 && bg._getDetailed()[rightUrl]) {
+                bg._getDetailed()[rightUrl]) {
 
                 partner.style.display = 'flex';
                 partnerSpinnerWrap.style.display = 'flex';

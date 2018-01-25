@@ -1,118 +1,5 @@
 /* ============= CONSTANTS, VARIABLES ============= */
 
-/* testurl!!! */
-const MAIN_URL = "https://cl.world/";
-// const MAIN_URL = "http://front.zato.clcorp/";
-
-let serverRequestKey = true;            // allow repeated request for server response checking
-
-/* (languages) */
-let languages = [];                     // available translation languages
-let defaultLanguage = 'en';
-let currentLanguage = defaultLanguage;
-let languagesRequestKey = true;         // allow repeated request for available languages
-
-/* (recommended) */
-let recommendedObj = {};                // recommended partners in object format
-const RECOMMENDED_QUANTITY = 25;        // recommended partners quantity
-let recommendedRequestKey = true;       // allow repeated request for recommended
-
-/* (links) */
-let links = {};                         // partners links in object format (links)
-let linksRequestKey = true;             // allow repeated request for partners links
-
-
-/* work with aggregate data of extension (languages, recommended, links) */
-let extensionDataTimestamp = null;                  // time of last update aggregate data
-const EXTENSION_DATA_UPDATE_INTERVAL = 86400000;    // 86400000 = 24h. Update period for aggregate data
-
-
-/* profile */
-let profileData = {default_start: 1};                   // profile data object
-let authIdentifier = 0;                 // authorisation identifier  for compare with cookie authorisation; 0 - not
-                                        // authorised , >0 (=id) - authorised
-let authCookie = 0;                     // current value of cookie authorisation. Will get in our site pages
-let profileTimeUpdate = null;           // time of last update profile dta. null - not authorised or not updated yet
-let profileRequestKey = true;           //  allow repeated request for profile data
-const PROFILE_UPDATE_INTERVAL = 900000; // 900000 = 15min //10800000 = 3h. Update period for profile data
-
-
-/* детальные данные партнеров */
-let detailed = {};                       // detailed partners data (detailed)
-let detailedRequestKey = true;           // allow repeated request for detailed data
-const DETAILED_LIVE_TIME = 172800000;    //172800000 =  48h. Update period for detailed (not for timestamps)
-
-
-/* кэшбэк */
-const CASHBACK_LIVE_TIME = 86400000;                // 86400000 = 24h. Cashback time update.
-const MODAL_LIVE_TIME = 43200000;                   // 43200000 = 12h. Update period for repeated showing modal window.
-const MODAL_TIMESTAMPS_CHECK_INTERVAL = 3600000;    // 3600000 = 1h. Interval of repeated checking cashback
-
-
-/* реактивация кэшбэка *///TODO переделать
-const CL_ALI_UID = '3Vby3rfe6';             // our new identifier in AliE
-const ALI_CLEAR = 'aliexpress.com';         // clear url of Aliexpress.com
-const ALI_COOKIE = 'aeu_cid';               // need cookie name of Aliexpress
-
-
-/* ============= GET, SET ============= */
-
-function _getProfileData() {
-    return profileData;
-}
-
-function _setProfileData(val) {
-    return profileData = val;
-}
-
-
-function _getLanguages() {
-    return languages;
-}
-
-function _getCurrentLanguage() {
-    return currentLanguage;
-}
-
-function _setCurrentLanguage(val) {
-    currentLanguage = val;
-}
-
-
-function _getDetailed() {
-    return detailed;
-}
-
-
-function _getRecommended() {
-    return recommendedObj;
-}
-
-
-function _setActivated(clearUlr, time) {
-    /* маркеру активции кэшбэка прописываем время активации */
-    return detailed[clearUlr]['activatedTimestamp'] = time;
-}
-
-
-function _setShowModalTimestamp(clearUlr, time) {
-    /* in the marker showModalTimestamp write the time of activation or specified value */
-    return detailed[clearUlr]['showModalTimestamp'] = time;
-}
-
-
-function _getTranslate() {
-    return translate;
-}
-
-function _setTranslate(lang, name, val) {
-    translate[lang][name] = val;
-}
-
-
-function _getLinks() {
-    return links
-}
 
 
 /* ============= SERVICE FUNCTION ============= */
@@ -776,7 +663,7 @@ function updateProfileRepeatedly() {
 function checkAuthorization(url) {
 
     /* check only on our site */
-    if (url.indexOf(getClearUrl(MAIN_URL)) !== -1) {
+    if (url && url.indexOf(getClearUrl(MAIN_URL)) !== -1) {
 
         /* and it not equal zero */
         if (authCookie !== 0) {
@@ -1146,10 +1033,11 @@ function checkModalTimestamp(partner) {
 
 /* Мост между content и background *///TODO Разместить инлайном в глобале.
 safari.application.addEventListener("message", function (data) {
+console.log('bridge bg 1');
 
-        let messageName = data.name;
-        let msg = data.message;
-
+        let messageName = data['name'];
+        let msg = data['message'];
+        let partner;
         //порядок запросов не менять (?)
         // console.log('МОСТ');
 
@@ -1157,56 +1045,62 @@ safari.application.addEventListener("message", function (data) {
         if (messageName === 'content') {
             let contentUrl = msg.url;
             let clearUrl = getClearUrl(contentUrl);
+            let currentPartner = detailed[clearUrl];
+            console.log('bridge bg 2');
 
-            //<<прием
-            if (msg.id === 'modalMarkerAdded') {
-                if (partnersData[clearUrl]) {
-                    let partner = partnersData[clearUrl];
-                    checkModalMarkerAdded(partner);
-                }
-            }
+            // //<<прием
+            // if (msg.id === 'modalMarkerAdded') {
+            //     if (detailed[clearUrl]) {
+            //         partner = detailed[clearUrl];
+            //         checkModalMarkerAdded(partner);
+            //     }
+            // }
 
-            //<<прием
-            if (msg.id === 'setCashbackClick') {
-                modalShowed = true;
-                remodalShowed = false;
+            // //<<прием
+            // if (msg.id === 'setCashbackClick') {
+            //     modalShowed = true;
+            //     remodalShowed = false;
+            //
+            //     /* если юзер залогинен, активируем кэшбэк по клику */
+            //     if (Object.keys(profileData).length > 0) {
+            //         _addToTimers(clearUrl, msg.timer);
+            //         for (let i = 0; i < modalMarkers.length; i++) {
+            //             if (modalMarkers[i] === msg.partnerId) {
+            //
+            //                 /* удаляем маркер отображени модалки,
+            //                 чтобы после активации кэшбэка модалка отобразилась заново еще раз,
+            //                  уже с уведомлением, что кэшбэк активирован */
+            //                 modalMarkers.splice(i, 1);
+            //             }
+            //         }
+            //     }
+            // }
 
-                /* если юзер залогинен, активируем кэшбэк по клику */
-                if (Object.keys(profileData).length > 0) {
-                    _addToTimers(clearUrl, msg.timer);
-                    for (let i = 0; i < modalMarkers.length; i++) {
-                        if (modalMarkers[i] === msg.partnerId) {
-
-                            /* удаляем маркер отображени модалки,
-                            чтобы после активации кэшбэка модалка отобразилась заново еще раз,
-                             уже с уведомлением, что кэшбэк активирован */
-                            modalMarkers.splice(i, 1);
-                        }
-                    }
-                }
-            }
-
-            //<<прием
-            /* активация маркера remodalShowed */
-            if (msg.id === 'remodalShowed') {
-                remodalShowed = msg.remodalShowed;
-            }
+            // //<<прием
+            // /* активация маркера remodalShowed */
+            // if (msg.id === 'remodalShowed') {
+            //     remodalShowed = msg.remodalShowed;
+            // }
 
             //<<прием
             /* начальная связь от content.js */
             if (msg.id === 'startConnect') {
+                console.log('bridge bg 3');
 
-                if (partnersData[clearUrl]) {
-                    partner = partnersData[clearUrl];
-                    // console.log('partner ', partner);
+                if ((clearUrl !== undefined) && (detailed[clearUrl])) {
+                    console.log('bridge bg 4');
+
+                    let currentPartner = detailed[clearUrl];
+                    console.log('currentPartner ', currentPartner);
+                    console.log('currentPartner ', currentPartner);
+                    console.log('currentPartner ', currentPartner);
                     //>>отправка
                     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                         {
                             id: 'showModal',
-                            currentPartner: partner,
-                            timers: timers,
-                            modalMarkers: modalMarkers,
-                            profileData: profileData
+                            currentPartner,
+                            currentLanguage,
+                            profileData
                         });
                 }
                 //<<прием
@@ -1231,10 +1125,10 @@ safari.application.addEventListener("message", function (data) {
                         // console.log('cookiesObj.aeu_cid ', cookiesObj.aeu_cid);
 
                         /* если кука aeu_cid не содежит идентификатор "yVF2rZRRj",
-                         то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку */
+                         то отправляем в контент данные алиэкспресс из массива detailed, чтобы отобразить ремодалку */
                         if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) === -1)) {
                             // console.log(3);
-                            if (partnersData[clearUrl]) {
+                            if (detailed[clearUrl]) {
                                 delete timers[ALI_CLEAR];
                                 // console.log(4);
                                 //>>отправка
@@ -1260,6 +1154,35 @@ safari.application.addEventListener("message", function (data) {
                             //}
                         }
                     }, false);
+                }
+            }
+
+            /*  обработка данных времени показа модалки */
+            if (msg.id === 'queryShowModalTimestamp') {
+                console.log('bridge bg 5');
+
+                if (detailed[clearUrl] && clearUrl !== undefined) {
+                    console.log('bridge bg 6');
+
+                    let partner = detailed[clearUrl];
+
+                    /* ставим время отображения модалки */
+                    checkModalTimestamp(partner);
+                }
+            }
+
+            /* обработка активаци кэшбэка из модалки*/
+            if (msg.id === 'setCashbackClick') {
+                console.log('bridge bg 7');
+                /* Выводим в модалке поле с активацией, только если юзер залогинен.
+                 *  profile может быть null, поэтому проверяем и id */
+                if (profileData && profileData.profile && profileData.profile.id) {
+                    console.log('bridge bg 8');
+                    currentPartner.activatedTimestamp = currentMilliseconds();
+
+                    /* Сбрасываем showModalTimestamp в null, чтобы после активации кэшбэка модалка отобразилась повторно */
+                    currentPartner.showModalTimestamp = null;
+
                 }
             }
         }

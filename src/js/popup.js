@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let bg = safari.extension.globalPage.contentWindow;
 
-        let languages = bg._getLanguages() || ['ru', 'en'];
+        let languages = bg._getLanguages() || ['ru', 'en'];//TODO temp
         let getCurrentLanguage = bg._getCurrentLanguage();
         let currentLanguage = getCurrentLanguage.toLowerCase();
         console.log('currentLanguage1 ', currentLanguage);
@@ -349,31 +349,30 @@ document.addEventListener('DOMContentLoaded', function () {
                     partnerDescription.innerHTML = DOMPurify.sanitize(detailedData.text); // use allowed sanitize library DOMPurify for inserted HTML
                     partnerDescription.appendChild(textBottomPadding);
 
+                    console.log('bg._getProfileData() ', bg._getProfileData());
+                    console.log('bg._getProfileData().profile ', bg._getProfileData().profile);
+                    
+                    
 
                     /* button text and link depends on profile status */
                     if ((bg._getProfileData()) && (bg._getProfileData().profile)) {
                         partnerLink.innerText = setWord('activate');
                         partnerLink.setAttribute('href', detailedData.href);
-                        partnerLink.addEventListener('click', function (e) {
-                            e.preventDefault();
-                            bg._setActivated(rightUrl, new Date().getTime());
-                            // chrome.tabs.update(tab.id, {url: detailedData.href});
+                        partnerLink.addEventListener('click', function () {
+                        bg._setActivated(rightUrl, new Date().getTime());
 
-                            /* showModalTimestamp reset for secondary showing of modal window with info about cashback */
-                            bg._setShowModalTimestamp(rightUrl, null);
-                            partner.style.display = 'none';
-                            window.close();
-                            alert('rrr');
+                        /* showModalTimestamp reset for secondary showing of modal window with info about cashback */
+                        bg._setShowModalTimestamp(rightUrl, null);
+                        partner.style.display = 'none';
+                        safari.self.hide();
+
                         });
                     } else {
                         partnerLink.innerText = setWord('enterForActivation');
                         partnerLink.setAttribute('href', 'https://profile.cl.world/login');
-
-                        partnerLink.addEventListener('click', function (e) {
-                            e.preventDefault();
-                            // chrome.tabs.update(tab.id, {url: 'https://profile.cl.world/login'});
-                            partner.style.display = 'none';
-                            window.close();
+                        partnerLink.addEventListener('click', function () {
+                        partner.style.display = 'none';
+                        safari.self.hide();
                         });
                     }
 

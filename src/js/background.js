@@ -770,7 +770,7 @@ function detailedRequest(id, lang, resolve, reject) {
                 resolve(resultObj);//TODO temp
 
             } else {
-// console.log('4');
+                // console.log('4');
 
                 detailedRequestKey = true;
                 reject();
@@ -819,7 +819,8 @@ function addToDetailed(data) {
     partner[currentLanguage].text = data.text;
 
     detailed[partnerClearUrl] = partner;
-    console.log('detailedDDD ', detailed);
+    safari.application.activeBrowserWindow.activeTab.url = safari.application.activeBrowserWindow.activeTab.url;
+    console.log('addToDetailed detailed ', detailed);
 }
 
 
@@ -1037,152 +1038,141 @@ console.log('bridge bg 1');
 
         let messageName = data['name'];
         let msg = data['message'];
-        let partner;
-        //порядок запросов не менять (?)
-        // console.log('МОСТ');
 
         //<<прием
         if (messageName === 'content') {
-            let contentUrl = msg.url;
+            let contentUrl = msg.url; /* по сути все откытые вкладки */
             let clearUrl = getClearUrl(contentUrl);
-            let currentPartner = detailed[clearUrl];
-            console.log('bridge bg 2');
 
-            // //<<прием
-            // if (msg.id === 'modalMarkerAdded') {
-            //     if (detailed[clearUrl]) {
-            //         partner = detailed[clearUrl];
-            //         checkModalMarkerAdded(partner);
-            //     }
-            // }
+            let currentUrl = safari.application.activeBrowserWindow.activeTab.url; /* текущая вкладка */
+            let clearCurrentUrl = getClearUrl(currentUrl);
 
-            // //<<прием
-            // if (msg.id === 'setCashbackClick') {
-            //     modalShowed = true;
-            //     remodalShowed = false;
-            //
-            //     /* если юзер залогинен, активируем кэшбэк по клику */
-            //     if (Object.keys(profileData).length > 0) {
-            //         _addToTimers(clearUrl, msg.timer);
-            //         for (let i = 0; i < modalMarkers.length; i++) {
-            //             if (modalMarkers[i] === msg.partnerId) {
-            //
-            //                 /* удаляем маркер отображени модалки,
-            //                 чтобы после активации кэшбэка модалка отобразилась заново еще раз,
-            //                  уже с уведомлением, что кэшбэк активирован */
-            //                 modalMarkers.splice(i, 1);
-            //             }
-            //         }
-            //     }
-            // }
 
-            // //<<прием
-            // /* активация маркера remodalShowed */
-            // if (msg.id === 'remodalShowed') {
-            //     remodalShowed = msg.remodalShowed;
-            // }
+            if(clearUrl === clearCurrentUrl){ /* работаем только с текущей */
+                console.log('bridge bg 2');
+                console.log('clearUrl ', clearUrl);
+                console.log('clearCurrentUrl ', clearCurrentUrl);
 
-            //<<прием
-            /* начальная связь от content.js */
-            if (msg.id === 'startConnect') {
-                console.log('bridge bg 3');
-
-                if ((clearUrl !== undefined) && (detailed[clearUrl])) {
-                    console.log('bridge bg 4');
-
-                    let currentPartner = detailed[clearUrl];
-                    console.log('currentPartner ', currentPartner);
-                    console.log('currentPartner ', currentPartner);
-                    console.log('currentPartner ', currentPartner);
-                    //>>отправка
-                    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
-                        {
-                            id: 'showModal',
-                            currentPartner,
-                            currentLanguage,
-                            profileData
-                        });
-                }
+                let currentPartner = detailed[clearUrl];
+                console.log('> detailed > ', detailed);
+                
+                console.log('> currentPartner > ', currentPartner);
                 //<<прием
-                //TODO переписать
-                /* если сайт - Aliexpress */
-                if ((clearUrl === ALI_CLEAR)) {
-                    // console.log(0);
-                    safari.application.addEventListener("message", function (data) {
+                /* начальная связь от content.js */
+                if (msg.id === 'startConnect') {
+                    console.log('bridge bg 3');
 
-                        // console.log(1);
+                    if ((clearUrl !== undefined) && currentPartner) {
+                        console.log('bridge bg 4');
+                        console.log('clearUrl ', clearUrl);
+                        console.log('ALI_CLEAR ', ALI_CLEAR);
 
-                        if (data.name === 'ali-cookies') {
-                            let cookiesName = data.name;
-                            let cookiesValue = data.message;
-                            let cookiesUrl = data.target['url'];
-                            let cookiesObj = cookiesToObj(cookiesValue);
-                        // console.log(2);
-                        // console.log('cookies  ', data);
-                        // console.log('cookiesName ', data.name);
-                        // console.log('cookiesValue ', data.message);
-                        // console.log('cookiesObj ', cookiesObj);
-                        // console.log('cookiesObj.aeu_cid ', cookiesObj.aeu_cid);
+                        // if (clearUrl === ALI_CLEAR) {
+                        //
+                        //     safari.application.addEventListener("message", function (data) {
+                        //
+                        //         // console.log(1);
+                        //
+                        //         if (data['name'] === 'ali-cookies') {
+                        //             let cookiesName = data['name'];
+                        //             let cookiesValue = data['message'];
+                        //             let cookiesUrl = data.target['url'];
+                        //             let cookiesObj = cookiesToObj(cookiesValue);
+                        //
+                        //
+                        //             /* если кука aeu_cid не содежит идентификатор "yVF2rZRRj",
+                        //              то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку */
+                        //             if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) === -1)) {
+                        //                 // console.log(3);
+                        //
+                        //                 /* проверка на реактивацию выполняется только,
+                        //                  * если партнер был активирован ранее */
+                        //                 if (detailed[ALI_CLEAR] &&
+                        //                     detailed[ALI_CLEAR].activatedTimestamp !== null &&
+                        //                     detailed[ALI_CLEAR].activatedTimestamp !== undefined) {
+                        //
+                        //                     console.log('data ', data);
+                        //                 }
+                        //                 else {
+                        //                     //>>отправка
+                        //                     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                        //                         {
+                        //                             id: 'showModal',
+                        //                             currentPartner,
+                        //                             currentLanguage,
+                        //                             profileData
+                        //                         });
+                        //                 }
+                        //             }
+                        //             else {
+                        //                 //>>отправка
+                        //                 safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                        //                     {
+                        //                         id: 'showModal',
+                        //                         currentPartner,
+                        //                         currentLanguage,
+                        //                         profileData
+                        //                     });
+                        //             }
+                        //             //else {//если да
+                        //             // console.log(5);
+                        //             //>>отправка
+                        //             //TODO в сафари срабатывает сразу. и закрывает окно
+                        //             // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                        //             //     {
+                        //             //         id: 'hideRemodal'
+                        //             //     });
+                        //             //}
+                        //         }
+                        //     }, false);
+                        //
+                        //
+                        //     /* все остальные сайты */
+                        // } else {
 
-                        /* если кука aeu_cid не содежит идентификатор "yVF2rZRRj",
-                         то отправляем в контент данные алиэкспресс из массива detailed, чтобы отобразить ремодалку */
-                        if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) === -1)) {
-                            // console.log(3);
-                            if (detailed[clearUrl]) {
-                                delete timers[ALI_CLEAR];
-                                // console.log(4);
-                                //>>отправка
-                                safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
-                                    {
-                                        id: 'showRemodal',
-                                        currentPartner: partner,
-                                        timers: timers,
-                                        modalMarkers: modalMarkers,
-                                        modalShowed: modalShowed,
-                                        remodalShowed: remodalShowed
-                                    });
-                            }
-                        }
-                            //else {//если да
-                            // console.log(5);
+
+                            console.log('currentPartner ', currentPartner);
+
                             //>>отправка
-                            //TODO в сафари срабатывает сразу. и закрывает окно
-                            // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
-                            //     {
-                            //         id: 'hideRemodal'
-                            //     });
-                            //}
-                        }
-                    }, false);
+                            safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                                {
+                                    id: 'showModal',
+                                    currentPartner,
+                                    currentLanguage,
+                                    profileData
+                                });
+                        // }
+                    }
+
                 }
-            }
 
-            /*  обработка данных времени показа модалки */
-            if (msg.id === 'queryShowModalTimestamp') {
-                console.log('bridge bg 5');
+                /*  обработка данных времени показа модалки */
+                if (msg.id === 'queryShowModalTimestamp') {
+                    console.log('bridge bg 5');
 
-                if (detailed[clearUrl] && clearUrl !== undefined) {
-                    console.log('bridge bg 6');
+                    if (detailed[clearUrl] && clearUrl !== undefined) {
+                        console.log('bridge bg 6');
 
-                    let partner = detailed[clearUrl];
+                        let partner = detailed[clearUrl];
 
-                    /* ставим время отображения модалки */
-                    checkModalTimestamp(partner);
+                        /* ставим время отображения модалки */
+                        checkModalTimestamp(partner);
+                    }
                 }
-            }
 
-            /* обработка активаци кэшбэка из модалки*/
-            if (msg.id === 'setCashbackClick') {
-                console.log('bridge bg 7');
-                /* Выводим в модалке поле с активацией, только если юзер залогинен.
-                 *  profile может быть null, поэтому проверяем и id */
-                if (profileData && profileData.profile && profileData.profile.id) {
-                    console.log('bridge bg 8');
-                    currentPartner.activatedTimestamp = currentMilliseconds();
+                /* обработка активаци кэшбэка из модалки*/
+                if (msg.id === 'setCashbackClick') {
+                    console.log('bridge bg 7');
+                    /* Выводим в модалке поле с активацией, только если юзер залогинен.
+                     *  profile может быть null, поэтому проверяем и id */
+                    if (profileData && profileData.profile && profileData.profile.id) {
+                        console.log('bridge bg 8');
+                        currentPartner.activatedTimestamp = currentMilliseconds();
 
-                    /* Сбрасываем showModalTimestamp в null, чтобы после активации кэшбэка модалка отобразилась повторно */
-                    currentPartner.showModalTimestamp = null;
+                        /* Сбрасываем showModalTimestamp в null, чтобы после активации кэшбэка модалка отобразилась повторно */
+                        currentPartner.showModalTimestamp = null;
 
+                    }
                 }
             }
         }

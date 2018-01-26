@@ -1,7 +1,7 @@
 /**
  * Created by CityLife on 29.12.16.
  */
-// console.log('--content--');
+console.log('content1');
 
 let SHOW_MODAL_DELAY = 2500; //3000 = 2,5 сек. Задержка перед открытием окна
 let HIDE_MODAL_DELAY = 180000; //180000 = 3 мин. Время скрытия модалки после отображения. Поставить секунд 15-20
@@ -14,20 +14,17 @@ function confirmExtensionInstalled(extensionClass, bannerClass, siteUrl) {
     if (document.location.href.indexOf(siteUrl) !== -1 && document.querySelector('.' + bannerClass)) {
         document.body.appendChild(extMarker);
     }
-
 }
-document.addEventListener('DOMContentLoaded', function () {
-    confirmExtensionInstalled('cl-ext-18', 'cl-banner-18', 'cl.world');
-});
-
+/* не дожидаемся загрузки страницы */
+confirmExtensionInstalled('cl-ext-18', 'cl-banner-18', 'cl.world');
 
 
 if(window === window.top) {
-    console.log('bridge content 1');
     /*
     *Отправка куки
     * */
-
+console.log('window === window.top');
+    console.log('content2');
     /* куки отслеживания авторизации */
     function sendCookies(name, data) {
         safari.self.tab.dispatchMessage(name, data);
@@ -38,8 +35,9 @@ if(window === window.top) {
         sendCookies("send-cookies", cookiesMain);
     }
 
-    /* временное решение для переопределения */
+    /* TODO temp */
     if((window.location.href).indexOf(ALI_CLEAR) !== -1){
+        console.log('ALIII');
         let cookiesAli = document.cookie.split(';');
         sendCookies("ali-cookies",cookiesAli);
     }
@@ -53,9 +51,7 @@ if(window === window.top) {
 
 
     safari.self.addEventListener("message", function (data) {
-        console.log('bridge content 2');
-        // console.log('data ', data);
-
+        console.log('content3');
         /**
          * Translation of words
          * @param name - name of translated field
@@ -70,7 +66,7 @@ if(window === window.top) {
         let msg = data['message'];
         let currentLanguage = msg.currentLanguage;
         let currentUrl = document.location.href;
-        
+
         let partner = msg.currentPartner;
         
         // let timers = msg.timers;
@@ -103,7 +99,6 @@ if(window === window.top) {
          * Modal components render
          */
         function renderModalComponents() {
-            console.log('renderModalComponents');
 
             ANCHOR.id = 'modalCL2017';
             ANCHOR.classList.add('modalCL2017');
@@ -179,14 +174,14 @@ if(window === window.top) {
          * Condition of showing modal
          */
         function showHideModal() {
-console.log('showHideModal');
 
             if (partner['showModalTimestamp'] === undefined ||
                 partner['showModalTimestamp'] === null) {
-
+                console.log('content4');
                 ANCHOR.style.display = 'flex';
                 ANCHOR.style.opacity = 1;
             } else {
+                console.log('content5');
                 ANCHOR.style.opacity = 0;
                 ANCHOR.style.display = 'none';
             }
@@ -197,22 +192,26 @@ console.log('showHideModal');
          * Add modal to DOM
          */
         function insertModalInPage() {
-console.log('insertModalInPage');
+            console.log('insertModalInPage 1');
 
-            document.addEventListener('DOMContentLoaded', function () {
+            // document.addEventListener('DOMContentLoaded', function () {
+                window.addEventListener('load', function () {
                 //     window.addEventListener('load', function () {
+                    console.log('insertModalInPage 2');
 
                 /* exclude duplication of adding */
                 if (!document.querySelector("#modalCL2017")) {
+                    console.log('insertModalInPage 3');
 
                     /* simulated delay */
                     setTimeout(function () {
                         document.body.appendChild(ANCHOR);
+                        console.log('insertModalInPage 4');
+
                     }, SHOW_MODAL_DELAY);
 
                 }
             });
-            document.body.appendChild(ANCHOR);
         }
 
 
@@ -220,7 +219,6 @@ console.log('insertModalInPage');
          * Hide modal by click
          */
         function clickHide() {
-            console.log('clickHide');
 
             close.addEventListener('click', function () {
                 ANCHOR.style.display = 'none';
@@ -238,7 +236,6 @@ console.log('insertModalInPage');
          * Hide modal by time interval HIDE_MODAL_DELAY
          */
         function timeHide() {
-console.log('timeHide');
 
             setTimeout(function () {
                 ANCHOR.style.display = 'none';
@@ -256,7 +253,6 @@ console.log('timeHide');
          * Check conditions for show info about active cashback
          */
         function cashbackActiveInfo() {
-console.log('cashbackActiveInfo');
 
             /* после отображения активного кэшбэка
              * запрашиваем добавление маркера скрытия модалки - showModalTimestamp
@@ -288,7 +284,6 @@ console.log('cashbackActiveInfo');
          * Cashback activation by click
          */
         function activateCashback() {
-console.log('activateCashback');
 
             clButton.addEventListener('click', function () {
 
@@ -315,12 +310,11 @@ console.log('activateCashback');
             activateCashback();
         }
 
-        
+
         //<<прием
         /* condition of modal showing */
         if (messageName === 'bg' && msg.id === 'showModal') {
-            console.log('bridge content 3');
-
+            console.log('showModal ');
             showModal();
         }
     });

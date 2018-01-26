@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let bg = safari.extension.globalPage.contentWindow;
 
-        let languages = bg._getLanguages() || ['ru', 'en'];//TODO temp
+        let languages = bg._getLanguages() ?  bg._getLanguages() : ['ru', 'en'];//TODO temp
         let getCurrentLanguage = bg._getCurrentLanguage();
         let currentLanguage = getCurrentLanguage.toLowerCase();
 
@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /* spinners */
         let searchListSpinner = document.querySelector('.cl-spinner_searchList');
+        let searchSpinner = document.querySelector('.cl-spinner-search');
 
         let spinnerText1 = document.createElement('span');
         let spinnerText2 = document.createElement('span');
@@ -384,6 +385,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             } else {
                 console.log('3');
+                console.log('bg._getDetailed() 3 ', bg._getDetailed());
+                
                 partner.style.display = 'none';
             }
         }
@@ -509,7 +512,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         /* Search autocomplete */
         let searchField = document.querySelector('.search__autocomplete');
-        searchField.setAttribute('placeholder', setWord('searchPlaceholder'));
         let btnClearSearchField = document.querySelector('.search__clear');
 
         btnClearSearchField.focus();
@@ -543,6 +545,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 for (let i = 0, length = partnerThumb.length; i < length; i++) {
                     partnerThumb[i].style.display = 'block';
                 }
+
+                searchSpinner.style.display = 'none';
             });
         }
 
@@ -553,7 +557,6 @@ document.addEventListener('DOMContentLoaded', function () {
         function searchRequest(name, resolve, reject) {
             let getCurrentLanguage = bg._getCurrentLanguage();
             let currentLanguage = getCurrentLanguage.toLowerCase();
-
             /* all languages array */
             let languages = bg._getLanguages();
             /* testurl!!! */
@@ -605,8 +608,14 @@ document.addEventListener('DOMContentLoaded', function () {
             /* show only if not empty */
             if (arr.length > 0) {
                 requestedWrap.style.display = 'block';
+
+                searchSpinner.style.display = 'none';
             } else {
                 requestedWrap.style.display = 'none';
+
+                searchSpinner.style.display = 'flex';
+                searchSpinner.classList.remove('animated');
+                searchSpinner.innerText = setWord('searchFail');
             }
         }
 
@@ -614,16 +623,18 @@ document.addEventListener('DOMContentLoaded', function () {
          * Dynamically search render (with debounce delay)
          */
         searchField.addEventListener('input', debounce(function () {
-
             this.value = this.value.replace(/<[^>]*>?/g, '');
             let searching = this.value;
-
+            searchSpinner.classList.add('animated');
+            searchSpinner.style.display = 'none';
             clearSearchInputValue(searching);
 
 
             /* minimum request length - 2 symbols */
             if (searching.length > 1) {
 
+                searchSpinner.innerText = setWord('search');
+                searchSpinner.style.display = 'flex';
                 searchRequest(searching,
                     renderRequestedList,
                     function (er) { /* console.error(er); */}
@@ -642,15 +653,15 @@ document.addEventListener('DOMContentLoaded', function () {
             languages = bg._getLanguages();
             getCurrentLanguage = bg._getCurrentLanguage();
             currentLanguage = getCurrentLanguage.toLowerCase();
-
+            searchField.setAttribute('placeholder', setWord('searchPlaceholder'));
             spinnerText1.innerText = setWord('spinnerText1');
             spinnerText2.innerText = setWord('spinnerText2');
             allShopsLink.innerText = setWord('moreShopLink');
 
+            renderRecommended();
             renderLanguagesInPopup(languages);
             changeCurrentLanguage(tab);
             renderLastVisited();
-            renderRecommended();
             showUserData();
             renderMainCard(tab);
         });

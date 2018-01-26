@@ -14,6 +14,8 @@ let translate = {
         reActivate: 'активировать повторно',
         recommendedTitle:'рекомендуемые',
         searchPlaceholder: 'найти',
+        search: 'Поиск',
+        searchFail: 'Не найдено.',
         upTo:'до',
         spinnerText1: 'Данные загружаются.',
         spinnerText2: 'Пожалуйста, повторите открытие окна'
@@ -33,6 +35,8 @@ let translate = {
         reActivate: 're-activate',
         recommendedTitle:'recommended',
         searchPlaceholder: 'search',
+        search: 'Searching',
+        searchFail: 'Not found.',
         upTo: 'up to',
         spinnerText1: 'The data is loading. ',
         spinnerText2: 'Please try to reopen window.'

@@ -1,7 +1,6 @@
 /**
  * Created by CityLife on 29.12.16.
  */
-console.log('content1');
 
 let SHOW_MODAL_DELAY = 2500; //3000 = 2,5 сек. Задержка перед открытием окна
 let HIDE_MODAL_DELAY = 180000; //180000 = 3 мин. Время скрытия модалки после отображения. Поставить секунд 15-20
@@ -23,23 +22,14 @@ if(window === window.top) {
     /*
     *Отправка куки
     * */
-console.log('window === window.top');
-    console.log('content2');
+
     /* куки отслеживания авторизации */
     function sendCookies(name, data) {
-        safari.self.tab.dispatchMessage(name, data);
-    }
 
-    if((window.location.href).indexOf('cl.world') !== -1){
-        let cookiesMain = document.cookie.split(';');
-        sendCookies("send-cookies", cookiesMain);
-    }
-
-    /* TODO temp */
-    if((window.location.href).indexOf(ALI_CLEAR) !== -1){
-        console.log('ALIII');
-        let cookiesAli = document.cookie.split(';');
-        sendCookies("ali-cookies",cookiesAli);
+        safari.self.tab.dispatchMessage(name, {
+            cookies: data,
+            url: window.location.href
+        });
     }
 
     //>>отправка
@@ -49,9 +39,19 @@ console.log('window === window.top');
         url: window.location.href
     });
 
+    if((window.location.href).indexOf('cl.world') !== -1){
+        let cookiesMain = document.cookie.split(';');
+        sendCookies("send-cookies", cookiesMain);
+    }
+
+    /* TODO temp */
+    if((window.location.href).indexOf(ALI_CLEAR) !== -1){
+        let cookiesAli = document.cookie.split(';');
+        sendCookies("ali-cookies",cookiesAli);
+    }
+
 
     safari.self.addEventListener("message", function (data) {
-        console.log('content3');
         /**
          * Translation of words
          * @param name - name of translated field
@@ -61,21 +61,13 @@ console.log('window === window.top');
             return translate[currentLanguage][name]
         }
 
-
         let messageName = data['name'];
         let msg = data['message'];
         let currentLanguage = msg.currentLanguage;
         let currentUrl = document.location.href;
-
         let partner = msg.currentPartner;
-        
-        // let timers = msg.timers;
-        // let modalMarkers = msg.modalMarkers;
-
-
         let ANCHOR = document.createElement('div');
         let modalHeader = document.createElement('div');
-
         let clLogo = document.createElement('div');
         let clLogoImg = document.createElement('div');
         let close = document.createElement('div');
@@ -90,7 +82,6 @@ console.log('window === window.top');
         let clButtonWrap = document.createElement('div');
         let clButton = document.createElement('a');
         let clButtonInner = document.createElement('span');
-
         let reactivation = document.createElement('div');
         reactivation.classList.add('reactivation');
         reactivation.innerText = `${setWord('cashbackNotActivated')}!`;
@@ -164,9 +155,12 @@ console.log('window === window.top');
 
             clPartnerLogo.setAttribute('src', partner[currentLanguage].logo);
             partner[currentLanguage].less ? cashbackValue.innerText = `${setWord('upTo')} ${roundNumber(partner[currentLanguage].cashback, 1)}%` : cashbackValue.innerText = `${roundNumber(partner[currentLanguage].cashback, 1)}%`;
-            clButton.setAttribute('href', partner[currentLanguage].href);
-        }
 
+            clButton.addEventListener('click', function(e){
+                e.preventDefault();
+                window.open(partner[currentLanguage].href, '_self');
+            })
+        }
         renderModalComponents();
 
 
@@ -174,14 +168,11 @@ console.log('window === window.top');
          * Condition of showing modal
          */
         function showHideModal() {
-
             if (partner['showModalTimestamp'] === undefined ||
                 partner['showModalTimestamp'] === null) {
-                console.log('content4');
                 ANCHOR.style.display = 'flex';
                 ANCHOR.style.opacity = 1;
             } else {
-                console.log('content5');
                 ANCHOR.style.opacity = 0;
                 ANCHOR.style.display = 'none';
             }
@@ -192,25 +183,18 @@ console.log('window === window.top');
          * Add modal to DOM
          */
         function insertModalInPage() {
-            console.log('insertModalInPage 1');
 
-            // document.addEventListener('DOMContentLoaded', function () {
-                window.addEventListener('load', function () {
-                //     window.addEventListener('load', function () {
-                    console.log('insertModalInPage 2');
+            window.addEventListener('load', function () {
 
-                /* exclude duplication of adding */
-                if (!document.querySelector("#modalCL2017")) {
-                    console.log('insertModalInPage 3');
-
-                    /* simulated delay */
-                    setTimeout(function () {
+                /* simulated delay */
+                setTimeout(function () {
+                    /* exclude duplication of adding */
+                    if (!document.querySelector("#modalCL2017")) {
                         document.body.appendChild(ANCHOR);
-                        console.log('insertModalInPage 4');
+                    }
+                }, SHOW_MODAL_DELAY);
 
-                    }, SHOW_MODAL_DELAY);
 
-                }
             });
         }
 
@@ -253,7 +237,6 @@ console.log('window === window.top');
          * Check conditions for show info about active cashback
          */
         function cashbackActiveInfo() {
-
             /* после отображения активного кэшбэка
              * запрашиваем добавление маркера скрытия модалки - showModalTimestamp
              * (т.е. запрет на ее дальнейшее отображение) */
@@ -302,19 +285,18 @@ console.log('window === window.top');
          * Stack of functions for modal window
          */
         function showModal() {
+            activateCashback();
             showHideModal();
             insertModalInPage();
             clickHide();
             timeHide();
             cashbackActiveInfo();
-            activateCashback();
         }
 
 
         //<<прием
         /* condition of modal showing */
         if (messageName === 'bg' && msg.id === 'showModal') {
-            console.log('showModal ');
             showModal();
         }
     });

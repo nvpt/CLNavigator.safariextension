@@ -41,5 +41,47 @@ let translate = {
         spinnerText1: 'The data is loading. ',
         spinnerText2: 'Please try to reopen window.'
 
+    },
+    de: {
+        activate: 'activate',
+        cashback: 'cashback',
+        cashbackActivated: 'cashback activated',
+        cashbackNotActivated: 'cashback not activated',
+        enter: 'Enter',
+        enterForActivation: 'enter for activation',
+        logoTitle: 'go to site',
+        lastVisitedTitle:'last visited',
+        moreShopLink: 'More shops',
+        openInNewWindow: 'open in new window',
+        reActivate: 're-activate',
+        recommendedTitle:'recommended',
+        searchPlaceholder: 'search',
+        search: 'Searching',
+        searchFail: 'Not found.',
+        upTo: 'up to',
+        spinnerText1: 'The data is loading. ',
+        spinnerText2: 'Please try to reopen window.'
+
+    },
+    tr: {
+        activate: 'activate',
+        cashback: 'cashback',
+        cashbackActivated: 'cashback activated',
+        cashbackNotActivated: 'cashback not activated',
+        enter: 'Enter',
+        enterForActivation: 'enter for activation',
+        logoTitle: 'go to site',
+        lastVisitedTitle:'last visited',
+        moreShopLink: 'More shops',
+        openInNewWindow: 'open in new window',
+        reActivate: 're-activate',
+        recommendedTitle:'recommended',
+        searchPlaceholder: 'search',
+        search: 'Searching',
+        searchFail: 'Not found.',
+        upTo: 'up to',
+        spinnerText1: 'The data is loading. ',
+        spinnerText2: 'Please try to reopen window.'
+
     }
 };

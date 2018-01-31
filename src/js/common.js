@@ -1,57 +1,7 @@
 /**
  * Created by CityLife on 23.12.16.
  */
-
 /* ============= CONSTANTS, VARIABLES ============= */
-/* testurl!!! */
-var MAIN_URL = "https://cl.world/";
-// var MAIN_URL = "http://front.zato.clcorp/";
-
-var serverRequestKey = true;            // allow repeated request for server response checking
-
-/* (languages) */
-var languages = [];                     // available translation languages
-var defaultLanguage = 'en';
-var currentLanguage = defaultLanguage;
-var languagesRequestKey = true;         // allow repeated request for available languages
-
-/* (recommended) */
-var recommendedObj = {};                // recommended partners in object format
-var RECOMMENDED_QUANTITY = 25;        // recommended partners quantity
-var recommendedRequestKey = true;       // allow repeated request for recommended
-
-/* (links) */
-var links = {};                         // partners links in object format (links)
-var linksRequestKey = true;             // allow repeated request for partners links
-
-
-/* work with aggregate data of extension (languages, recommended, links) */
-var extensionDataTimestamp = null;                  // time of last update aggregate data
-var EXTENSION_DATA_UPDATE_INTERVAL = 86400000;    // 86400000 = 24h. Update period for aggregate data
-
-
-/* profile */
-var profileData = {default_start: 1};                   // profile data object
-var authIdentifier = 0;                 // authorisation identifier  for compare with cookie authorisation; 0 - not
-                                        // authorised , >0 (=id) - authorised
-var authCookie = 0;                     // current value of cookie authorisation. Will get in our site pages
-var profileTimeUpdate = null;           // time of last update profile dta. null - not authorised or not updated yet
-var profileRequestKey = true;           //  allow repeated request for profile data
-var PROFILE_UPDATE_INTERVAL = 900000; // 900000 = 15min //10800000 = 3h. Update period for profile data
-
-
-/* детальные данные партнеров */
-var detailed = {};                       // detailed partners data (detailed)
-var detailedRequestKey = true;           // allow repeated request for detailed data
-var DETAILED_LIVE_TIME = 172800000;    //172800000 =  48h. Update period for detailed (not for timestamps)
-
-
-/* кэшбэк */
-var CASHBACK_LIVE_TIME = 86400000;                // 86400000 = 24h. Cashback time update.
-var MODAL_LIVE_TIME = 43200000;                   // 43200000 = 12h. Update period for repeated showing modal window.
-var MODAL_TIMESTAMPS_CHECK_INTERVAL = 3600000;    // 3600000 = 1h. Interval of repeated checking cashback
-
-
 /* реактивация кэшбэка *///TODO переделать
 var CL_ALI_UID = '3Vby3rfe6';             // our new identifier in AliE
 var ALI_CLEAR = 'aliexpress.com';         // clear url of Aliexpress.com

@@ -221,7 +221,9 @@ document.addEventListener('DOMContentLoaded', function () {
             user.appendChild(userCash);
 
             userLink.addEventListener('click', function () {
+                /* testurl!!! */
                 safari.application.activeBrowserWindow.openTab().url = 'https://cl.world/profile';
+                // safari.application.activeBrowserWindow.openTab().url = 'http://profile.zato.clcorp/';
                 safari.self.hide();
             });
 
@@ -235,7 +237,9 @@ document.addEventListener('DOMContentLoaded', function () {
             user.appendChild(userCash);
 
             userLink.addEventListener('click', function () {
+                /* testurl!!! */
                 safari.application.activeBrowserWindow.openTab().url = 'https://cl.world/';
+                // safari.application.activeBrowserWindow.openTab().url = 'http://front.zato.clcorp/';
                 safari.self.hide();
             });
 
@@ -343,7 +347,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 } else {
                     partnerLink.innerText = setWord('enterForActivation');
+                    /* testurl!!! */
                     partnerLink.setAttribute('href', 'https://profile.cl.world/login');
+                    // partnerLink.setAttribute('href', 'http://profile.zato.clcorp/');
                     partnerLink.addEventListener('click', function () {
                         partner.style.display = 'none';
                         safari.self.hide();

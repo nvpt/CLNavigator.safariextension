@@ -1,6 +1,3 @@
-/* ============= CONSTANTS, VARIABLES ============= */
-
-
 /* ============= SERVICE FUNCTION ============= */
 
 
@@ -515,11 +512,6 @@ function uploadExtensionData() {
     if (extensionDataTimestamp === null ||
         timeUpdate > EXTENSION_DATA_UPDATE_INTERVAL
 
-    /* redundant checking. while let stay */
-    // ||
-    // languages.length === 0 ||
-    // Object.keys(links).length === 0 ||
-    // Object.keys(recommendedObj).length === 0
     ) {
 
         updateLanguages(uploadRecommended);

@@ -1,4 +1,4 @@
-let translate = {
+var translate = {
     /* need to add translations by hands */
     ru: {
         activate: 'активировать',

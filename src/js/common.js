@@ -1,59 +1,61 @@
 /**
  * Created by CityLife on 23.12.16.
  */
-/* testurl!!! */
-let MAIN_URL = "https://cl.world/";
-// let MAIN_URL = "http://front.zato.clcorp/";
 
-let serverRequestKey = true;            // allow repeated request for server response checking
+/* ============= CONSTANTS, VARIABLES ============= */
+/* testurl!!! */
+var MAIN_URL = "https://cl.world/";
+// var MAIN_URL = "http://front.zato.clcorp/";
+
+var serverRequestKey = true;            // allow repeated request for server response checking
 
 /* (languages) */
-let languages = [];                     // available translation languages
-let defaultLanguage = 'en';
-let currentLanguage = defaultLanguage;
-let languagesRequestKey = true;         // allow repeated request for available languages
+var languages = [];                     // available translation languages
+var defaultLanguage = 'en';
+var currentLanguage = defaultLanguage;
+var languagesRequestKey = true;         // allow repeated request for available languages
 
 /* (recommended) */
-let recommendedObj = {};                // recommended partners in object format
-let RECOMMENDED_QUANTITY = 25;        // recommended partners quantity
-let recommendedRequestKey = true;       // allow repeated request for recommended
+var recommendedObj = {};                // recommended partners in object format
+var RECOMMENDED_QUANTITY = 25;        // recommended partners quantity
+var recommendedRequestKey = true;       // allow repeated request for recommended
 
 /* (links) */
-let links = {};                         // partners links in object format (links)
-let linksRequestKey = true;             // allow repeated request for partners links
+var links = {};                         // partners links in object format (links)
+var linksRequestKey = true;             // allow repeated request for partners links
 
 
 /* work with aggregate data of extension (languages, recommended, links) */
-let extensionDataTimestamp = null;                  // time of last update aggregate data
-let EXTENSION_DATA_UPDATE_INTERVAL = 86400000;    // 86400000 = 24h. Update period for aggregate data
+var extensionDataTimestamp = null;                  // time of last update aggregate data
+var EXTENSION_DATA_UPDATE_INTERVAL = 86400000;    // 86400000 = 24h. Update period for aggregate data
 
 
 /* profile */
-let profileData = {default_start: 1};                   // profile data object
-let authIdentifier = 0;                 // authorisation identifier  for compare with cookie authorisation; 0 - not
+var profileData = {default_start: 1};                   // profile data object
+var authIdentifier = 0;                 // authorisation identifier  for compare with cookie authorisation; 0 - not
                                         // authorised , >0 (=id) - authorised
-let authCookie = 0;                     // current value of cookie authorisation. Will get in our site pages
-let profileTimeUpdate = null;           // time of last update profile dta. null - not authorised or not updated yet
-let profileRequestKey = true;           //  allow repeated request for profile data
-let PROFILE_UPDATE_INTERVAL = 900000; // 900000 = 15min //10800000 = 3h. Update period for profile data
+var authCookie = 0;                     // current value of cookie authorisation. Will get in our site pages
+var profileTimeUpdate = null;           // time of last update profile dta. null - not authorised or not updated yet
+var profileRequestKey = true;           //  allow repeated request for profile data
+var PROFILE_UPDATE_INTERVAL = 900000; // 900000 = 15min //10800000 = 3h. Update period for profile data
 
 
 /* детальные данные партнеров */
-let detailed = {};                       // detailed partners data (detailed)
-let detailedRequestKey = true;           // allow repeated request for detailed data
-let DETAILED_LIVE_TIME = 172800000;    //172800000 =  48h. Update period for detailed (not for timestamps)
+var detailed = {};                       // detailed partners data (detailed)
+var detailedRequestKey = true;           // allow repeated request for detailed data
+var DETAILED_LIVE_TIME = 172800000;    //172800000 =  48h. Update period for detailed (not for timestamps)
 
 
 /* кэшбэк */
-let CASHBACK_LIVE_TIME = 86400000;                // 86400000 = 24h. Cashback time update.
-let MODAL_LIVE_TIME = 43200000;                   // 43200000 = 12h. Update period for repeated showing modal window.
-let MODAL_TIMESTAMPS_CHECK_INTERVAL = 3600000;    // 3600000 = 1h. Interval of repeated checking cashback
+var CASHBACK_LIVE_TIME = 86400000;                // 86400000 = 24h. Cashback time update.
+var MODAL_LIVE_TIME = 43200000;                   // 43200000 = 12h. Update period for repeated showing modal window.
+var MODAL_TIMESTAMPS_CHECK_INTERVAL = 3600000;    // 3600000 = 1h. Interval of repeated checking cashback
 
 
 /* реактивация кэшбэка *///TODO переделать
-let CL_ALI_UID = '3Vby3rfe6';             // our new identifier in AliE
-let ALI_CLEAR = 'aliexpress.com';         // clear url of Aliexpress.com
-let ALI_COOKIE = 'aeu_cid';               // need cookie name of Aliexpress
+var CL_ALI_UID = '3Vby3rfe6';             // our new identifier in AliE
+var ALI_CLEAR = 'aliexpress.com';         // clear url of Aliexpress.com
+var ALI_COOKIE = 'aeu_cid';               // need cookie name of Aliexpress
 
 
 /* ============= GET, SET ============= */

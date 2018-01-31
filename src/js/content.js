@@ -3,10 +3,11 @@
  */
 
 
-let SHOW_MODAL_DELAY = 2500; //3000 = 2,5 сек. Задержка перед открытием окна
-let HIDE_MODAL_DELAY = 180000; //180000 = 3 мин. Время скрытия модалки после отображения. Поставить секунд 15-20
-let HIDE_CASHBACK_DELAY = 30000; //30000 = 30 сек. Время скрытия модалки после демонстрации, что кэшбэк активен
-
+var SHOW_MODAL_DELAY = 2500; //3000 = 2,5 сек. Задержка перед открытием окна
+var HIDE_MODAL_DELAY = 180000; //180000 = 3 мин. Время скрытия модалки после отображения. Поставить секунд 15-20
+var HIDE_CASHBACK_DELAY = 30000; //30000 = 30 сек. Время скрытия модалки после демонстрации, что кэшбэк активен
+var RENDER_INTERVAL_TIME = 1000;
+var RENDER_REPEAT_TIME = 15000;
 
 /* работа с баннером на нашем сайте */
 function confirmExtensionInstalled(extensionClass, bannerClass, siteUrl) {
@@ -298,10 +299,10 @@ function wrap() {
 
 
 /* из-за задержки передачи данных партнера с сервера повторяем рендер */
-let repeatModalRender = setInterval(wrap, 1000);
+var repeatModalRender = setInterval(wrap, RENDER_INTERVAL_TIME);
 
 function stopRepeatModalRender(){
     clearInterval(repeatModalRender);
 }
 
-setTimeout(stopRepeatModalRender, 15000);
+setTimeout(stopRepeatModalRender, RENDER_REPEAT_TIME);

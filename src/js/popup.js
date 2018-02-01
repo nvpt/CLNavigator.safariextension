@@ -2,7 +2,6 @@
  * Created by CityLife on 23.12.16.
  */
 
-
 document.addEventListener('DOMContentLoaded', function () {
 
     let bg = safari.extension.globalPage.contentWindow;
@@ -16,10 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let partnerDescription = document.querySelector('.partner__description');
     let partnerLinkWrap = document.querySelector('.button-cl__wrapper');
     let cashbackActive = document.querySelector('.cashback-active');
-    
     let languages = bg._getLanguages() ? bg._getLanguages() : ['ru', 'en']; //TODO temp
-    let getCurrentLanguage = bg._getCurrentLanguage();
-    let currentLanguage = getCurrentLanguage.toLowerCase();
+    let currentLanguage = bg._getCurrentLanguage().toLowerCase();
     
     /**
      * Translation of words
@@ -53,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return el;
     }
 
-
     /**
      * Render all languages in select field in popup
      */
@@ -78,12 +74,9 @@ document.addEventListener('DOMContentLoaded', function () {
             item.classList.add('active');
             languagesList.appendChild(item);
         }
-        // languagesList = document.querySelector('.language__list');
-
 
         let currentLang = createTag('div', ['language__current'], currentLanguage);
         currentLang.setAttribute('data-current-lang', currentLanguage);
-
         let languageWrap = document.querySelector('.language');
         languageWrap.appendChild(currentLang);
         languageWrap.appendChild(languagesList);
@@ -104,7 +97,6 @@ document.addEventListener('DOMContentLoaded', function () {
         let languages = bg._getLanguages();
 
         currentLang.addEventListener('click', () => {
-
             languagesList.classList.contains('visible') ?
                 languagesList.classList.remove('visible') :
                 languagesList.classList.add('visible');
@@ -118,35 +110,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentLang.setAttribute('data-current-lang', chosenLang);
                 currentLang.innerText = chosenLang;
                 languagesList.classList.remove('visible');
-
                 bg._setCurrentLanguage(chosenLang);
                 renderLanguagesInPopup(languages);
                 safari.self.hide();
                 safari.application.activeBrowserWindow.activeTab.url = safari.application.activeBrowserWindow.activeTab.url; // reload page
             })
         }
-
-
     }
-
 
     /* spinners */
     let searchListSpinner = document.querySelector('.cl-spinner_searchList');
     let searchSpinner = document.querySelector('.cl-spinner-search');
-
     let spinnerText1 = document.createElement('span');
     let spinnerText2 = document.createElement('span');
     searchListSpinner.appendChild(spinnerText1);
     searchListSpinner.appendChild(spinnerText2);
-    let partnerSpinner = document.querySelector('.cl-spinner_partner');
-    partnerSpinner.appendChild(spinnerText1);
-    partnerSpinner.appendChild(spinnerText2);
-
     /* tabs (not used yet) */
     let tabsButtons = document.querySelectorAll('.tabs__button');
     let tabsBodies = document.querySelectorAll('.tabs__body');
-
-
     /* partners list */
     let visitedTitle = document.querySelector('.search-list__h2_visited');
     let recommendedTitle = document.querySelector('.search-list__h2_recommended');
@@ -157,18 +138,15 @@ document.addEventListener('DOMContentLoaded', function () {
     let recommended = document.querySelector('.search__form-autocomplete.recommended');
     let last = document.querySelector('.search__form-autocomplete.last');
     let requested = document.querySelector('.search__form-autocomplete.requested');
-
     /* bottom padding in partner description text */
     let textBottomPadding = document.createElement('div');
-
-    let allShopsLink = document.querySelector('.all-shops');//for ff
-    allShopsLink.addEventListener('click', function (e) {//for ff
+    let allShopsLink = document.querySelector('.all-shops');
+    allShopsLink.addEventListener('click', function (e) {
         e.preventDefault();
 
         /* testurl!!! */
         window.open('https://cl.world/cases', '_blank');
         // window.open('http://front.zato.clcorp/cases', '_blank');
-
         window.close();
     });
     let popupLogoLink = document.querySelector('.popup__logo-link');//for ff
@@ -193,24 +171,18 @@ document.addEventListener('DOMContentLoaded', function () {
         let user = document.querySelector('.user');
         let userLink = document.createElement('a');
         userLink.setAttribute('target', '_blank');
-
         let userLinkImg = document.createElement('img');
         userLinkImg.setAttribute('src', 'img/user_24x24.png');
         userLinkImg.classList.add('user__icon');
-
         let userLinkName = document.createElement('span');
         userLinkName.classList.add('user__name');
-
         let userCash = document.createElement('span');
         userCash.classList.add('user__cash');
-
         let userCashImg = document.createElement('img');
         userCashImg.setAttribute('src', 'img/balance.png');
         userCashImg.classList.add('user__cash-icon');
-
         let userCashValue = document.createElement('span');
         userCashValue.classList.add('user__cash-value');
-
 
         if ((bg._getProfileData()) && (bg._getProfileData().profile)) {
             let el = bg._getProfileData().profile;
@@ -248,11 +220,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 // safari.application.activeBrowserWindow.openTab().url = 'http://front.zato.clcorp/';
                 safari.self.hide();
             });
-
         }
     }
-
-    // showUserData();
 
     /**
      * Switch tabs
@@ -276,15 +245,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    selectTab();//move to safari.application.addEventListener('popover', function (e) {...
+    selectTab();//need to move to safari.application.addEventListener('popover', function (e) {...
 
 
     /**
      * Render of partner card
      */
     function renderMainCard(tab) {
-        let getCurrentLanguage = bg._getCurrentLanguage();
-        let currentLanguage = getCurrentLanguage.toLowerCase();
+        currentLanguage = bg._getCurrentLanguage().toLowerCase();
         let currentTabUrl = tab.url;
         let rightUrl = bg.getClearUrl(currentTabUrl);
         partnerCashbackLabel.innerText = setWord('cashback');
@@ -298,28 +266,23 @@ document.addEventListener('DOMContentLoaded', function () {
         /* чтобы не было пустой кнопки */
         cashbackActive.innerText = setWord('cashbackActivated');
 
-
         /* current translation must be available for current partner and current tub url must not be empty */
-
         if (currentTabUrl !== undefined && rightUrl !== undefined &&
             bg._getDetailed()[rightUrl]) {
-
             partner.style.display = 'flex';
-            let detailedData = bg._getDetailed()[rightUrl][currentLanguage] ? bg._getDetailed()[rightUrl][currentLanguage] :
-                bg._getDetailed()[rightUrl]['en'] ? bg._getDetailed()[rightUrl]['en'] : bg._getDetailed()[rightUrl]['ru']; // если нет перевода, выводим на англ или русском
-            console.log('bg._getDetailed() ', bg._getDetailed());
-            console.log('detailedData ', detailedData);
-
+            let detailedData = bg._getDetailed()[rightUrl][currentLanguage] ?
+                bg._getDetailed()[rightUrl][currentLanguage] :
+                bg._getDetailed()[rightUrl]['en'] ?
+                    bg._getDetailed()[rightUrl]['en'] :
+                    bg._getDetailed()[rightUrl]['ru']; // если нет перевода, выводим на англ или русском
             let cashbackTimestamp = bg._getDetailed()[rightUrl]['activatedTimestamp'];
-
             partner.style.display = 'flex';
             partnerName.innerText = detailedData.name;
             partnerLogo.setAttribute('src', detailedData.logo);
             detailedData.less ? partnerCashback.innerText = `${setWord('upTo')} ${detailedData.cashback} %` : partnerCashback.innerText = `${detailedData.cashback} %`;
             textBottomPadding.classList.add('textBottomPadding');
-            partnerDescription.innerHTML = DOMPurify.sanitize(detailedData.text); // use allowed sanitize
-                                                                                  // library DOMPurify for
-                                                                                  // inserted HTML
+            /* use allowed sanitize library DOMPurify for inserted HTML */
+            partnerDescription.innerHTML = DOMPurify.sanitize(detailedData.text);
             partnerDescription.appendChild(textBottomPadding);
 
             /* button text and link depends on profile status */
@@ -328,12 +291,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 partnerLink.setAttribute('href', detailedData.href);
                 partnerLink.addEventListener('click', function () {
                     bg._setActivated(rightUrl, new Date().getTime());
-
                     /* showModalTimestamp reset for secondary showing of modal window with info about cashback */
                     bg._setShowModalTimestamp(rightUrl, null);
                     partner.style.display = 'none';
                     safari.self.hide();
-
                 });
             } else {
                 partnerLink.innerText = setWord('enterForActivation');
@@ -345,7 +306,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     safari.self.hide();
                 });
             }
-
 
             /* checking is cashback is active, without click necessary */
             if (cashbackTimestamp !== null &&
@@ -365,7 +325,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-
     /**
      * List of partners pattern
      * @param el - source data element
@@ -380,9 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
             link.classList.add('list-item__link');
             link.setAttribute('target', "_blank");
             link.setAttribute('title', `${setWord('openInNewWindow')} el.name`);
-
             link.setAttribute('href', el.site_url);
-
             link.addEventListener('click', function () {
                 safari.application.activeBrowserWindow.openTab().url = el.site_url;
                 safari.self.hide();
@@ -390,40 +347,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
             let inner = document.createElement('div');
             inner.classList.add('list-item__inner');
-
             let label = document.createElement('div');
             label.classList.add('list-item__label');
-
             let pictureWrap = document.createElement('div');
             pictureWrap.classList.add('list-item__picture-wrap');
-
             let picture = document.createElement('img');
             picture.classList.add('list-item__picture');
             picture.setAttribute('src', el.logo);
             picture.setAttribute('alt', el.name);
-
             let name = document.createElement('span');
             name.classList.add('list-item__name');
             name.innerText = el.name;
-
             label.appendChild(pictureWrap);
             label.appendChild(name);
-
             pictureWrap.appendChild(picture);
-
             let info = document.createElement('div');
             info.classList.add('list-item__info');
-
             let cashbackInfo = document.createElement('span');
             cashbackInfo.classList.add('list-item__cashback');
             cashbackInfo.innerText = setWord('cashback');
-
             let cashbackValue = document.createElement('span');
             cashbackValue.classList.add('list-item__value');
-
             /* round cashback value */
             el.cashback = bg.roundNumber(el.cashback, 1);
-
             el.less ? cashbackValue.innerText = `${setWord('upTo')} ${el.cashback}%` : cashbackValue.innerText = `${el.cashback}%`;
             info.appendChild(cashbackInfo);
             info.appendChild(cashbackValue);
@@ -441,8 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function renderRecommended() {
         clearTag('.search__form-autocomplete.recommended');
-        let getCurrentLanguage = bg._getCurrentLanguage();
-        let currentLanguage = getCurrentLanguage.toLowerCase();
+        currentLanguage = bg._getCurrentLanguage().toLowerCase();
         let recommendedPartners = bg._getRecommended()[currentLanguage];
 
         for (let key in recommendedPartners) {
@@ -487,7 +432,6 @@ document.addEventListener('DOMContentLoaded', function () {
     /* Search autocomplete */
     let searchField = document.querySelector('.search__autocomplete');
     let btnClearSearchField = document.querySelector('.search__clear');
-
     btnClearSearchField.focus();
 
     function clearSearchInputValue(el) {
@@ -529,12 +473,11 @@ document.addEventListener('DOMContentLoaded', function () {
      * Search request
      */
     function searchRequest(name, resolve, reject) {
-        let getCurrentLanguage = bg._getCurrentLanguage();
-        let currentLanguage = getCurrentLanguage.toLowerCase();
+        currentLanguage = bg._getCurrentLanguage().toLowerCase();
 
         /* testurl!!! */
-        let url = 'https://profile.cl.world/api/v3';
-        // let url = 'http://profile.zato.clcorp/api/v3';
+        let url = 'https://profile.cl.world/api/v3.1';
+        // let url = 'http://profile.zato.clcorp/api/v3.1';
 
         let req = new XMLHttpRequest();
         req.responseType = '';
@@ -564,28 +507,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-
     /**
      * Partners list render by search request
      * @param elements
      */
     function renderRequestedList(elements) {
         let arr = elements;
-
         clearTag('.search__form-autocomplete.requested');
 
         for (let i = 0, length = arr.length; i < length; i++) {
             listItemRender(arr[i], requested);
         }
 
-        /* show only if not empty */
+        /* will show only if not empty */
         if (arr.length > 0) {
             requestedWrap.style.display = 'block';
-
             searchSpinner.style.display = 'none';
         } else {
             requestedWrap.style.display = 'none';
-
             searchSpinner.style.display = 'flex';
             searchSpinner.classList.remove('animated');
             searchSpinner.innerText = setWord('searchFail');
@@ -612,7 +551,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 renderRequestedList,
                 function (er) { /* console.error(er); */}
             );
-
         }
     }, 300));
 
@@ -620,12 +558,11 @@ document.addEventListener('DOMContentLoaded', function () {
     /**
      * Functions activated by extension icon click
      */
-    safari.application.addEventListener('popover', e => {
+    safari.application.addEventListener('popover', () => {
         let tab = safari.application.activeBrowserWindow.activeTab;
         searchField.value = '';
         languages = bg._getLanguages();
-        getCurrentLanguage = bg._getCurrentLanguage();
-        currentLanguage = getCurrentLanguage.toLowerCase();
+        currentLanguage = bg._getCurrentLanguage().toLowerCase();
         searchField.setAttribute('placeholder', setWord('searchPlaceholder'));
         spinnerText1.innerText = setWord('spinnerText1');
         spinnerText2.innerText = setWord('spinnerText2');

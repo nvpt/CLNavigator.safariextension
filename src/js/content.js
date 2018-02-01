@@ -1,15 +1,13 @@
 /**
  * Created by CityLife on 29.12.16.
  */
-
-
 var SHOW_MODAL_DELAY = 2500; //3000 = 2,5 сек. Задержка перед открытием окна
 var HIDE_MODAL_DELAY = 180000; //180000 = 3 мин. Время скрытия модалки после отображения. Поставить секунд 15-20
 var HIDE_CASHBACK_DELAY = 30000; //30000 = 30 сек. Время скрытия модалки после демонстрации, что кэшбэк активен
 var RENDER_INTERVAL_TIME = 1000;
 var RENDER_REPEAT_TIME = 15000;
 
-/* работа с баннером на нашем сайте */
+
 function confirmExtensionInstalled(extensionClass, bannerClass, siteUrl) {
     let extMarker = document.createElement('div');
     extMarker.classList.add(extensionClass);
@@ -22,16 +20,12 @@ function confirmExtensionInstalled(extensionClass, bannerClass, siteUrl) {
     }
 }
 
-
 function wrap() {
 
     confirmExtensionInstalled('cl-ext-18', 'cl-banner-18', 'cl.world');
 
     /* только при загрузке страницы, исключаем фреймы */
     if (window === window.top) {
-
-
-        console.log('www');
 
         //>>отправка
         /* Старт связки */
@@ -69,7 +63,11 @@ function wrap() {
             let messageName = data['name'];
             let msg = data['message'];
             let partner = msg.currentPartner;
-            let currentLanguage = partner[msg.currentLanguage] ? msg.currentLanguage : partner['en'] ? 'en' : 'ru'; // если перевод отсутствует, выводим данные на анг. или русск.
+
+            /* язык овормления модалки */
+            let currentLanguage = msg.currentLanguage;
+            /* язык перевода данных партнера в модалке - может не совпадать с выбранным, если нет перевода в карточке */
+            let currentPartnerLanguage = partner[msg.currentLanguage] ? msg.currentLanguage : partner['en'] ? 'en' : 'ru'; // если перевод отсутствует, выводим данные на анг. или русск.
             let currentUrl = document.location.href;
             let ANCHOR = document.createElement('div');
             let modalHeader = document.createElement('div');
@@ -89,7 +87,7 @@ function wrap() {
             let clButtonInner = document.createElement('span');
             let reactivation = document.createElement('div');
             reactivation.classList.add('reactivation');
-            reactivation.innerText = `${setWord('cashbackNotActivated')}!`;
+
 
             /**
              * Translation of words
@@ -126,6 +124,7 @@ function wrap() {
                 clButton.classList.add('button-cl', 'button-cl_pink', 'cl-partner__link', 'button-cl_glass');
                 clButton.setAttribute('href', '');
                 clButtonInner.innerText = setWord('activate');
+                reactivation.innerText = `${setWord('cashbackNotActivated')}!`;
                 clButton.appendChild(clButtonInner);
                 clButtonWrap.appendChild(clButton);
                 modalFooter.appendChild(cashbackActive);
@@ -141,14 +140,14 @@ function wrap() {
                 ANCHOR.appendChild(modalHeader);
                 ANCHOR.appendChild(modalBody);
                 ANCHOR.appendChild(modalFooter);
-                clPartnerLogo.setAttribute('src', partner[currentLanguage].logo);
-                partner[currentLanguage].less ?
-                    cashbackValue.innerText = `${setWord('upTo')} ${roundNumber(partner[currentLanguage].cashback, 1)}%` :
-                    cashbackValue.innerText = `${roundNumber(partner[currentLanguage].cashback, 1)}%`;
+                clPartnerLogo.setAttribute('src', partner[currentPartnerLanguage].logo);
+                partner[currentPartnerLanguage].less ?
+                    cashbackValue.innerText = `${setWord('upTo')} ${roundNumber(partner[currentPartnerLanguage].cashback, 1)}%` :
+                    cashbackValue.innerText = `${roundNumber(partner[currentPartnerLanguage].cashback, 1)}%`;
 
                 clButton.addEventListener('click', function (e) {
                     e.preventDefault();
-                    window.open(partner[currentLanguage].href, '_self');
+                    window.open(partner[currentPartnerLanguage].href, '_self');
                 })
             })();
 
@@ -159,13 +158,11 @@ function wrap() {
             function showHideModal() {
                 if (partner['showModalTimestamp'] === undefined ||
                     partner['showModalTimestamp'] === null) {
-                    console.log('partner[\'showModalTimestamp\'] ', partner['showModalTimestamp']);
-                    
+
                     ANCHOR.style.display = 'flex';
                     ANCHOR.style.opacity = '1';
                 } else {
-                    console.log('partner[\'showModalTimestamp\']2 ', partner['showModalTimestamp']);
-                    
+
                     ANCHOR.style.opacity = '0';
                     ANCHOR.style.display = 'none';
                 }
@@ -176,16 +173,20 @@ function wrap() {
              * Add modal to DOM
              */
             function insertModalInPage() {
-                console.log('111');
 
                 /* simulated delay */
                 setTimeout(function () {
-                    console.log('222');
+                    /* delete modal if new translation */
+                    if(document.querySelector("#modalCL2017") &&
+                        document.querySelector('#modalCL2017 .button-cl') &&
+                        document.querySelector('.button-cl span') &&
+                        document.querySelector('.button-cl span').innerText.toLowerCase() !== setWord('activate').toLowerCase()) {
+                        document.querySelector("#modalCL2017").remove();
+                    }
 
                     /* exclude duplication of adding */
                     if (!document.querySelector("#modalCL2017")) {
                         document.body.appendChild(ANCHOR);
-                        console.log('333 stop repeat');
                         stopRepeatModalRender();
                     }
                 }, SHOW_MODAL_DELAY);
@@ -263,12 +264,12 @@ function wrap() {
 
                 clButton.addEventListener('click', function () {
 
-                    window.open(partner[currentLanguage].href, '_self');
+                    window.open(partner[currentPartnerLanguage].href, '_self');
                     //>>отправка
                     safari.self['tab'].dispatchMessage("content", {
                         id: 'setCashbackClick',
                         url: currentUrl,
-                        partnerId: partner[currentLanguage].id
+                        partnerId: partner[currentPartnerLanguage].id
                     });
                 });
             }

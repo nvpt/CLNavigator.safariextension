@@ -1,4 +1,5 @@
 /* ============= CONSTANTS, VARIABLES ============= */
+
 /* testurl!!! */
 var MAIN_URL = "https://cl.world/";
 // var MAIN_URL = "http://front.zato.clcorp/";
@@ -108,7 +109,6 @@ function _getLinks() {
 }
 
 /* ============= SERVICE FUNCTION ============= */
-
 
 /**
  * Get clear url without http:// and parameters
@@ -228,7 +228,7 @@ function checkSafeResponse(obj) {
  * @param min
  * @param max
  */
-function getRandomValue(min, max){
+function getRandomValue(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
@@ -248,9 +248,8 @@ function currentMilliseconds() {
  * @param oldTime in millisecond
  */
 function calculateTimeInterval(newTime, oldTime) {
-
     /* result in millisecond or null */
-    return oldTime !== null ? (parseInt(newTime) - parseInt(oldTime)) : null;
+    return oldTime !== null ? (parseInt(newTime) - parseInt(oldTime)) : 0;
 }
 
 
@@ -320,9 +319,7 @@ function checkServerResponse() {
         serverRequestKey = false;
         let less = 20000;
         let more = 120000;
-
         let url = 'https://profile.cl.world/upload/online_partner_url.json';
-
         let req = new XMLHttpRequest();
         req.open("GET", url);
         req.send();
@@ -334,7 +331,6 @@ function checkServerResponse() {
                 serverRequestKey = true;
                 return false;
             } else {
-
                 /* initiate random delay time */
                 let dataRequestDelay = getRandomValue(less, more);
                 serverRequestKey = false;
@@ -353,7 +349,6 @@ function checkServerResponse() {
                     detailedRequestKey = true;
 
                 }, dataRequestDelay);
-
             }
         })
     }
@@ -401,19 +396,16 @@ function checkModalTimestampsLife(detailedData) {
                 if (oldTimeActivation !== null && oldTimeActivation !== undefined) {
 
                     if (calculateTimeInterval(currentMilliseconds(), oldTimeActivation) > CASHBACK_LIVE_TIME) {
-
                         detailedData[key]['activatedTimestamp'] = null;
                     }
 
                     /* check relevance of modal show timestamp (showModalTimestamp) is need only,
                      * if cashback (activatedTimestamp) not active*/
                 } else {
-
                     /* so, if partner has no active cashback, we check his modal show timestamp,
                      * and every MODAL_LIVE_TIME delay show modal */
                     if ((oldTimeModalShow !== null || oldTimeModalShow !== undefined) &&
                         calculateTimeInterval(currentMilliseconds(), oldTimeModalShow) > MODAL_LIVE_TIME) {
-
                         detailedData[key]['showModalTimestamp'] = null;
                     }
                 }
@@ -448,7 +440,6 @@ function checkCurrentLanguageInLink(links, currentClearUrl, currentLanguage) {
                 if (links[currentClearUrl]['languages'][key] === currentLanguage) {
                     return true
                 }
-
             }
         }
 
@@ -471,8 +462,8 @@ function languagesRequest(resolve, reject) {
         languagesRequestKey = false;
 
         /* testurl!!! */
-        let url = 'https://profile.cl.world/api/v3';
-        // let url = 'http://profile.zato.clcorp/api/v3';
+        let url = 'https://profile.cl.world/api/v3.1';
+        // let url = 'http://profile.zato.clcorp/api/v3.1';
 
         let req = new XMLHttpRequest();
         req.responseType = "";
@@ -545,8 +536,8 @@ function recommendedRequest(langs, resolve, reject) {
         recommendedRequestKey = false;
 
         /* testurl!!! */
-        let url = 'https://profile.cl.world/api/v3';
-        // let url = 'http://profile.zato.clcorp/api/v3';
+        let url = 'https://profile.cl.world/api/v3.1';
+        // let url = 'http://profile.zato.clcorp/api/v3.1';
 
         let req = new XMLHttpRequest();
         req.responseType = '';
@@ -638,7 +629,6 @@ function uploadRecommended() {
 
 /* ============= LINKS ============= */
 
-
 /**
  * Partners links request
  * @param resolve
@@ -668,7 +658,6 @@ function urlListRequest(resolve, reject) {
                 (() => {
                     response.map((el) => {
                         let url = el.site_url;
-
 
                         if (el !== undefined) {
 
@@ -735,7 +724,6 @@ function uploadUrlList(cb) {
 
 /* ============= AGGREGATE DATA (LANGUAGES, RECOMMENDED, LINKS) ============= */
 
-
 function uploadExtensionData() {
 
     /* time after last update aggregate data */
@@ -762,7 +750,6 @@ uploadExtensionData();
 
 /* ============= PROFILE ============= */
 
-
 /**
  * Profile data request
  * @param resolve
@@ -774,8 +761,8 @@ function profileRequest(resolve, reject) {
         profileRequestKey = false;
 
         /* testurl!!! */
-        let url = 'https://profile.cl.world/api/v3';
-        // let url = 'http://profile.zato.clcorp/api/v3';
+        let url = 'https://profile.cl.world/api/v3.1';
+        // let url = 'http://profile.zato.clcorp/api/v3.1';
 
         let req = new XMLHttpRequest();
         req.responseType = "";
@@ -920,7 +907,6 @@ function checkAuthorization(url) {
 
 /* ============= DETAILED PARTNER DATA ============= */
 
-
 /**
  * Partner data request
  * @param id - partner id
@@ -934,8 +920,8 @@ function detailedRequest(id, lang, resolve, reject) {
         detailedRequestKey = false;
 
         /* testurl!!! */
-        let url = 'https://profile.cl.world/api/v3';
-        // let url = 'http://profile.zato.clcorp/api/v3';
+        let url = 'https://profile.cl.world/api/v3.1';
+        // let url = 'http://profile.zato.clcorp/api/v3.1';
 
         let req = new XMLHttpRequest();
         req.responseType = '';
@@ -982,8 +968,9 @@ function detailedRequest(id, lang, resolve, reject) {
 /**
  * Add data of current tab to detailed
  * @param data - server response by id of current url
+ * @param lang - language wich will selected to add detailed data
  */
-function addToDetailed(data) {
+function addToDetailed(data, lang) {
 
     let partnerClearUrl = getClearUrl(data.site_url);
     let partner;
@@ -1004,19 +991,19 @@ function addToDetailed(data) {
 
     /* внутри данных по партнеру создаем объект с наименованием текущего языка.
      * при смене языка будет создаваться новый объект с переведенными данными */
-    partner[currentLanguage] = {};
-    partner[currentLanguage].id = data.id;
-    partner[currentLanguage].name = data['name'];
-    partner[currentLanguage].logo = data.logo;
-    partner[currentLanguage].href = data.href;
-    partner[currentLanguage].cashback = roundNumber(data.cashback, 1);
-    partner[currentLanguage].less = data.less;
-    partner[currentLanguage].site_url = data.site_url;
-    partner[currentLanguage].description = data.description;
-    partner[currentLanguage].text = data.text;
+    partner[lang] = {};
+    partner[lang].id = data.id;
+    partner[lang].name = data['name'];
+    partner[lang].logo = data.logo;
+    partner[lang].href = data.href;
+    partner[lang].cashback = roundNumber(data.cashback, 1);
+    partner[lang].less = data.less;
+    partner[lang].site_url = data.site_url;
+    partner[lang].description = data.description;
+    partner[lang].text = data.text;
 
     detailed[partnerClearUrl] = partner;
-    // console.log('addToDetailed detailed ', detailed);
+
 }
 
 
@@ -1040,28 +1027,53 @@ function uploadDetailed(clearCurrentUrl, cb) {
             cb(clearCurrentUrl);
 
         } else {
+            /* иначе запрашиваем данные на сервере */
+            /* и помещаем их в детальные */
+            let id = links[clearCurrentUrl].id;
+            /* до ответа запроса меняем иконку расширения */
+            markCheckPartner();
 
             /* отправлять запрос для данного языка имеет смысл, только, если есть перевод для данного партнера на данном языке */
             if (checkCurrentLanguageInLink(links, clearCurrentUrl, currentLanguage)) {
-
-                /* иначе запрашиваем данные на сервере */
-                /* и помещаем их в детальные */
-                let id = links[clearCurrentUrl].id;
-
-                /* до ответа запроса меняем иконку расширения */
-                markCheckPartner();
 
 
                 detailedRequest(id, currentLanguage,
                     (data) => {
                         if (data) {
-                            addToDetailed(data);
+                            addToDetailed(data, currentLanguage);
                         }
 
                         /* обработка иконки после получения данных сервера */
                         cb(clearCurrentUrl);
                     },
 
+                    /* в случае падения сервера отменяем разрешающие ключи запросов на рандомный интервал */
+                    checkServerResponse);
+            /* если при клике по партнеру из списка в попапе, выбирается партнер, у которого нет текущего языка (например турейкого), то подгружаем его данные с английским (если еще не подгружены) */
+            } else if (checkCurrentLanguageInLink(links, clearCurrentUrl, DEFAULT_LANGUAGE) && !(detailed[clearCurrentUrl] && detailed[clearCurrentUrl][DEFAULT_LANGUAGE])) {
+                detailedRequest(id, DEFAULT_LANGUAGE,
+                    (data) => {
+                        if (data) {
+                            addToDetailed(data, DEFAULT_LANGUAGE);
+                        }
+
+                        /* обработка иконки после получения данных сервера */
+                        cb(clearCurrentUrl);
+                    },
+                    /* в случае падения сервера отменяем разрешающие ключи запросов на рандомный интервал */
+                    checkServerResponse);
+
+            /* предыдущее условие, только вместо английского - русский язык */
+            } else if (checkCurrentLanguageInLink(links, clearCurrentUrl, 'ru') && !(detailed[clearCurrentUrl] && detailed[clearCurrentUrl][DEFAULT_LANGUAGE])) {
+                detailedRequest(id, 'ru',
+                    (data) => {
+                        if (data) {
+                            addToDetailed(data, 'ru');
+                        }
+
+                        /* обработка иконки после получения данных сервера */
+                        cb(clearCurrentUrl);
+                    },
                     /* в случае падения сервера отменяем разрешающие ключи запросов на рандомный интервал */
                     checkServerResponse);
             }
@@ -1230,8 +1242,6 @@ safari.application.addEventListener("message", data => {
         /* текущая вкладка */
         let clearCurrentUrl = getClearUrl(currentUrl);
 
-
-
         if (clearUrl === clearCurrentUrl) { /* работаем только с текущей */
             let currentPartner = detailed[clearUrl];
 
@@ -1262,52 +1272,22 @@ safari.application.addEventListener("message", data => {
                     //                     detailed[ALI_CLEAR].activatedTimestamp !== null &&
                     //                     detailed[ALI_CLEAR].activatedTimestamp !== undefined) {
                     //                     /* если кука aeu_cid не содежит идентификатор "yVF2rZRRj",
-                    //                      то отправляем в контент данные алиэкспресс из массива partnersData, чтобы отобразить ремодалку */
-                    //                     if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) === -1)) {
-                    //
-                    //                         detailed[ALI_CLEAR].showModalTimestamp = null;
-                    //                         detailed[ALI_CLEAR].activatedTimestamp = null;
-                    //
-                    //
-                    //                     }
-                    //                     else {
-                    //                         //>>отправка
-                    //
-                    //                         safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
-                    //                             {
-                    //                                 id: 'showModal',
-                    //                                 currentPartner,
-                    //                                 currentLanguage,
-                    //                                 profileData
-                    //                             });
-                    //                     }
-                    //                 }
-                    //                 else {
-                    //                     //>>отправка
-                    //                     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
-                    //                         {
-                    //                             id: 'showModal',
-                    //                             currentPartner,
-                    //                             currentLanguage,
-                    //                             profileData
-                    //                         });
-                    //                 }
-                    //             }
-                    //         }
-                    //     }, false);
-                    //
-                    //
-                    //     /* все остальные сайты */
-                    // }
-                    // else {
-                    //     //>>отправка
-                        safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
-                            {
-                                id: 'showModal',
-                                currentPartner,
-                                currentLanguage,
-                                profileData
-                            });
+                    //                      то отправляем в контент данные алиэкспресс из массива partnersData, чтобы
+                    // отобразить ремодалку */ if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) ===
+                    // -1)) {  detailed[ALI_CLEAR].showModalTimestamp = null; detailed[ALI_CLEAR].activatedTimestamp =
+                    // null;   } else { //>>отправка
+                    // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg", { id: 'showModal',
+                    // currentPartner, currentLanguage, profileData }); } } else { //>>отправка
+                    // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg", { id: 'showModal',
+                    // currentPartner, currentLanguage, profileData }); } } } }, false);   /* все остальные сайты */ }
+                    // else { //>>отправка
+                    safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
+                        {
+                            id: 'showModal',
+                            currentPartner,
+                            currentLanguage,
+                            profileData
+                        });
                     // }
                 }
             }

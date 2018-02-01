@@ -1252,35 +1252,6 @@ safari.application.addEventListener("message", data => {
 
                 if ((clearUrl !== undefined) && currentPartner) {
 
-
-                    // if (clearUrl === ALI_CLEAR) {
-                    //
-                    //     safari.application.addEventListener("message", function (data) {
-                    //         if ((clearUrl !== undefined) && currentPartner) {
-                    //             let msg = data['message'];
-                    //             let messageName = data['name'];
-                    //
-                    //
-                    //             if (messageName === 'ali-cookies') {
-                    //                 let cookiesValue = msg['cookies'];
-                    //                 let cookiesObj = cookiesToObj(cookiesValue);
-                    //
-                    //                 /* проверка на реактивацию выполняется только,
-                    //                  * если партнер был активирован ранее */
-                    //                 /*отменено*/
-                    //                 if (detailed[ALI_CLEAR] &&
-                    //                     detailed[ALI_CLEAR].activatedTimestamp !== null &&
-                    //                     detailed[ALI_CLEAR].activatedTimestamp !== undefined) {
-                    //                     /* если кука aeu_cid не содежит идентификатор "yVF2rZRRj",
-                    //                      то отправляем в контент данные алиэкспресс из массива partnersData, чтобы
-                    // отобразить ремодалку */ if ((cookiesObj.aeu_cid) && (cookiesObj.aeu_cid.indexOf(CL_ALI_UID) ===
-                    // -1)) {  detailed[ALI_CLEAR].showModalTimestamp = null; detailed[ALI_CLEAR].activatedTimestamp =
-                    // null;   } else { //>>отправка
-                    // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg", { id: 'showModal',
-                    // currentPartner, currentLanguage, profileData }); } } else { //>>отправка
-                    // safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg", { id: 'showModal',
-                    // currentPartner, currentLanguage, profileData }); } } } }, false);   /* все остальные сайты */ }
-                    // else { //>>отправка
                     safari.application.activeBrowserWindow.activeTab.page.dispatchMessage("bg",
                         {
                             id: 'showModal',
@@ -1288,7 +1259,6 @@ safari.application.addEventListener("message", data => {
                             currentLanguage,
                             profileData
                         });
-                    // }
                 }
             }
             /*  обработка данных времени показа модалки */

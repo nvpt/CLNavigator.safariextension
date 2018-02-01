@@ -1,13 +1,6 @@
 /**
  * Created by CityLife on 23.12.16.
  */
-/* ============= COMMON CONSTANTS, VARIABLES ============= */
-/* реактивация кэшбэка *///TODO переделать
-// var CL_ALI_UID = '3Vby3rfe6';             // our new identifier in AliE
-// var ALI_CLEAR = 'aliexpress.com';         // clear url of Aliexpress.com
-// var ALI_COOKIE = 'aeu_cid';               // need cookie name of Aliexpress
-
-
 /* ============= COMMON SERVICE FUNCTION ============= */
 /**
  * Round float numbers

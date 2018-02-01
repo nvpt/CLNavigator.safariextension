@@ -53,12 +53,6 @@ function wrap() {
         }
 
 
-        // if ((window.location.href).indexOf(ALI_CLEAR) !== -1) {
-        //     let cookiesAli = document.cookie.split(';');
-        //     sendCookies("ali-cookies", cookiesAli);
-        // }
-
-
         safari.self.addEventListener("message", data => {
             let messageName = data['name'];
             let msg = data['message'];

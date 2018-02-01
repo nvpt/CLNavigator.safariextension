@@ -949,7 +949,7 @@ function detailedRequest(id, lang, resolve, reject) {
             })
         );
 
-        console.log('send detailedRequest 6 +++++++++++++++++++ ');
+        // console.log('send detailedRequest 6 +++++++++++++++++++ ');
 
         req.addEventListener('load', function () {
             if (req.status === 200) {

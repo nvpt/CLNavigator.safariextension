@@ -35,7 +35,7 @@ function wrap() {
 
         //>>отправка
         /* Старт связки */
-        safari.self.tab.dispatchMessage("content", {
+        safari.self['tab'].dispatchMessage("content", {
             id: 'startConnect',
             url: window.location.href
         });
@@ -46,7 +46,7 @@ function wrap() {
          * */
         /* куки отслеживания авторизации */
         function sendCookies(name, data) {
-            safari.self.tab.dispatchMessage(name, {
+            safari.self['tab'].dispatchMessage(name, {
                 cookies: data,
                 url: window.location.href
             });
@@ -59,27 +59,18 @@ function wrap() {
         }
 
 
-        if ((window.location.href).indexOf(ALI_CLEAR) !== -1) {
-            let cookiesAli = document.cookie.split(';');
-            sendCookies("ali-cookies", cookiesAli);
-        }
+        // if ((window.location.href).indexOf(ALI_CLEAR) !== -1) {
+        //     let cookiesAli = document.cookie.split(';');
+        //     sendCookies("ali-cookies", cookiesAli);
+        // }
 
 
-        safari.self.addEventListener("message", function (data) {
-            /**
-             * Translation of words
-             * @param name - name of translated field
-             * @returns {*} - result of translated field in accordance of current language
-             */
-            function setWord(name) {
-                return translate[currentLanguage][name]
-            }
-
+        safari.self.addEventListener("message", data => {
             let messageName = data['name'];
             let msg = data['message'];
-            let currentLanguage = msg.currentLanguage;
-            let currentUrl = document.location.href;
             let partner = msg.currentPartner;
+            let currentLanguage = partner[msg.currentLanguage] ? msg.currentLanguage : partner['en'] ? 'en' : 'ru'; // если перевод отсутствует, выводим данные на анг. или русск.
+            let currentUrl = document.location.href;
             let ANCHOR = document.createElement('div');
             let modalHeader = document.createElement('div');
             let clLogo = document.createElement('div');
@@ -100,6 +91,15 @@ function wrap() {
             reactivation.classList.add('reactivation');
             reactivation.innerText = `${setWord('cashbackNotActivated')}!`;
 
+            /**
+             * Translation of words
+             * @param name - name of translated field
+             * @returns {*} - result of translated field in accordance of current language
+             */
+            function setWord(name) {
+                return translate[currentLanguage][name]
+            }
+            
             /**
              * Modal components render
              */
@@ -162,11 +162,11 @@ function wrap() {
                     console.log('partner[\'showModalTimestamp\'] ', partner['showModalTimestamp']);
                     
                     ANCHOR.style.display = 'flex';
-                    ANCHOR.style.opacity = 1;
+                    ANCHOR.style.opacity = '1';
                 } else {
                     console.log('partner[\'showModalTimestamp\']2 ', partner['showModalTimestamp']);
                     
-                    ANCHOR.style.opacity = 0;
+                    ANCHOR.style.opacity = '0';
                     ANCHOR.style.display = 'none';
                 }
             }
@@ -201,7 +201,7 @@ function wrap() {
                     ANCHOR.style.display = 'none';
 
                     //>>отправка
-                    safari.self.tab.dispatchMessage("content", {
+                    safari.self['tab'].dispatchMessage("content", {
                         id: 'queryShowModalTimestamp',
                         url: currentUrl,
                     });
@@ -218,7 +218,7 @@ function wrap() {
                     ANCHOR.style.display = 'none';
 
                     //>>отправка
-                    safari.self.tab.dispatchMessage("content", {
+                    safari.self['tab'].dispatchMessage("content", {
                         id: 'queryShowModalTimestamp',
                         url: currentUrl,
                     });
@@ -238,7 +238,7 @@ function wrap() {
                 if (partner.activatedTimestamp !== null && partner.activatedTimestamp !== undefined) {
 
                     //>>отправка
-                    safari.self.tab.dispatchMessage("content", {
+                    safari.self['tab'].dispatchMessage("content", {
                         id: 'queryShowModalTimestamp',
                         url: currentUrl,
                     });
@@ -265,7 +265,7 @@ function wrap() {
 
                     window.open(partner[currentLanguage].href, '_self');
                     //>>отправка
-                    safari.self.tab.dispatchMessage("content", {
+                    safari.self['tab'].dispatchMessage("content", {
                         id: 'setCashbackClick',
                         url: currentUrl,
                         partnerId: partner[currentLanguage].id

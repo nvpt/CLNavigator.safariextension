@@ -6,9 +6,10 @@ var MAIN_URL = "https://cl.world/";
 var serverRequestKey = true;            // allow repeated request for server response checking
 
 /* (languages) */
+
+var DEFAULT_LANGUAGE = 'en';
 var languages = [];                     // available translation languages
-var defaultLanguage = 'en';
-var currentLanguage = defaultLanguage;
+var currentLanguage = DEFAULT_LANGUAGE;
 var languagesRequestKey = true;         // allow repeated request for available languages
 
 /* (recommended) */
@@ -57,9 +58,6 @@ function _setProfileData(val) {
     return profileData = val;
 }
 
-function _getDefaultLanguage(){
-    return defaultLanguage;
-}
 
 function _getLanguages() {
     return languages;
@@ -118,7 +116,6 @@ function _getLinks() {
  * @param val
  * @returns {*}
  */
-
 function getClearUrl(val) {
     if (val) {
 
@@ -198,12 +195,8 @@ safeResponse = function () {
  * @param obj
  */
 function checkSafeResponse(obj) {
-
-
-
-
     for (let key in obj) {//перебираем все свойства объекта
-        if ((obj.hasOwnProperty(key)) && obj[key]) {
+        if (obj.hasOwnProperty(key)) {
             if ((obj[key].length > 0) && (!isNaN(obj[key]))) {//если число и не пустое значение
                 obj[key] = parseFloat(obj[key]);
             } else if (obj[key].constructor === Array) {//массив как объект, если не пустой
@@ -245,7 +238,7 @@ function getRandomValue(min, max){
  * @returns {Number} in milliseconds
  */
 function currentMilliseconds() {
-    return parseInt(new Date().getTime())
+    return new Date().getTime();
 }
 
 
@@ -269,7 +262,8 @@ function cookiesToObj(arr) {
     for (let i = 0; i < arr.length; i++) {
         let cookie = arr[i].split('=');
         let cookieName = cookie[0].trim();
-        let cookieValue = cookie.splice(1, cookie.length).join('=');
+        let cookieValue;
+        cookieValue = cookie.splice(1, cookie.length).join('=');
         obj[cookieName] = cookieValue;
     }
     return obj;
@@ -301,7 +295,7 @@ function arrayToObj(arr, obj) {
     for (let i = 0, length = arr.length; i < length; i++) {
         let partner = arr[i];
 
-        /* checking script for get broken partners data (without urls). Don't delete*/
+        /* DON'T DELETE. Checking script for get broken partners data (without urls). */
         // if(!partner.site_url){
         //     console.log('partner no url ', partner);
         // }
@@ -635,7 +629,7 @@ function uploadRecommended() {
             }
 
         }, () => {
-            console.info('рекомендуемые не загружены');
+            // console.info('рекомендуемые не загружены');
         });
 
     recommendedRequestKey = true;
@@ -689,7 +683,7 @@ function urlListRequest(resolve, reject) {
                         }
                     });
 
-                    /* for debugging. Don't delete */
+                    /* DON'T DELETE. For debugging. */
                     // console.log('result ', result);
                     // console.log('breaking ', breaking);
                     // for (let key in breaking) {
@@ -1082,7 +1076,8 @@ function uploadDetailed(clearCurrentUrl, cb) {
  * Иконка не партнера. дефолтная
  */
 function markNotPartner() {
-    let iconUri = safari.extension.baseURI + 'img/icon/Icon-64.png';
+    let iconUri;
+    iconUri = safari.extension.baseURI + 'img/icon/Icon-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -1092,7 +1087,8 @@ function markNotPartner() {
  * Иконка на партнере
  */
 function markPartner() {
-    let iconUri = safari.extension.baseURI + 'img/icon/partner-64.png';
+    let iconUri;
+    iconUri = safari.extension.baseURI + 'img/icon/partner-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -1102,7 +1098,8 @@ function markPartner() {
  * Анимация вращения иконки при активации
  */
 function markCheckPartner() {
-    let iconUri = safari.extension.baseURI + 'img/icon/wait-64.png';
+    let iconUri;
+    iconUri = safari.extension.baseURI + 'img/icon/wait-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '...';
 }
@@ -1112,7 +1109,8 @@ function markCheckPartner() {
  * Иконка кэшбэка
  */
 function markCashbackActive() {
-    let iconUri = safari.extension.baseURI + 'img/icon/done-64.png';
+    let iconUri;
+    iconUri = safari.extension.baseURI + 'img/icon/done-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }
@@ -1218,8 +1216,8 @@ function checkModalTimestamp(partner) {
 }
 
 
-/* Мост между content и background *///TODO Разместить инлайном в глобале.
-safari.application.addEventListener("message", function (data) {
+/* Мост между content и background */
+safari.application.addEventListener("message", data => {
     let msg = data['message'];
     let messageName = data['name'];
 

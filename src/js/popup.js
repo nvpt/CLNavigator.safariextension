@@ -6,11 +6,21 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     let bg = safari.extension.globalPage.contentWindow;
-
-    let languages = bg._getLanguages() ? bg._getLanguages() : ['ru', 'en'];//TODO temp
+    
+    /* partner */
+    let partner = document.querySelector('.partner');
+    let partnerName = document.querySelector('.partner__name');
+    let partnerLogo = document.querySelector('.partner__logo');
+    let partnerCashbackLabel = document.querySelector('.partner__cashback-label');
+    let partnerCashback = document.querySelector('.partner__cashback-value');
+    let partnerDescription = document.querySelector('.partner__description');
+    let partnerLinkWrap = document.querySelector('.button-cl__wrapper');
+    let cashbackActive = document.querySelector('.cashback-active');
+    
+    let languages = bg._getLanguages() ? bg._getLanguages() : ['ru', 'en']; //TODO temp
     let getCurrentLanguage = bg._getCurrentLanguage();
     let currentLanguage = getCurrentLanguage.toLowerCase();
-
+    
     /**
      * Translation of words
      * @param name - name of translated field
@@ -19,8 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function setWord(name) {
         return translate[currentLanguage][name];
     }
-
-
+    
     /**
      * Instead of innerHTML=''
      * @param elemMarker (string) - class or id. Is required '.' or '#'
@@ -105,7 +114,6 @@ document.addEventListener('DOMContentLoaded', function () {
             let lang = langItems[i];
 
             lang.addEventListener('click', function () {
-
                 let chosenLang = (this.getAttribute('data-lang'));
                 currentLang.setAttribute('data-current-lang', chosenLang);
                 currentLang.innerText = chosenLang;
@@ -114,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 bg._setCurrentLanguage(chosenLang);
                 renderLanguagesInPopup(languages);
                 safari.self.hide();
-                safari.application.activeBrowserWindow.activeTab.url = safari.application.activeBrowserWindow.activeTab.url;
+                safari.application.activeBrowserWindow.activeTab.url = safari.application.activeBrowserWindow.activeTab.url; // reload page
             })
         }
 
@@ -130,8 +138,6 @@ document.addEventListener('DOMContentLoaded', function () {
     let spinnerText2 = document.createElement('span');
     searchListSpinner.appendChild(spinnerText1);
     searchListSpinner.appendChild(spinnerText2);
-
-    let partnerSpinnerWrap = document.querySelector('.partner__spinner-wrap');
     let partnerSpinner = document.querySelector('.cl-spinner_partner');
     partnerSpinner.appendChild(spinnerText1);
     partnerSpinner.appendChild(spinnerText2);
@@ -277,31 +283,19 @@ document.addEventListener('DOMContentLoaded', function () {
      * Render of partner card
      */
     function renderMainCard(tab) {
-        partnerSpinnerWrap.style.display = 'none';
         let getCurrentLanguage = bg._getCurrentLanguage();
         let currentLanguage = getCurrentLanguage.toLowerCase();
         let currentTabUrl = tab.url;
         let rightUrl = bg.getClearUrl(currentTabUrl);
-
-        let partner = document.querySelector('.partner');
-        let partnerName = document.querySelector('.partner__name');
-        let partnerLogo = document.querySelector('.partner__logo');
-        let partnerCashbackLabel = document.querySelector('.partner__cashback-label');
         partnerCashbackLabel.innerText = setWord('cashback');
-        let partnerCashback = document.querySelector('.partner__cashback-value');
-        let partnerDescription = document.querySelector('.partner__description');
-
-        //для предотвращения дублирования событий на обработчике кликов, необходимо генерить элемент с обработчиком
-        // внутри это ункции
-        let partnerLinkWrap = document.querySelector('.button-cl__wrapper');
         partnerLinkWrap.innerText = '';
+        //для предотвращения дублирования событий на обработчике кликов, необходимо генерить элемент с обработчиком
+        // внутри это функции
         let partnerLink = document.createElement('a');
         partnerLink.classList.add('button-cl', 'button-cl_pink', 'partner__link', 'button-cl_glass');
         partnerLinkWrap.appendChild(partnerLink);
         partnerLink.innerText = setWord('activate');
         /* чтобы не было пустой кнопки */
-
-        let cashbackActive = document.querySelector('.cashback-active');
         cashbackActive.innerText = setWord('cashbackActivated');
 
 
@@ -311,68 +305,60 @@ document.addEventListener('DOMContentLoaded', function () {
             bg._getDetailed()[rightUrl]) {
 
             partner.style.display = 'flex';
-            partnerSpinnerWrap.style.display = 'flex';
+            let detailedData = bg._getDetailed()[rightUrl][currentLanguage] ? bg._getDetailed()[rightUrl][currentLanguage] :
+                bg._getDetailed()[rightUrl]['en'] ? bg._getDetailed()[rightUrl]['en'] : bg._getDetailed()[rightUrl]['ru']; // если нет перевода, выводим на англ или русском
+            console.log('bg._getDetailed() ', bg._getDetailed());
+            console.log('detailedData ', detailedData);
 
-            let allowShow = bg.checkCurrentLanguageInLink(bg._getLinks(), rightUrl, currentLanguage);
+            let cashbackTimestamp = bg._getDetailed()[rightUrl]['activatedTimestamp'];
 
-            if (allowShow && bg._getLinks()[rightUrl]) {
+            partner.style.display = 'flex';
+            partnerName.innerText = detailedData.name;
+            partnerLogo.setAttribute('src', detailedData.logo);
+            detailedData.less ? partnerCashback.innerText = `${setWord('upTo')} ${detailedData.cashback} %` : partnerCashback.innerText = `${detailedData.cashback} %`;
+            textBottomPadding.classList.add('textBottomPadding');
+            partnerDescription.innerHTML = DOMPurify.sanitize(detailedData.text); // use allowed sanitize
+                                                                                  // library DOMPurify for
+                                                                                  // inserted HTML
+            partnerDescription.appendChild(textBottomPadding);
 
+            /* button text and link depends on profile status */
+            if ((bg._getProfileData()) && (bg._getProfileData().profile)) {
+                partnerLink.innerText = setWord('activate');
+                partnerLink.setAttribute('href', detailedData.href);
+                partnerLink.addEventListener('click', function () {
+                    bg._setActivated(rightUrl, new Date().getTime());
 
-                let detailedData = bg._getDetailed()[rightUrl][currentLanguage];
-                let cashbackTimestamp = bg._getDetailed()[rightUrl]['activatedTimestamp'];
-
-                partner.style.display = 'flex';
-                partnerName.innerText = detailedData.name;
-                partnerLogo.setAttribute('src', detailedData.logo);
-                detailedData.less ? partnerCashback.innerText = `${setWord('upTo')} ${detailedData.cashback} %` : partnerCashback.innerText = `${detailedData.cashback} %`;
-                textBottomPadding.classList.add('textBottomPadding');
-                partnerDescription.innerHTML = DOMPurify.sanitize(detailedData.text); // use allowed sanitize
-                                                                                      // library DOMPurify for
-                                                                                      // inserted HTML
-                partnerDescription.appendChild(textBottomPadding);
-                partnerSpinnerWrap.style.display = 'none';
-
-                /* button text and link depends on profile status */
-                if ((bg._getProfileData()) && (bg._getProfileData().profile)) {
-                    partnerLink.innerText = setWord('activate');
-                    partnerLink.setAttribute('href', detailedData.href);
-                    partnerLink.addEventListener('click', function () {
-                        bg._setActivated(rightUrl, new Date().getTime());
-
-                        /* showModalTimestamp reset for secondary showing of modal window with info about cashback */
-                        bg._setShowModalTimestamp(rightUrl, null);
-                        partner.style.display = 'none';
-                        safari.self.hide();
-
-                    });
-                } else {
-                    partnerLink.innerText = setWord('enterForActivation');
-                    /* testurl!!! */
-                    partnerLink.setAttribute('href', 'https://profile.cl.world/login');
-                    // partnerLink.setAttribute('href', 'http://profile.zato.clcorp/');
-                    partnerLink.addEventListener('click', function () {
-                        partner.style.display = 'none';
-                        safari.self.hide();
-                    });
-                }
-
-
-                /* checking is cashback is active, without click necessary */
-                if (cashbackTimestamp !== null &&
-                    cashbackTimestamp !== undefined) {
-                    cashbackActive.style.display = 'flex';
-                } else {
-                    cashbackActive.style.display = 'none';
-                }
-
-                let closePartner = document.querySelector('.partner__close-icon');
-                closePartner.addEventListener('click', function () {
+                    /* showModalTimestamp reset for secondary showing of modal window with info about cashback */
+                    bg._setShowModalTimestamp(rightUrl, null);
                     partner.style.display = 'none';
+                    safari.self.hide();
+
                 });
             } else {
-                partner.style.display = 'none';
-                partnerSpinnerWrap.style.display = 'flex';
+                partnerLink.innerText = setWord('enterForActivation');
+                /* testurl!!! */
+                partnerLink.setAttribute('href', 'https://profile.cl.world/login');
+                // partnerLink.setAttribute('href', 'http://profile.zato.clcorp/');
+                partnerLink.addEventListener('click', function () {
+                    partner.style.display = 'none';
+                    safari.self.hide();
+                });
             }
+
+
+            /* checking is cashback is active, without click necessary */
+            if (cashbackTimestamp !== null &&
+                cashbackTimestamp !== undefined) {
+                cashbackActive.style.display = 'flex';
+            } else {
+                cashbackActive.style.display = 'none';
+            }
+
+            let closePartner = document.querySelector('.partner__close-icon');
+            closePartner.addEventListener('click', function () {
+                partner.style.display = 'none';
+            });
 
         } else {
             partner.style.display = 'none';
@@ -545,8 +531,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function searchRequest(name, resolve, reject) {
         let getCurrentLanguage = bg._getCurrentLanguage();
         let currentLanguage = getCurrentLanguage.toLowerCase();
-        /* all languages array */
-        let languages = bg._getLanguages();
+
         /* testurl!!! */
         let url = 'https://profile.cl.world/api/v3';
         // let url = 'http://profile.zato.clcorp/api/v3';
@@ -635,7 +620,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /**
      * Functions activated by extension icon click
      */
-    safari.application.addEventListener('popover', function (e) {
+    safari.application.addEventListener('popover', e => {
         let tab = safari.application.activeBrowserWindow.activeTab;
         searchField.value = '';
         languages = bg._getLanguages();

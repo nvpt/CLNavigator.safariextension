@@ -3,9 +3,10 @@
  */
 /* ============= COMMON CONSTANTS, VARIABLES ============= */
 /* реактивация кэшбэка *///TODO переделать
-var CL_ALI_UID = '3Vby3rfe6';             // our new identifier in AliE
-var ALI_CLEAR = 'aliexpress.com';         // clear url of Aliexpress.com
-var ALI_COOKIE = 'aeu_cid';               // need cookie name of Aliexpress
+// var CL_ALI_UID = '3Vby3rfe6';             // our new identifier in AliE
+// var ALI_CLEAR = 'aliexpress.com';         // clear url of Aliexpress.com
+// var ALI_COOKIE = 'aeu_cid';               // need cookie name of Aliexpress
+
 
 /* ============= COMMON SERVICE FUNCTION ============= */
 /**
@@ -15,9 +16,7 @@ var ALI_COOKIE = 'aeu_cid';               // need cookie name of Aliexpress
  * @returns {number}
  */
 function roundNumber(val, afterComa) {
-
     if (val % 1 > 0 && afterComa > 0) {
-        return parseFloat(( Math.round(val * Math.pow(10, afterComa)) / Math.pow(10, afterComa) ));
-    } else return parseInt(val);
-
+        return ( Math.round(val * Math.pow(10, afterComa)) / Math.pow(10, afterComa) );
+    } else return val;
 }

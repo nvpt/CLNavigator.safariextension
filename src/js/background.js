@@ -918,7 +918,8 @@ function detailedRequest(id, lang, resolve, reject) {
 
     if (detailedRequestKey) {
         detailedRequestKey = false;
-
+        /* до ответа на запрос меняем иконку расширения */
+        markCheckPartner();
         /* testurl!!! */
         let url = 'https://profile.cl.world/api/v3.1';
         // let url = 'http://profile.zato.clcorp/api/v3.1';
@@ -1010,9 +1011,9 @@ function addToDetailed(data, lang) {
 /**
  * Проверка/актуализация подробных данных по клику или обновлению таба.
  * @param clearCurrentUrl - чистый урл текущей вкдадки
- * @param cb - коллбек проверки иконки расширения
+ * @param checkIconCallback - коллбек проверки иконки расширения
  */
-function uploadDetailed(clearCurrentUrl, cb) {
+function uploadDetailed(clearCurrentUrl, checkIconCallback) {
 
     /* если текущая ссылка партнера есть в общем списке */
     if (links[clearCurrentUrl]) {
@@ -1024,14 +1025,12 @@ function uploadDetailed(clearCurrentUrl, cb) {
             calculateTimeInterval(currentMilliseconds(), detailed[clearCurrentUrl]['visitedTimestamp']) < DETAILED_LIVE_TIME) {
 
             /* обработка иконки без запроса */
-            cb(clearCurrentUrl);
+            checkIconCallback(clearCurrentUrl);
 
         } else {
             /* иначе запрашиваем данные на сервере */
             /* и помещаем их в детальные */
             let id = links[clearCurrentUrl].id;
-            /* до ответа запроса меняем иконку расширения */
-            markCheckPartner();
 
             /* отправлять запрос для данного языка имеет смысл, только, если есть перевод для данного партнера на данном языке */
             if (checkCurrentLanguageInLink(links, clearCurrentUrl, currentLanguage)) {
@@ -1044,7 +1043,7 @@ function uploadDetailed(clearCurrentUrl, cb) {
                         }
 
                         /* обработка иконки после получения данных сервера */
-                        cb(clearCurrentUrl);
+                        checkIconCallback(clearCurrentUrl);
                     },
 
                     /* в случае падения сервера отменяем разрешающие ключи запросов на рандомный интервал */
@@ -1058,7 +1057,7 @@ function uploadDetailed(clearCurrentUrl, cb) {
                         }
 
                         /* обработка иконки после получения данных сервера */
-                        cb(clearCurrentUrl);
+                        checkIconCallback(clearCurrentUrl);
                     },
                     /* в случае падения сервера отменяем разрешающие ключи запросов на рандомный интервал */
                     checkServerResponse);
@@ -1072,7 +1071,7 @@ function uploadDetailed(clearCurrentUrl, cb) {
                         }
 
                         /* обработка иконки после получения данных сервера */
-                        cb(clearCurrentUrl);
+                        checkIconCallback(clearCurrentUrl);
                     },
                     /* в случае падения сервера отменяем разрешающие ключи запросов на рандомный интервал */
                     checkServerResponse);

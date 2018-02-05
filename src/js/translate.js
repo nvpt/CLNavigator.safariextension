@@ -37,7 +37,7 @@ var translate = {
         search: 'Searching',
         searchFail: 'Not found.',
         upTo: 'up to',
-        spinnerText1: 'The data is loading. ',
+        spinnerText1: 'The data is loading.',
         spinnerText2: 'Please try to reopen window.'
     },
     de: {
@@ -58,7 +58,7 @@ var translate = {
         searchFail: 'Nicht gefunden.',
         upTo: 'bis zu',
         spinnerText1: 'Daten werden geladen.',
-        spinnerText2: 'Versuchen Sie bitte Fenster wiederzueröffnen',
+        spinnerText2: 'Versuchen Sie bitte Fenster wiederzueröffnen.',
     },
     tr: {
         activate: 'etkinleştir',

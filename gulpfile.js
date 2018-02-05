@@ -30,7 +30,7 @@ var projectPath = {
     build: {
         fonts: 'cl-navigator.safariextension/fonts/',
         html: 'cl-navigator.safariextension/',
-        img: 'cl-navigator.safariextension/img/',
+        img: 'cl-navigator.safariextension/',
         js: 'cl-navigator.safariextension/js/',
         styles: 'cl-navigator.safariextension/styles/'
     },
@@ -38,7 +38,7 @@ var projectPath = {
     src: {
         fonts: 'src/fonts/**/*.*',
         html: ['src/*.html', '!src/modal.html'],
-        img: 'src/img/**/*.*',
+        img: 'src/**/*.png',
         js: ['src/js/**/*.js'],
         // jsES6: ['src/js/punycode.js'],
         less: ['src/styles/popup.less', 'src/styles/modal.less']

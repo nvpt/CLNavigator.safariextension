@@ -1088,7 +1088,7 @@ function uploadDetailed(clearCurrentUrl, checkIconCallback) {
  */
 function markNotPartner() {
     let iconUri;
-    iconUri = safari.extension.baseURI + 'img/icon/Icon-64.png';
+    iconUri = safari.extension.baseURI + 'img/icon/icon-default-64.png';
     safari.extension.toolbarItems[0].image = iconUri;
     safari.extension.toolbarItems[0].label = '';
 }

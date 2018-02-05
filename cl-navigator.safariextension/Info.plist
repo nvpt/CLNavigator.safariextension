@@ -15,7 +15,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>3.0.3</string>
 	<key>CFBundleVersion</key>
-	<string>1.0.0</string>
+	<string>3.0.32</string>
 	<key>Chrome</key>
 	<dict>
 		<key>Database Quota</key>
@@ -41,7 +41,7 @@
 				<key>Identifier</key>
 				<string>CLNButton</string>
 				<key>Image</key>
-				<string>img/icon/Icon-64.png</string>
+				<string>img/icon/icon-default-64.png</string>
 				<key>Include By Default</key>
 				<true/>
 				<key>Label</key>

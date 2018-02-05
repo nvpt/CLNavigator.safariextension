@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let userLink = document.createElement('a');
         userLink.setAttribute('target', '_blank');
         let userLinkImg = document.createElement('img');
-        userLinkImg.setAttribute('src', 'img/user_24x24.png');
+        userLinkImg.setAttribute('src', 'img/user-24x24.png');
         userLinkImg.classList.add('user__icon');
         let userLinkName = document.createElement('span');
         userLinkName.classList.add('user__name');

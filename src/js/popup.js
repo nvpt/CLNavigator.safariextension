@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let cashbackActive = document.querySelector('.cashback-active');
     let languages = bg._getLanguages() ? bg._getLanguages() : ['ru', 'en']; //TODO temp
     let currentLanguage = bg._getCurrentLanguage().toLowerCase();
-    
+    let requestLang = 'en'; //for request use eng;
     /**
      * Translation of words
      * @param name - name of translated field
@@ -119,8 +119,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /* spinners */
-    let searchListSpinner = document.querySelector('.cl-spinner_searchList');
-    let searchSpinner = document.querySelector('.cl-spinner-search');
+    let searchListSpinner = document.querySelector('.cl-spinner_searchList'); // спиннер в списке выводимых данных партнеров
+    let searchSpinner = document.querySelector('.cl-spinner-search'); // спинер при вводе данных в поле поиска и ожидании ответа
     let spinnerText1 = document.createElement('span');
     let spinnerText2 = document.createElement('span');
     searchListSpinner.appendChild(spinnerText1);
@@ -318,6 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let closePartner = document.querySelector('.partner__close-icon');
             closePartner.addEventListener('click', function () {
                 partner.style.display = 'none';
+                document.querySelector('.search__autocomplete').focus();
             });
 
         } else {
@@ -387,8 +388,8 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     function renderRecommended() {
         clearTag('.search__form-autocomplete.recommended');
-        currentLanguage = bg._getCurrentLanguage().toLowerCase();
-        let recommendedPartners = bg._getRecommended()[currentLanguage];
+        currentLanguage === 'ru' ? requestLang = 'ru' : requestLang = 'en';
+        let recommendedPartners = bg._getRecommended()[requestLang];
 
         for (let key in recommendedPartners) {
             if (recommendedPartners.hasOwnProperty(key)) {
@@ -408,31 +409,39 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /**
+     * Show/hide Last visited title
+     */
+    function toggleLastVisitedTitle(){
+        /* show only if not empty */
+        if (last.querySelector('.list-item') && Object.keys(bg._getDetailed()).length > 0 ) {
+            lastWrap.style.display = 'block';
+            searchListSpinner.style.display = 'none';
+        } else {
+            lastWrap.style.display = 'none';
+        }
+    }
+
+    /**
      * last visited partners render
      * Each visited page dynamically has adding here
      */
     function renderLastVisited() {
-        visitedTitle.innerText = setWord('lastVisitedTitle');
         clearTag('.search__form-autocomplete.last');
+        visitedTitle.innerText = setWord('lastVisitedTitle');
+        currentLanguage === 'ru' ? requestLang = 'ru' : requestLang = 'en';
+
         let keys = Object.keys(bg._getDetailed());
-
         for (let i = keys.length - 1; i >= 0; i--) {
-            listItemRender(bg._getDetailed()[keys[i]][currentLanguage], last);
+            listItemRender(bg._getDetailed()[keys[i]][requestLang], last);
         }
-
-        /* show only if not empty */
-        if (last.querySelector('.list-item')) {
-            lastWrap.style.display = 'block';
-        } else {
-            lastWrap.style.display = 'none';
-        }
+        toggleLastVisitedTitle();
     }
 
 
     /* Search autocomplete */
     let searchField = document.querySelector('.search__autocomplete');
     let btnClearSearchField = document.querySelector('.search__clear');
-    btnClearSearchField.focus();
+
 
     function clearSearchInputValue(el) {
         if (el.length > 0) {
@@ -446,13 +455,16 @@ document.addEventListener('DOMContentLoaded', function () {
             recommendedWrap.style.display = 'block';
             requestedWrap.style.display = 'none';
         }
+        toggleLastVisitedTitle();
 
         btnClearSearchField.addEventListener('click', function () {
-            if (Object.keys(bg._getDetailed()).length > 0) {
+            toggleLastVisitedTitle();
+            if (last.querySelector('.list-item')) {
                 lastWrap.style.display = 'block';
             } else {
                 lastWrap.style.display = 'none';
             }
+
             recommendedWrap.style.display = 'block';
             requestedWrap.style.display = 'none';
 
@@ -473,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
      * Search request
      */
     function searchRequest(name, resolve, reject) {
-        currentLanguage = bg._getCurrentLanguage().toLowerCase();
+        currentLanguage === 'ru' ? requestLang = 'ru' : requestLang = 'en';
 
         /* testurl!!! */
         let url = 'https://profile.cl.world/api/v3.1';
@@ -488,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         req.send(JSON.stringify({
                 query: "query onlinePartners { onlinePartners (search: \"" + name + "\")  { id name cashback less href logo site_url} }"
-                , variables: {locale: currentLanguage}
+                , variables: {locale: requestLang}
             })
         );
 
@@ -539,18 +551,25 @@ document.addEventListener('DOMContentLoaded', function () {
         let searching = this.value;
         searchSpinner.classList.add('animated');
         searchSpinner.style.display = 'none';
+        searchListSpinner.style.display = 'none'; // если списки не успели подгрузиться при открытии окна, то удаляем спиннер списков, при начале поиска
         clearSearchInputValue(searching);
 
 
         /* minimum request length - 2 symbols */
         if (searching.length > 1) {
 
-            searchSpinner.innerText = setWord('search');
+            searchSpinner.innerText = `${setWord('search')}...`;
             searchSpinner.style.display = 'flex';
             searchRequest(searching,
                 renderRequestedList,
                 function (er) { /* console.error(er); */}
             );
+        }
+
+        if (last.querySelector('.list-item')) {
+            lastWrap.style.display = 'block';
+        } else {
+            lastWrap.style.display = 'none';
         }
     }, 300));
 

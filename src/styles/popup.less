@@ -426,13 +426,21 @@
     }
 
     .cl-spinner-search {
-
+        position: absolute;
         display: none;
         width: 100%;
         height: 100%;
-        position: relative ;
-        align-items: center ;
-        justify-content: center ;
+        align-items: center;
+        background: #fff;
+        justify-content: center;
+        z-index: 999;
+
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        line-height: 28px;
+        color: #b3b3b3;
+
         transition: all 0.3s;
 
         &.animated {

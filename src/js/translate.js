@@ -77,7 +77,7 @@ var translate = {
         search: 'Ara',
         searchFail: 'Bulundu.',
         upTo: 'kadar',
-        spinnerText1: 'Veriler yükleniyor',
+        spinnerText1: 'Veriler yükleniyor.',
         spinnerText2: 'Lütfen, pencereyi tekrar açmayı deneyin.',
     }
 };

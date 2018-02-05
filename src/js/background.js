@@ -196,7 +196,7 @@ safeResponse = function () {
  */
 function checkSafeResponse(obj) {
     for (let key in obj) {//перебираем все свойства объекта
-        if (obj.hasOwnProperty(key)) {
+        if (obj[key] && obj.hasOwnProperty(key)) {
             if ((obj[key].length > 0) && (!isNaN(obj[key]))) {//если число и не пустое значение
                 obj[key] = parseFloat(obj[key]);
             } else if (obj[key].constructor === Array) {//массив как объект, если не пустой

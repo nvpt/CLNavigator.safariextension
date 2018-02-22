@@ -45,7 +45,7 @@ var translate = {
         cashback: 'Cashback',
         cashbackActivated: 'Cashback wurde aktiviert',
         cashbackNotActivated: 'Cashback wurde nicht aktiviert',
-        enter: 'einloggen',
+        enter: 'Einloggen',
         enterForActivation: 'für die Aktivierung einloggen',
         logoTitle: 'auf die Website gehen',
         lastVisitedTitle: 'vor kurzem besuchte',

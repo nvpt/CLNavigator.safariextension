@@ -29,7 +29,7 @@ var EXTENSION_DATA_UPDATE_INTERVAL = 86400000;    // 86400000 = 24h. Update peri
 
 
 /* profile */
-var profileData = {default_start: 1};                   // profile data object
+var profileData = {};                   // profile data object
 var authIdentifier = 0;                 // authorisation identifier  for compare with cookie authorisation; 0 - not
                                         // authorised , >0 (=id) - authorised
 var authCookie = 0;                     // current value of cookie authorisation. Will get in our site pages
@@ -506,7 +506,8 @@ function languagesRequest(resolve, reject) {
 function updateLanguages(cb) {
     languagesRequest((res) => {
             if (res) {
-                currentLanguage = res.default.toLowerCase();
+                currentLanguage = res.default || DEFAULT_LANGUAGE;
+                currentLanguage = currentLanguage.toLowerCase();
                 languages = [];
                 for (let i = 0, length = res['items'].length; i < length; i++) {
                     let lang = res['items'][i]['short_name'].toLowerCase();
@@ -514,10 +515,15 @@ function updateLanguages(cb) {
                 }
 
                 cb();
+            } else {
+                currentLanguage = DEFAULT_LANGUAGE.toLowerCase();
             }
         },
         /* if server response fail - we reject  following requests to random time */
-        checkServerResponse);
+        () => {
+            currentLanguage = DEFAULT_LANGUAGE.toLowerCase();
+            checkServerResponse();
+        });
 }
 
 
@@ -761,8 +767,8 @@ function profileRequest(resolve, reject) {
         profileRequestKey = false;
 
         /* testurl!!! */
-        let url = 'https://profile.cl.world/api/v3.1';
-        // let url = 'http://profile.zato.clcorp/api/v3.1';
+        let url = 'https://profile.cl.world/extension/user/info';
+        // let url = 'http://profile.zato.clcorp/extension/user/info';
 
         let req = new XMLHttpRequest();
         req.responseType = "";
@@ -770,19 +776,14 @@ function profileRequest(resolve, reject) {
         req.open("POST", url);
         req.setRequestHeader("Content-Type", "application/json");
         req.setRequestHeader("Accept", "application/json");
-
-        req.send(JSON.stringify({
-                query: "query Profile { profile { fullName balance id paid } }",
-                variables: {locale: "ru"}
-            })
-        );
+        req.send();
 
         // console.log('send profileRequest 5 +++++++++++++++++++ ');
 
         req.addEventListener('load', function () {
             if (req.status === 200) {
                 let response = JSON.parse(req.responseText.replace(/<[^>]*>?/g, ''));
-                resolve(response.data);
+                resolve(response);
                 profileRequestKey = true;
             } else {
                 reject();
@@ -817,9 +818,9 @@ function uploadProfileData() {
             profileTimeUpdate = currentMilliseconds();
 
             /* assign id, if user authorised */
-            if (profileData && profileData.profile) {
-                authIdentifier = parseInt(profileData.profile.id);
-                authCookie = parseInt(profileData.profile.id);
+            if (profileData) {
+                authIdentifier = parseInt(profileData.id);
+                authCookie = parseInt(profileData.id);
             }
         },
 
@@ -879,9 +880,9 @@ function checkAuthorization(url) {
                     function (resp) {
                         profileData = resp;
 
-                        if (profileData.profile) {
-                            authIdentifier = parseInt(profileData.profile.id);
-                            authCookie = parseInt(profileData.profile.id);
+                        if (profileData) {
+                            authIdentifier = parseInt(profileData.id);
+                            authCookie = parseInt(profileData.id);
                         }
 
                         profileTimeUpdate = currentMilliseconds();
@@ -1275,7 +1276,7 @@ safari.application.addEventListener("message", data => {
 
                 /* Выводим в модалке поле с активацией, только если юзер залогинен.
                  *  profile может быть null, поэтому проверяем и id */
-                if (profileData && profileData.profile && profileData.profile.id) {
+                if (profileData && profileData.id) {
                     currentPartner.activatedTimestamp = currentMilliseconds();
 
                     /* Сбрасываем showModalTimestamp в null, чтобы после активации кэшбэка модалка отобразилась повторно */

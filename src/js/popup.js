@@ -16,8 +16,10 @@ document.addEventListener('DOMContentLoaded', function () {
     let partnerLinkWrap = document.querySelector('.button-cl__wrapper');
     let cashbackActive = document.querySelector('.cashback-active');
     let languages = bg._getLanguages() ? bg._getLanguages() : ['ru', 'en']; //TODO temp
-    let currentLanguage = bg._getCurrentLanguage().toLowerCase();
-    let requestLang = 'en'; //for request use eng;
+    let currentLanguage = bg._getCurrentLanguage() ?
+        bg._getCurrentLanguage().toLowerCase() :
+        'en'; // for  slow data responding
+    let requestLang = 'en'; //FOR REQUESTS we always use eng or ru;
     /**
      * Translation of words
      * @param name - name of translated field
@@ -184,8 +186,8 @@ document.addEventListener('DOMContentLoaded', function () {
         let userCashValue = document.createElement('span');
         userCashValue.classList.add('user__cash-value');
 
-        if ((bg._getProfileData()) && (bg._getProfileData().profile)) {
-            let el = bg._getProfileData().profile;
+        if (bg._getProfileData() && bg._getProfileData().id) {
+            let el = bg._getProfileData();
             user.innerText = '';
             userLink.removeAttribute('class');
             userLinkName.innerText = el['fullName'];
@@ -286,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
             partnerDescription.appendChild(textBottomPadding);
 
             /* button text and link depends on profile status */
-            if ((bg._getProfileData()) && (bg._getProfileData().profile)) {
+            if (bg._getProfileData() && bg._getProfileData().id) {
                 partnerLink.innerText = setWord('activate');
                 partnerLink.setAttribute('href', detailedData.href);
                 partnerLink.addEventListener('click', function () {
@@ -527,12 +529,13 @@ document.addEventListener('DOMContentLoaded', function () {
         let arr = elements;
         clearTag('.search__form-autocomplete.requested');
 
-        for (let i = 0, length = arr.length; i < length; i++) {
-            listItemRender(arr[i], requested);
-        }
+
 
         /* will show only if not empty */
         if (arr.length > 0) {
+            for (let i = 0, length = arr.length; i < length; i++) {
+                listItemRender(arr[i], requested);
+            }
             requestedWrap.style.display = 'block';
             searchSpinner.style.display = 'none';
         } else {
@@ -554,10 +557,8 @@ document.addEventListener('DOMContentLoaded', function () {
         searchListSpinner.style.display = 'none'; // если списки не успели подгрузиться при открытии окна, то удаляем спиннер списков, при начале поиска
         clearSearchInputValue(searching);
 
-
         /* minimum request length - 2 symbols */
         if (searching.length > 1) {
-
             searchSpinner.innerText = `${setWord('search')}...`;
             searchSpinner.style.display = 'flex';
             searchRequest(searching,
@@ -580,6 +581,8 @@ document.addEventListener('DOMContentLoaded', function () {
     safari.application.addEventListener('popover', () => {
         let tab = safari.application.activeBrowserWindow.activeTab;
         searchField.value = '';
+        requestedWrap.style.display = 'none';
+        btnClearSearchField.style.display = 'none';
         languages = bg._getLanguages();
         currentLanguage = bg._getCurrentLanguage().toLowerCase();
         searchField.setAttribute('placeholder', setWord('searchPlaceholder'));

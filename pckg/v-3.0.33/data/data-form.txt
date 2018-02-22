@@ -1,18 +1,24 @@
 
-
+SITE
 https://cl.world/
-
+---
+DOWNLOAD URL
 http://cdrn.clcorp.ru/extensions/safari/cl-navigator/cl-navigator.safariextz
-
+---
+NAME
 CL-navigator
-
+---
+DESCRIPTION
 App for monitoring cashback among our partners. Convenient interface. Personal account. Search cashback. Stock.
 Take advantage of our app for even more profit!
-
+---
+WHATS NEW
 Meet now in Safari!
 ---
+CATEGORY
 Shopping
 ---
+FEATURE
 Toolbar button
 Adds page content
 Runs invisibly in the background

@@ -1,6 +1,6 @@
 {
   "name": "cl-chrome-extention",
-  "version": "3.0.32",
+  "version": "3.0.40",
   "description": "Расширение для WebKit-браузеров",
   "main": "index.js",
   "scripts": {

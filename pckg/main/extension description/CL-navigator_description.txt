@@ -1,0 +1,45 @@
+Расширение CL-navigator предназначено для упрощения активации кэшбэка. Когда вы посещаете сайты, расширение сообщает об этой возможности. Благодаря расширению, вам не нужно заходить на наш сайт для этого.
+
+Алгоритм работы:
+Когда вы посещаете какой-либо сайт, расширение сообщает, если это сайт нашего партнера, где вы можете активировать кэшбэк. Если это так, то иконка на панели изменит вид, также модальное окно расширения на сайте-странице покажет соответствующую информацию об активации кэшбэка.
+
+Активировать кэшбэк можно в модальном окне расширения на странице сайта. Или нажав на иконку на панели, где будет открыто всплывающее окно. Там будет показана информация о текущем партнере, данные кэшбэка и еще одна кнопка для его активации.
+
+Всплывающее окно в панели также содержит информацию о последних посещенных партнерах, список рекомендуемых партнеров и поле поиска для наших партнеров.
+
+Активация кэшбэка доступна только авторизованным пользователям. Если Вы не авторизованы, вы будете перенаправлены на страницу авторизации на нашем сайте (после нажатия кнопки активации кэшбэка).
+
+Если вы авторизованы,ваше имя и данные профиля будут отображаться во всплывающем окне на панели. При нажатии на свое имя, вы можете зайти в свой аккаунт на сайте.
+
+Для удобства есть выбор одного из языков локализации.
+
+Для активации кэшбэка необходимо нажать кнопку “активировать” в модальном окне расширения на странице сайта или во всплывающем окне на панели. Сайт текущего партнера перенаправит вас на страницу активации кэшбэка.
+
+После активации кэшбэка модальное окно расширения на странице сайта и всплывающее окно в панели будет содержать информацию о том, что кэшбэк активирован. Значок расширения, также будет изменен.
+
+ Активация кэшбэка действительна в течение ограниченного времени. В это время при посещении сайта с активированным кэшбэком, расширение будет отображать информацию об активации (изменена иконка в панели и информация во всплывающем окне).
+=========================================================
+
+
+Extension CL-navigator is intended for simplification of the activation cashback. When you visit sites, the extension informs, about that possibility. Thanks to the extension, you don’t need to go to our site for this.
+
+The algorithm of work:
+When you visit some site, the extension reports, if it's the site of our partner, where you can activate cashback. If so, the icon on bar will change view, also the extension's modal window on the site-page will show appropriate information about cashback activation.
+
+You can activate cashback in extension's modal window on the site-page. Or clicking by the icon on the bar, where will opened the popup. There will showing information about current partner, cashback data and another one button for activation it.
+
+The popup in the bar also contains information about last visited partners, and the list of recommended partners, and a search field for our partners.
+
+Cashback activation is available only for authorised users. If you are not authorised, you will be redirected to the authorisation page on our site (after pressing the cashback activation buttons).
+
+If you are authorised, your name and profile details will be displayed in the pop-up on the bar. When you click on the your name, you can go to your account on the site.
+
+For convenience, there is a choice of one of the localization languages.
+
+For cashback activation, you need to click the “Activate” button in the extension's modal window on the site-page, or in the pop-up on the bar. The current partner's site will redirect you to the activation page of the cashback.
+
+After cashback activation, the extension's modal window on the site-page and pop-up in the bar will contain information that the cashback is activated. The extension's bar icon will also changed.
+
+ Activation of cashback is valid during a limited time. In this time, when visiting the site with activated cashback, the extension will display information about activation (changed icon in the bar and information in pop-up).
+
+

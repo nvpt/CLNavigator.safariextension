@@ -274,6 +274,22 @@
         .textBottomPadding {
             height: 40px;
         }
+
+        .search-list {
+
+            &__white-shadow {
+                position: relative;
+                box-shadow: 0 10px 20px 25px #fff;
+                z-index: 300;
+                top: -15px;
+
+                &_to-top {
+                    top: initial;
+                    bottom: -25px;
+                    box-shadow: 0 -20px 20px 20px #fff;
+                }
+            }
+        }
     }
 
     .user {
@@ -426,7 +442,7 @@
     }
 
     .cl-spinner-search {
-        position: absolute;
+        position: fixed;
         display: none;
         width: 100%;
         height: 100%;

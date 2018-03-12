@@ -579,6 +579,7 @@ document.addEventListener('DOMContentLoaded', function () {
      */
     safari.application.addEventListener('popover', () => {
         let tab = safari.application.activeBrowserWindow.activeTab;
+        searchSpinner.style.display = 'none';
         searchField.value = '';
         requestedWrap.style.display = 'none';
         btnClearSearchField.style.display = 'none';

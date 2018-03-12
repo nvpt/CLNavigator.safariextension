@@ -552,13 +552,12 @@ document.addEventListener('DOMContentLoaded', function () {
     searchField.addEventListener('input', debounce(function () {
         this.value = this.value.replace(/<[^>]*>?/g, '');
         let searching = this.value;
-        searchSpinner.classList.add('animated');
-        searchSpinner.style.display = 'none';
-        searchListSpinner.style.display = 'none'; // если списки не успели подгрузиться при открытии окна, то удаляем спиннер списков, при начале поиска
-        clearSearchInputValue(searching);
-
         /* minimum request length - 2 symbols */
         if (searching.length > 1) {
+            searchSpinner.classList.add('animated');
+            searchSpinner.style.display = 'none';
+            searchListSpinner.style.display = 'none'; // если списки не успели подгрузиться при открытии окна, то удаляем спиннер списков, при начале поиска
+            clearSearchInputValue(searching);
             searchSpinner.innerText = `${setWord('search')}...`;
             searchSpinner.style.display = 'flex';
             searchRequest(searching,
